@@ -6,18 +6,12 @@ const auth = require('../middleware/auth');
 // ✅ Purana block hatao aur ye exact paste karo:
 // ✅ IS SETUP KO PASTE KARO (PORT 587 AUR SECURE FALSE KE SATH)
 const transporter = nodemailer.createTransport({
-  host: '74.125.200.108', // Ya fir '74.125.200.108' dono mein se koi bhi rakh sakte ho
-  port: 587,
+  host: process.env.EMAIL_HOST || 'smtp-relay.brevo.com',
+  port: parseInt(process.env.EMAIL_PORT) || 587,
   secure: false,
-  family: 4,
-   // Port 587 ke liye secure automatic false hota hai (STARTTLS)
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false,
-    minVersion: 'TLSv1.2' // Explicitly secure communication force karne ke liye
   }
 });
 
