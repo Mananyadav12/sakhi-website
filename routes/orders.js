@@ -8,7 +8,9 @@ const auth = require('../middleware/auth');
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com', // Ya fir '74.125.200.108' dono mein se koi bhi rakh sakte ho
   port: 587,
-  secure: false, // Port 587 ke liye secure automatic false hota hai (STARTTLS)
+  secure: false,
+  family: 4,
+   // Port 587 ke liye secure automatic false hota hai (STARTTLS)
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
