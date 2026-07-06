@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 // ✅ Purana block hatao aur ye exact paste karo:
 // ✅ IS SETUP KO PASTE KARO (PORT 587 AUR SECURE FALSE KE SATH)
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com', // Ya fir '74.125.200.108' dono mein se koi bhi rakh sakte ho
+  host: '74.125.200.108', // Ya fir '74.125.200.108' dono mein se koi bhi rakh sakte ho
   port: 587,
   secure: false,
   family: 4,
