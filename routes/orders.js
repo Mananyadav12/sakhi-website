@@ -3,14 +3,20 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const nodemailer = require('nodemailer');
 const auth = require('../middleware/auth');
-
+// ✅ Purana block hatao aur ye exact paste karo:
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: '74.125.200.108', // 👈 Service hata kar direct Gmail ka IPv4 IP daal diya
+  port: 465,
+  secure: true, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false 
   }
 });
+
 
 const sendConfirmationEmail = async (order) => {
   try {
