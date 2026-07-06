@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sakhi Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#f5f5f7;color:#1a1a2e}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#5A1220,#7B1C2E)}
+.login-box{background:#fff;border-radius:24px;padding:2.5rem;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-logo{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #C9922A;margin-bottom:1.25rem}
+.login-box h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:#5A1220;margin-bottom:.35rem}
+.login-box p{font-size:.875rem;color:#9B6070;margin-bottom:2rem}
+.form-group{margin-bottom:1.1rem;text-align:left}
+.form-group label{display:block;font-size:.82rem;font-weight:600;color:#5C3040;margin-bottom:.4rem}
+.form-group input{width:100%;padding:12px 16px;border:1.5px solid rgba(201,146,42,.3);border-radius:10px;font-size:.9rem;outline:none;transition:border .2s}
+.form-group input:focus{border-color:#7B1C2E}
+.btn-login{width:100%;padding:13px;background:#7B1C2E;color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.5rem}
+.btn-login:hover{background:#5A1220}
+.admin-app{display:none}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#5A1220;z-index:100}
+.sidebar-logo{padding:1.5rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
+.sidebar-logo img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #C9922A}
+.sidebar-logo span{color:#E8B84B;font-weight:700;font-size:1rem}
+.sidebar-nav{padding:1.5rem 0}
+.sidebar-btn{display:flex;align-items:center;gap:10px;padding:.85rem 1.5rem;color:rgba(255,255,255,.7);background:none;border:none;width:100%;cursor:pointer;font-size:.9rem;font-family:Inter,sans-serif;transition:all .2s}
+.sidebar-btn:hover,.sidebar-btn.active{background:rgba(255,255,255,.1);color:#fff}
+.sidebar-btn .icon{font-size:1.1rem;width:22px}
+.main{margin-left:240px;padding:2rem;min-height:100vh}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+.topbar h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:#5A1220}
+.btn-logout{background:none;border:1px solid #ddd;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.875rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2rem}
+.stat{background:#fff;border-radius:16px;padding:1.5rem;border-left:4px solid #C9922A}
+.stat .label{font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#9B6070;margin-bottom:.5rem}
+.stat .value{font-size:2rem;font-weight:700;color:#5A1220}
+.panel{background:#fff;border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.panel-head h2{font-size:1.1rem;color:#5A1220;font-family:'Playfair Display',serif}
+.btn-add{background:#7B1C2E;color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;font-size:.875rem;font-weight:600}
+table{width:100%;border-collapse:collapse}
+th{background:#f5ede0;padding:10px 14px;text-align:left;font-size:.8rem;font-weight:600;color:#5C3040}
+td{padding:12px 14px;border-bottom:1px solid #f0f0f0;font-size:.875rem}
+tr:hover td{background:#fafafa}
+.badge{padding:4px 10px;border-radius:20px;font-size:.73rem;font-weight:600}
+.badge-pending{background:#fff3cd;color:#856404}
+.badge-confirmed{background:#d1e7dd;color:#0a3622}
+.badge-shipped{background:#cfe2ff;color:#084298}
+.badge-delivered{background:#d1e7dd;color:#0a3622}
+.badge-cancelled{background:#f8d7da;color:#58151c}
+.tab{display:none}.tab.active{display:block}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto}
+.modal-box h3{color:#5A1220;margin-bottom:1.5rem;font-family:'Playfair Display',serif;font-size:1.2rem}
+.mform-group{margin-bottom:1rem}
+.mform-group label{display:block;font-size:.8rem;font-weight:600;color:#5C3040;margin-bottom:.35rem}
+.mform-group input,.mform-group select,.mform-group textarea{width:100%;padding:10px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:8px;font-size:.875rem;outline:none;font-family:inherit;transition:border .2s}
+.mform-group input:focus,.mform-group textarea:focus{border-color:#7B1C2E}
+.mform-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn-save{background:#7B1C2E;color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;width:100%;margin-top:.5rem}
+.btn-cancel{width:100%;padding:10px;margin-top:.5rem;background:none;border:1px solid #ddd;border-radius:10px;cursor:pointer;font-family:inherit}
+.action-btn{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:500;margin-right:4px}
+.btn-edit{background:#7B1C2E;color:#fff}
+.btn-del{background:#dc3545;color:#fff}
+/* SIZE STOCK */
+.size-stock-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:8px}
+.size-stock-cell{text-align:center}
+.size-stock-cell label{display:block;font-size:.78rem;font-weight:700;color:#C9922A;margin-bottom:.4rem}
+.size-stock-cell input{width:100%;padding:8px 4px;border:1.5px solid rgba(201,146,42,.25);border-radius:8px;text-align:center;font-size:.9rem;outline:none;font-family:inherit;transition:border .2s}
+.size-stock-cell input:focus{border-color:#7B1C2E}
+.size-stock-cell input[value="0"]{background:#fff5f5;color:#c0392b}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <img src="../images/logo.jpeg" class="login-logo" alt="Sakhi"/>
+    <h2>Sakhi Admin</h2>
+    <p>Sign in to manage your store</p>
+    <form id="loginForm">
+      <div class="form-group"><label>Username</label><input type="text" id="uname" placeholder="sakhi_admin" required/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="upass" placeholder="••••••••" required/></div>
+      <p id="loginErr" style="color:#c0392b;font-size:.8rem;margin-bottom:.5rem;display:none">❌ Wrong credentials!</p>
+      <button type="submit" class="btn-login">Sign In →</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="admin-app" id="adminApp">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi"/>
+      <span>sakhi.co</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-btn active" onclick="showTab('dashboard',this)"><span class="icon">📊</span>Dashboard</button>
+      <button class="sidebar-btn" onclick="showTab('products',this)"><span class="icon">👗</span>Products</button>
+      <button class="sidebar-btn" onclick="showTab('orders',this)"><span class="icon">📦</span>Orders</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1 id="pageTitle">Dashboard</h1>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div class="tab active" id="tab-dashboard">
+      <div class="stats">
+        <div class="stat"><div class="label">Total Orders</div><div class="value" id="sTotalOrders">—</div></div>
+        <div class="stat"><div class="label">Products</div><div class="value" id="sTotalProducts">—</div></div>
+        <div class="stat"><div class="label">Revenue</div><div class="value" id="sRevenue">—</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Recent Orders</h2></div>
+        <table>
+          <thead><tr><th>Order #</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="recentOrdersTbl"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRODUCTS TAB -->
+    <div class="tab" id="tab-products">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>All Products</h2>
+          <button class="btn-add" onclick="openModal()">+ Add Product</button>
+        </div>
+        <table>
+          <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Total Stock</th><th>Sizes</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="productsTbl"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="tab" id="tab-orders">
+      <div class="panel">
+        <div class="panel-head"><h2>All Orders</h2></div>
+        <table>
+          <thead><tr><th>Order #</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Status</th><th>Update Status</th></tr></thead>
+          <tbody id="ordersTbl"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADD/EDIT PRODUCT MODAL -->
+<div class="modal" id="productModal">
+  <div class="modal-box">
+    <h3 id="modalTitle">Add New Product</h3>
+    <form id="productForm">
+      <input type="hidden" id="editId"/>
+      <div class="mform-group"><label>Product Name *</label><input type="text" id="pName" placeholder="Rosewood Bloom Kurti" required/></div>
+      <div class="mform-group"><label>Description</label><textarea id="pDesc" rows="3" placeholder="Beautiful handcrafted kurti..."></textarea></div>
+      <div class="mform-row">
+        <div class="mform-group"><label>Price (₹) *</label><input type="number" id="pPrice" placeholder="749" required/></div>
+        <div class="mform-group"><label>MRP (₹) *</label><input type="number" id="pMrp" placeholder="1199" required/></div>
+      </div>
+      <div class="mform-row">
+        <div class="mform-group"><label>Category *</label>
+          <select id="pCat">
+            <option value="square">Square Neck</option>
+            <option value="bell">Bell Sleeves</option>
+            <option value="halter">Halter Neck</option>
+            <option value="straight">Straight Cut</option>
+            <option value="boat">Boat Neck</option>
+            <option value="corset">Corset Back</option>
+          </select>
+        </div>
+        <div class="mform-group"><label>Total Stock *</label><input type="number" id="pStock" placeholder="50" required/></div>
+      </div>
+
+      <!-- SIZE STOCK -->
+      <div class="mform-group">
+        <label>Size wise Stock (0 = unavailable, cross lagega | sab 0 = Sold Out)</label>
+        <div class="size-stock-grid">
+          <div class="size-stock-cell"><label>XS</label><input type="number" class="size-stock-input" data-size="XS" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>S</label><input type="number" class="size-stock-input" data-size="S" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>M</label><input type="number" class="size-stock-input" data-size="M" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>L</label><input type="number" class="size-stock-input" data-size="L" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>XL</label><input type="number" class="size-stock-input" data-size="XL" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>XXL</label><input type="number" class="size-stock-input" data-size="XXL" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>3XL</label><input type="number" class="size-stock-input" data-size="3XL" min="0" placeholder="0"/></div>
+          <div class="size-stock-cell"><label>4XL</label><input type="number" class="size-stock-input" data-size="4XL" min="0" placeholder="0"/></div>
+        </div>
+        <p style="font-size:.75rem;color:#9B6070;margin-top:.5rem">💡 Jo size available nahi hai uska 0 rakho — product page pe cross lag jaayega</p>
+      </div>
+
+      <div class="mform-group"><label>Product Photos (max 5)</label><input type="file" id="pImages" accept="image/*" multiple/></div>
+      <button type="submit" class="btn-save" id="saveBtn">Save Product</button>
+      <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5000';
+let token = localStorage.getItem('sakhi_token');
+
+if (token) { showDashboard(); loadStats(); }
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const res = await fetch(`${API}/api/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: document.getElementById('uname').value, password: document.getElementById('upass').value })
+  });
+  const data = await res.json();
+  if (data.token) {
+    token = data.token;
+    localStorage.setItem('sakhi_token', token);
+    showDashboard();
+    loadStats();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+});
+
+function showDashboard() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('adminApp').style.display = 'block';
+}
+
+function logout() {
+  localStorage.removeItem('sakhi_token');
+  location.reload();
+}
+
+function showTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('pageTitle').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+  if (name === 'products') loadProducts();
+  if (name === 'orders') loadOrders();
+}
+
+async function loadStats() {
+  const res = await fetch(`${API}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
+  const d = await res.json();
+  document.getElementById('sTotalOrders').textContent = d.totalOrders || 0;
+  document.getElementById('sTotalProducts').textContent = d.totalProducts || 0;
+  document.getElementById('sRevenue').textContent = '₹' + (d.revenue || 0).toLocaleString('en-IN');
+  const tbody = document.getElementById('recentOrdersTbl');
+  tbody.innerHTML = (d.recentOrders || []).map(o => `
+    <tr>
+      <td>#${o.order_number}</td>
+      <td>${o.customer_name}</td>
+      <td>₹${o.total_amount}</td>
+      <td><span class="badge badge-${o.status}">${o.status}</span></td>
+      <td>${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
+}
+
+async function loadProducts() {
+  const res = await fetch(`${API}/api/products`);
+  const d = await res.json();
+  document.getElementById('productsTbl').innerHTML = (d.products || []).map(p => {
+    const ss = p.size_stock || {};
+    const totalQty = Object.values(ss).reduce((s,v) => s+v, 0);
+    const isSoldOut = p.sizes && p.sizes.length > 0 && Object.keys(ss).length > 0 && totalQty === 0;
+    const sizeSummary = Object.keys(ss).length > 0
+      ? Object.entries(ss).map(([s,q]) => `<span style="font-size:.7rem;padding:2px 6px;border-radius:4px;background:${q>0?'#d1e7dd':'#f8d7da'};color:${q>0?'#0a3622':'#58151c'};margin:1px">${s}:${q}</span>`).join('')
+      : '<span style="color:#9B6070;font-size:.78rem">Not set</span>';
+    return `<tr>
+      <td><strong>${p.name}</strong>${isSoldOut ? ' <span style="background:#f8d7da;color:#58151c;font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:600">SOLD OUT</span>' : ''}</td>
+      <td style="text-transform:capitalize">${p.category}</td>
+      <td>₹${p.price}</td>
+      <td>${p.stock}</td>
+      <td style="max-width:150px">${sizeSummary}</td>
+      <td><span class="badge" style="background:${p.active?'#d1e7dd':'#f8d7da'};color:${p.active?'#0a3622':'#58151c'}">${p.active?'Active':'Hidden'}</span></td>
+      <td>
+        <button class="action-btn btn-edit" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
+        <button class="action-btn btn-del" onclick="deleteProduct('${p.id}')">Remove</button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No products yet. Add your first kurti! 👗</td></tr>';
+}
+
+async function loadOrders() {
+  const res = await fetch(`${API}/api/orders`, { headers: { Authorization: `Bearer ${token}` } });
+  const d = await res.json();
+  document.getElementById('ordersTbl').innerHTML = (d.orders || []).map(o => `
+    <tr>
+      <td>#${o.order_number}</td>
+      <td>${o.customer_name}<br/><small style="color:#9B6070">${o.customer_email}</small></td>
+      <td>${o.customer_phone}</td>
+      <td>₹${o.total_amount}</td>
+      <td><span class="badge badge-${o.status}">${o.status}</span></td>
+      <td>
+        <select onchange="updateStatus('${o.id}',this.value)" style="padding:6px;border:1px solid #ddd;border-radius:6px;font-size:.8rem">
+          <option value="">Update...</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
+}
+
+function openModal() {
+  document.getElementById('productModal').classList.add('open');
+  document.getElementById('modalTitle').textContent = 'Add New Product';
+  document.getElementById('productForm').reset();
+  document.getElementById('editId').value = '';
+  document.querySelectorAll('.size-stock-input').forEach(i => i.value = '');
+}
+
+function closeModal() { document.getElementById('productModal').classList.remove('open'); }
+
+function editProduct(p) {
+  openModal();
+  document.getElementById('modalTitle').textContent = 'Edit Product';
+  document.getElementById('editId').value = p.id;
+  document.getElementById('pName').value = p.name;
+  document.getElementById('pDesc').value = p.description || '';
+  document.getElementById('pPrice').value = p.price;
+  document.getElementById('pMrp').value = p.mrp;
+  document.getElementById('pCat').value = p.category;
+  document.getElementById('pStock').value = p.stock;
+  // Size stock fill
+  document.querySelectorAll('.size-stock-input').forEach(input => {
+    const size = input.dataset.size;
+    input.value = (p.size_stock && p.size_stock[size] !== undefined) ? p.size_stock[size] : '';
+  });
+}
+
+document.getElementById('productForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('saveBtn');
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  const id = document.getElementById('editId').value;
+  const fd = new FormData();
+  fd.append('name', document.getElementById('pName').value);
+  fd.append('description', document.getElementById('pDesc').value);
+  fd.append('price', document.getElementById('pPrice').value);
+  fd.append('mrp', document.getElementById('pMrp').value);
+  fd.append('category', document.getElementById('pCat').value);
+  fd.append('stock', document.getElementById('pStock').value);
+
+  // Size stock collect
+  const sizeStock = {};
+  const availableSizes = [];
+  document.querySelectorAll('.size-stock-input').forEach(input => {
+    const size = input.dataset.size;
+    const qty = parseInt(input.value) || 0;
+    if (input.value !== '') {
+      sizeStock[size] = qty;
+      if (qty > 0) availableSizes.push(size);
+    }
+  });
+  fd.append('sizes', JSON.stringify(availableSizes.length > 0 ? availableSizes : ['S','M','L','XL','XXL']));
+  fd.append('size_stock', JSON.stringify(sizeStock));
+
+  const files = document.getElementById('pImages').files;
+  for (const f of files) fd.append('images', f);
+  const url = id ? `${API}/api/products/${id}` : `${API}/api/products`;
+  await fetch(url, { method: id ? 'PUT' : 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
+  closeModal();
+  loadProducts();
+  btn.textContent = 'Save Product'; btn.disabled = false;
+});
+
+async function deleteProduct(id) {
+  if (!confirm('Remove this product from store?')) return;
+  await fetch(`${API}/api/products/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+  loadProducts();
+}
+
+async function updateStatus(id, status) {
+  if (!status) return;
+  await fetch(`${API}/api/orders/${id}/status`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  loadOrders();
+  loadStats();
+}
+</script>
+</body>
+</html>

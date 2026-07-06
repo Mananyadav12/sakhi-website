@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Track Order – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/about.html">About</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge">0</span>
+      </button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:140px 2rem 4rem">
+  <p class="hero-eyebrow">Order Status</p>
+  <h1>Track Your Order</h1>
+  <p>Enter your tracking ID and phone number to see your order status</p>
+</div>
+
+<div class="container" style="padding:3rem 2rem 6rem">
+  <div style="max-width:650px;margin:0 auto">
+
+    <!-- TRACK FORM -->
+    <div class="contact-form-wrap">
+      <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:.5rem">Enter Order Details</h3>
+      <p style="color:var(--text-light);font-size:.875rem;margin-bottom:1.75rem">
+        Your Tracking ID was sent to your email after placing the order. It starts with <strong>SKHI...</strong>
+      </p>
+
+      <form id="trackForm">
+        <div class="form-group">
+          <label>Tracking ID *</label>
+          <input type="text" id="trackId" placeholder="e.g. SKHIABCD1234"
+            style="text-transform:uppercase" required/>
+        </div>
+        <div class="form-group">
+          <label>Registered Phone Number *</label>
+          <input type="tel" id="trackPhone" placeholder="Phone number used while ordering" required/>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px">
+          Track My Order 🔍
+        </button>
+      </form>
+    </div>
+
+    <!-- RESULT -->
+    <div id="trackResult" style="margin-top:2rem"></div>
+
+    <!-- HELP BOX -->
+    <div style="margin-top:2rem;background:var(--cream-dark);border-radius:16px;padding:1.5rem;text-align:center">
+      <p style="font-size:.875rem;color:var(--text-mid);margin-bottom:.5rem">
+        Can't find your tracking ID?
+      </p>
+      <p style="font-size:.875rem;color:var(--text-light)">
+        Check your email inbox for order confirmation from <strong>sakhi.co</strong>
+        or <a href="/pages/contact.html" style="color:var(--maroon);font-weight:600">contact us</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="../images/logo.jpeg" alt="Sakhi" class="footer-logo-img"/>
+        <p class="brand-tagline">Craft worn daily.<br/>Made for every woman.</p>
+      </div>
+      <div class="footer-links"><h4>Shop</h4><ul>
+        <li><a href="/pages/collections.html">All Kurtis</a></li>
+        <li><a href="/pages/collections.html?cat=square">Square Neck</a></li>
+        <li><a href="/pages/collections.html?cat=bell">Bell Sleeves</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Help</h4><ul>
+        <li><a href="/pages/contact.html">Contact Us</a></li>
+        <li><a href="/pages/track.html">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Company</h4><ul>
+        <li><a href="/pages/about.html">About</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+const statusSteps = ['pending','confirmed','processing','shipped','delivered'];
+const statusEmoji = {
+  pending: '🕐',
+  confirmed: '✅',
+  processing: '📦',
+  shipped: '🚚',
+  delivered: '🎉'
+};
+const statusLabel = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  processing: 'Processing',
+  shipped: 'Shipped',
+  delivered: 'Delivered'
+};
+
+document.getElementById('trackForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('trackId').value.trim().toUpperCase();
+  const phone = document.getElementById('trackPhone').value.trim();
+  const el = document.getElementById('trackResult');
+
+  el.innerHTML = `
+    <div style="text-align:center;padding:2rem">
+      <p style="color:var(--text-light)">🔍 Searching for your order...</p>
+    </div>`;
+
+  try {
+    const res = await fetch(`${API_URL}/api/track/${id}`);
+    const data = await res.json();
+
+    if (!data.order) {
+      el.innerHTML = `
+        <div style="background:#fff5f5;border:1px solid #ffcccc;border-radius:16px;padding:2rem;text-align:center">
+          <p style="font-size:2rem;margin-bottom:.5rem">😕</p>
+          <p style="color:#c0392b;font-weight:600">Order not found!</p>
+          <p style="color:var(--text-light);font-size:.875rem;margin-top:.5rem">Please check your Tracking ID and try again.</p>
+        </div>`;
+      return;
+    }
+
+    // Phone number verify
+    if (data.order.customer_phone !== phone) {
+      el.innerHTML = `
+        <div style="background:#fff5f5;border:1px solid #ffcccc;border-radius:16px;padding:2rem;text-align:center">
+          <p style="font-size:2rem;margin-bottom:.5rem">🔒</p>
+          <p style="color:#c0392b;font-weight:600">Phone number does not match!</p>
+          <p style="color:var(--text-light);font-size:.875rem;margin-top:.5rem">Please use the phone number you used while placing the order.</p>
+        </div>`;
+      return;
+    }
+
+    const o = data.order;
+    const currentStep = statusSteps.indexOf(o.status);
+
+    el.innerHTML = `
+      <div style="background:var(--white);border-radius:20px;padding:2rem;border:1px solid rgba(201,146,42,.15);box-shadow:var(--shadow)">
+
+        <!-- ORDER HEADER -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div>
+            <p style="font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.25rem">Order Number</p>
+            <p style="font-weight:700;color:var(--maroon-dark);font-size:1.2rem">#${o.order_number}</p>
+          </div>
+          <div style="text-align:right">
+            <p style="font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.25rem">Total Amount</p>
+            <p style="font-weight:700;color:var(--maroon);font-size:1.2rem">₹${o.total_amount}</p>
+          </div>
+        </div>
+
+        <!-- CURRENT STATUS BADGE -->
+        <div style="text-align:center;margin-bottom:2rem;padding:1.25rem;background:var(--cream);border-radius:14px">
+          <p style="font-size:2rem;margin-bottom:.4rem">${statusEmoji[o.status] || '📦'}</p>
+          <p style="font-size:1.1rem;font-weight:700;color:var(--maroon)">
+            ${statusLabel[o.status] || o.status}
+          </p>
+          <p style="font-size:.8rem;color:var(--text-light);margin-top:.25rem">
+            ${o.status === 'pending' ? 'Your order is being reviewed' :
+              o.status === 'confirmed' ? 'Order confirmed! Preparing your kurti' :
+              o.status === 'processing' ? 'Your kurti is being packed' :
+              o.status === 'shipped' ? 'Your order is on the way!' :
+              o.status === 'delivered' ? 'Order delivered! Enjoy your kurti 💕' : ''}
+          </p>
+        </div>
+
+        <!-- PROGRESS STEPS -->
+        <div class="track-steps" style="margin-bottom:2rem">
+          ${statusSteps.map((s, i) => `
+            <div class="track-step">
+              <div class="step-dot ${i <= currentStep ? 'done' : ''}">
+                ${i <= currentStep ? statusEmoji[s] : '○'}
+              </div>
+              <span class="step-label ${i <= currentStep ? 'done' : ''}">
+                ${statusLabel[s]}
+              </span>
+            </div>`).join('')}
+        </div>
+
+        <!-- ORDER INFO -->
+        <div style="background:var(--cream);border-radius:14px;padding:1.25rem;margin-bottom:1rem">
+          <p style="font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem">Delivery Info</p>
+          <p style="font-size:.875rem;color:var(--text-mid);margin-bottom:.5rem">
+            👤 <strong>${o.customer_name}</strong>
+          </p>
+          <p style="font-size:.875rem;color:var(--text-mid);margin-bottom:.5rem">
+            📍 ${o.city}, ${o.state}
+          </p>
+          <p style="font-size:.875rem;color:var(--text-mid);margin-bottom:.5rem">
+            💳 ${o.payment_method === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
+          </p>
+          <p style="font-size:.875rem;color:var(--text-mid)">
+            🚚 ${o.delivery_type === 'express' ? 'Express Delivery (2-3 days)' : 'Standard Delivery (5-7 days)'}
+          </p>
+        </div>
+
+        <!-- ITEMS -->
+        <div style="margin-bottom:1rem">
+          <p style="font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem">Items Ordered</p>
+          ${(o.items || []).map(item => `
+            <div style="display:flex;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid rgba(201,146,42,.1);font-size:.875rem">
+              <span style="color:var(--text-dark)">${item.name} <span style="color:var(--text-light)">(${item.size}) x${item.quantity}</span></span>
+              <span style="font-weight:600;color:var(--maroon)">₹${item.price * item.quantity}</span>
+            </div>`).join('')}
+        </div>
+
+        <!-- NEED HELP -->
+        <div style="text-align:center;padding-top:1rem;border-top:1px solid rgba(201,146,42,.15)">
+          <p style="font-size:.8rem;color:var(--text-light)">
+            Need help? <a href="/pages/contact.html" style="color:var(--maroon);font-weight:600">Contact us</a>
+            or WhatsApp <a href="https://wa.me/919876543210" style="color:var(--maroon);font-weight:600">+91 98765 43210</a>
+          </p>
+        </div>
+      </div>`;
+
+  } catch (err) {
+    el.innerHTML = `
+      <div style="background:#fff5f5;border:1px solid #ffcccc;border-radius:16px;padding:2rem;text-align:center">
+        <p style="color:#c0392b">Something went wrong. Please try again.</p>
+      </div>`;
+  }
+});
+
+// Auto fill from URL
+const urlId = new URLSearchParams(window.location.search).get('id');
+if (urlId) {
+  document.getElementById('trackId').value = urlId;
+}
+</script>
+</body>
+</html>

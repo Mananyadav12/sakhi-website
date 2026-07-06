@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sakhi.co – Handcrafted Kurtis for Every Woman</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/about.html">About</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="location.href='/pages/collections.html'">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </button>
+      <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge">0</span>
+      </button>
+      <div id="authBtn"></div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">New Collection 2026</p>
+    <h1 class="hero-title">Wear the grace<br/>of every woman</h1>
+    <p class="hero-sub">Handcrafted kurtis in pure cotton — made for college, work, and every beautiful everyday moment.</p>
+    <div class="hero-btns">
+      <a href="/pages/collections.html" class="btn btn-primary">Shop Now</a>
+      <a href="/pages/about.html" class="btn btn-outline">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <img src="images/logo.jpeg" alt="Sakhi" class="hero-logo-badge"/>
+    <div class="hero-ring"></div>
+    <div class="hero-ring2"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span>Pure Cotton</span><span class="dot"> ✦ </span>
+    <span>Handcrafted</span><span class="dot"> ✦ </span>
+    <span>Free Shipping ₹999+</span><span class="dot"> ✦ </span>
+    <span>Easy Returns</span><span class="dot"> ✦ </span>
+    <span>COD Available</span><span class="dot"> ✦ </span>
+    <span>Pure Cotton</span><span class="dot"> ✦ </span>
+    <span>Handcrafted</span><span class="dot"> ✦ </span>
+    <span>Free Shipping ₹999+</span><span class="dot"> ✦ </span>
+    <span>Easy Returns</span><span class="dot"> ✦ </span>
+    <span>COD Available</span><span class="dot"> ✦ </span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section categories-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Browse by Style</p>
+      <h2 class="section-title">Find your fit</h2>
+    </div>
+    <div class="categories-grid">
+      <div class="category-card" onclick="location.href='/pages/collections.html?cat=square'">
+        <div class="cat-icon">🪷</div><h3>Square Neck</h3><p>Modern & bold</p>
+      </div>
+      <div class="category-card" onclick="location.href='/pages/collections.html?cat=bell'">
+        <div class="cat-icon">🌸</div><h3>Bell Sleeves</h3><p>Flowy & festive</p>
+      </div>
+      <div class="category-card" onclick="location.href='/pages/collections.html?cat=halter'">
+        <div class="cat-icon">✨</div><h3>Halter Neck</h3><p>Chic & confident</p>
+      </div>
+      <div class="category-card" onclick="location.href='/pages/collections.html?cat=straight'">
+        <div class="cat-icon">🌿</div><h3>Straight Cut</h3><p>Classic everyday</p>
+      </div>
+      <div class="category-card" onclick="location.href='/pages/collections.html?cat=boat'">
+        <div class="cat-icon">🪻</div><h3>Boat Neck</h3><p>Elegant & refined</p>
+      </div>
+      <div class="category-card" onclick="location.href='/pages/collections.html?cat=corset'">
+        <div class="cat-icon">💎</div><h3>Corset Back</h3><p>Statement piece</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section products-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Just Dropped</p>
+      <h2 class="section-title">New Arrivals</h2>
+    </div>
+    <div class="products-grid" id="featuredProducts">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+    <div class="see-all-wrap">
+      <a href="/pages/collections.html" class="see-all">View all products →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROMISE -->
+<section class="section promise-section">
+  <div class="container">
+    <div class="promise-grid">
+      <div class="promise-text">
+        <p class="section-eyebrow">Why Sakhi</p>
+        <h2 class="section-title">Craft worn daily,<br/>not saved for occasions</h2>
+        <p class="promise-body">Every Sakhi kurti starts with a sketch, not a spreadsheet. Cotton that breathes, prints that last, cuts that feel made for your shape.</p>
+        <a href="/pages/about.html" class="btn btn-primary">Read our story</a>
+      </div>
+      <div class="promise-features">
+        <div class="feature-item">
+          <div class="feature-icon">🌿</div>
+          <div><h4>100% Pure Cotton</h4><p>Breathable fabric for India's weather, every season.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🖐️</div>
+          <div><h4>Screen Printed by Hand</h4><p>Real artisans, real craft — every print made with intention.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💸</div>
+          <div><h4>Priced Honestly</h4><p>Starting ₹649 — craft shouldn't cost a fortune.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔄</div>
+          <div><h4>Easy Returns</h4><p>7-day hassle-free returns. No questions asked.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Loved Across India</p>
+      <h2 class="section-title">What our customers say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p>"The fabric quality is stunning — so soft and breathable. I've bought 4 kurtis and each one is better than the last!"</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">P</div>
+          <div><strong>Priya S.</strong><span>Mumbai</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p>"Absolutely love the fit. The stitching is so clean and it flatters my shape perfectly. Sakhi is my go-to brand now."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">A</div>
+          <div><strong>Ananya R.</strong><span>Delhi</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p>"College, office, family events — I wear Sakhi kurtis everywhere. The prints are so unique and the price is amazing!"</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">D</div>
+          <div><strong>Divya M.</strong><span>Indore</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-box">
+      <div class="newsletter-logo">
+        <img src="images/logo.jpeg" alt="Sakhi"/>
+      </div>
+      <h2>Get early access to new drops</h2>
+      <p>Join 10,000+ women who get first dibs on new arrivals & sales.</p>
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input type="email" placeholder="Enter your email" required/>
+        <button type="submit" class="btn btn-gold">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="images/logo.jpeg" alt="Sakhi" class="footer-logo-img"/>
+        <p class="brand-tagline">Craft worn daily.<br/>Made for every woman.</p>
+        <div class="social-links">
+          <a href="#">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="/pages/collections.html">All Kurtis</a></li>
+          <li><a href="/pages/collections.html?cat=square">Square Neck</a></li>
+          <li><a href="/pages/collections.html?cat=bell">Bell Sleeves</a></li>
+          <li><a href="/pages/collections.html?cat=halter">Halter Neck</a></li>
+          <li><a href="/pages/collections.html?cat=straight">Straight Cut</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="/pages/contact.html">Contact Us</a></li>
+          <li><a href="/pages/track.html">Track Order</a></li>
+          <li><a href="#">Returns Policy</a></li>
+          <li><a href="#">Size Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/pages/about.html">About Sakhi</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Sakhi.co — All rights reserved.</p>
+      <p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+
+</script>
+</body>
+</html>

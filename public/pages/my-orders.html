@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Orders – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+    </ul>
+    <div class="nav-actions" id="authBtn"></div>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:140px 2rem 4rem">
+  <p class="hero-eyebrow">My Account</p>
+  <h1>My Orders</h1>
+</div>
+
+<div class="container" style="padding:3rem 2rem 6rem">
+  <div id="ordersContent">
+    <div style="text-align:center;padding:3rem;color:var(--text-light)">Loading...</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+const statusEmoji = { pending:'🕐', confirmed:'✅', processing:'📦', shipped:'🚚', delivered:'🎉', cancelled:'❌' };
+
+async function loadOrders() {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) { location.href = '/pages/login.html?redirect=/pages/my-orders.html'; return; }
+
+  try {
+    const res = await fetch(`${API_URL}/api/users/orders`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const orders = data.orders || [];
+
+    if (orders.length === 0) {
+      document.getElementById('ordersContent').innerHTML = `
+        <div style="text-align:center;padding:4rem 2rem;background:var(--white);border-radius:20px">
+          <p style="font-size:3rem;margin-bottom:1rem">📦</p>
+          <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:.75rem">No orders yet!</h3>
+          <p style="color:var(--text-light);margin-bottom:2rem">Start shopping to see your orders here</p>
+          <a href="/pages/collections.html" class="btn btn-primary">Shop Now</a>
+        </div>`;
+      return;
+    }
+
+    document.getElementById('ordersContent').innerHTML = orders.map(o => `
+      <div style="background:var(--white);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;border:1px solid rgba(201,146,42,.15);box-shadow:var(--shadow)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
+          <div>
+            <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.2rem">Order Number</p>
+            <p style="font-weight:700;color:var(--maroon-dark)">#${o.order_number}</p>
+          </div>
+          <div>
+            <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.2rem">Date</p>
+            <p style="font-weight:600;color:var(--text-dark)">${new Date(o.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</p>
+          </div>
+          <div>
+            <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.2rem">Total</p>
+            <p style="font-weight:700;color:var(--maroon)">₹${o.total_amount}</p>
+          </div>
+          <span style="padding:6px 16px;border-radius:20px;font-size:.8rem;font-weight:600;background:${o.status==='delivered'?'#d1e7dd':o.status==='shipped'?'#cfe2ff':o.status==='cancelled'?'#f8d7da':'#fff3cd'};color:${o.status==='delivered'?'#0a3622':o.status==='shipped'?'#084298':o.status==='cancelled'?'#58151c':'#856404'}">
+            ${statusEmoji[o.status]} ${o.status.charAt(0).toUpperCase()+o.status.slice(1)}
+          </span>
+        </div>
+
+        <!-- Items -->
+        <div style="border-top:1px solid rgba(201,146,42,.1);padding-top:1rem;margin-bottom:1rem">
+          ${(o.items||[]).map(item => `
+            <div style="display:flex;justify-content:space-between;padding:.5rem 0;font-size:.875rem">
+              <span style="color:var(--text-dark)">${item.name} <span style="color:var(--text-light)">(${item.size}) x${item.quantity}</span></span>
+              <span style="font-weight:600;color:var(--maroon)">₹${item.price*item.quantity}</span>
+            </div>`).join('')}
+        </div>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <a href="/pages/track.html?id=${o.tracking_id}" class="btn btn-outline" style="padding:8px 18px;font-size:.85rem">
+            Track Order
+          </a>
+          ${o.status === 'delivered' ? `<button class="btn btn-primary" style="padding:8px 18px;font-size:.85rem" onclick="reorder('${o.id}')">Reorder</button>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (err) {
+    document.getElementById('ordersContent').innerHTML = '<p style="text-align:center;color:var(--text-light)">Could not load orders.</p>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadOrders);
+</script>
+</body>
+</html>

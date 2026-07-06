@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Collections – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html" class="active">Collections</a></li>
+      <li><a href="/pages/about.html">About</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge">0</span>
+      </button>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <p class="hero-eyebrow">All Styles</p>
+  <h1>Our Collections</h1>
+  <p>Pure cotton kurtis for every mood and occasion.</p>
+</div>
+
+<div class="container">
+  <div class="collections-layout">
+    <aside class="filters-panel">
+      <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">Filter</h3>
+      <div class="filter-group">
+        <h4>Style</h4>
+        <label class="filter-option"><input type="checkbox" value="square"/> Square Neck</label>
+        <label class="filter-option"><input type="checkbox" value="bell"/> Bell Sleeves</label>
+        <label class="filter-option"><input type="checkbox" value="halter"/> Halter Neck</label>
+        <label class="filter-option"><input type="checkbox" value="straight"/> Straight Cut</label>
+        <label class="filter-option"><input type="checkbox" value="boat"/> Boat Neck</label>
+        <label class="filter-option"><input type="checkbox" value="corset"/> Corset Back</label>
+      </div>
+      <div class="filter-group">
+        <h4>Price</h4>
+        <label class="filter-option"><input type="checkbox" value="under750"/> Under ₹750</label>
+        <label class="filter-option"><input type="checkbox" value="750to900"/> ₹750 – ₹900</label>
+        <label class="filter-option"><input type="checkbox" value="above900"/> ₹900+</label>
+      </div>
+    </aside>
+    <div>
+      <div class="collections-toolbar">
+        <span class="results-count" id="resultsCount">Loading...</span>
+        <select class="sort-select" id="sortSelect">
+          <option value="new">Newest First</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+        </select>
+      </div>
+      <div class="all-products-grid" id="allProducts">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="../images/logo.jpeg" alt="Sakhi" class="footer-logo-img"/>
+        <p class="brand-tagline">Craft worn daily.<br/>Made for every woman.</p>
+      </div>
+      <div class="footer-links"><h4>Shop</h4><ul>
+        <li><a href="/pages/collections.html">All Kurtis</a></li>
+        <li><a href="/pages/collections.html?cat=square">Square Neck</a></li>
+        <li><a href="/pages/collections.html?cat=bell">Bell Sleeves</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Help</h4><ul>
+        <li><a href="/pages/contact.html">Contact</a></li>
+        <li><a href="/pages/track.html">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Company</h4><ul>
+        <li><a href="/pages/about.html">About</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+let allProducts = [];
+
+async function loadProducts() {
+  try {
+    const urlCat = new URLSearchParams(window.location.search).get('cat');
+    let url = `${API_URL}/api/products`;
+    if (urlCat) {
+      url += `?category=${urlCat}`;
+      const cb = document.querySelector(`.filter-option input[value="${urlCat}"]`);
+      if (cb) cb.checked = true;
+    }
+    const res = await fetch(url);
+    const data = await res.json();
+    allProducts = data.products || [];
+    renderProducts(allProducts);
+  } catch (err) {
+    document.getElementById('allProducts').innerHTML =
+      `<p style="grid-column:1/-1;text-align:center;color:var(--text-light);padding:3rem">Could not load products.</p>`;
+  }
+}
+
+function renderProducts(list) {
+  const el = document.getElementById('allProducts');
+  const count = document.getElementById('resultsCount');
+  count.textContent = `${list.length} products`;
+  if (list.length === 0) {
+    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--text-light)"><p style="font-size:3rem">👗</p><p>No products found</p></div>`;
+    return;
+  }
+  el.innerHTML = list.map(p => productCard(p)).join('');
+}
+
+// Filters
+document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const checked = [...document.querySelectorAll('.filter-option input:checked')].map(c => c.value);
+    if (checked.length === 0) { renderProducts(allProducts); return; }
+    const filtered = allProducts.filter(p =>
+      checked.some(v => {
+        if (v === 'under750') return p.price < 750;
+        if (v === '750to900') return p.price >= 750 && p.price <= 900;
+        if (v === 'above900') return p.price > 900;
+        return p.category === v;
+      })
+    );
+    renderProducts(filtered);
+  });
+});
+
+// Sort
+document.getElementById('sortSelect').addEventListener('change', function() {
+  let sorted = [...allProducts];
+  if (this.value === 'low') sorted.sort((a,b) => a.price - b.price);
+  else if (this.value === 'high') sorted.sort((a,b) => b.price - a.price);
+  renderProducts(sorted);
+});
+
+document.addEventListener('DOMContentLoaded', loadProducts);
+</script>
+</body>
+</html>

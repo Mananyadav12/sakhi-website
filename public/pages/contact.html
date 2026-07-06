@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Contact – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/about.html">About</a></li>
+      <li><a href="/pages/contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <p class="hero-eyebrow">Get In Touch</p>
+  <h1>We'd love to hear from you</h1>
+  <p>Questions, feedback, or just want to say hello? We reply within 24 hours.</p>
+</div>
+
+<div class="container">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h2>Let's talk</h2>
+      <p>Whether it's about an order, a return, or a partnership — we're here for you.</p>
+      <div class="contact-detail">
+        <div class="contact-icon">📧</div>
+        <div><h4>Email</h4><p>hello@sakhi.co</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">📱</div>
+        <div><h4>WhatsApp</h4><p>+91 98765 43210</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">📍</div>
+        <div><h4>Based In</h4><p>Indore, Madhya Pradesh, India</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">🕐</div>
+        <div><h4>Support Hours</h4><p>Mon–Sat, 10am–6pm IST</p></div>
+      </div>
+    </div>
+    <div class="contact-form-wrap">
+      <h3>Send us a message</h3>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Priya" required/></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Sharma" required/></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="priya@email.com" required/></div>
+        <div class="form-group"><label>Topic</label>
+          <select>
+            <option>Order Query</option>
+            <option>Returns & Refunds</option>
+            <option>Product Question</option>
+            <option>Feedback</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Tell us how we can help..." required></textarea></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send Message</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  showToast('✅ Message sent! We will reply within 24 hours.');
+  this.reset();
+});
+</script>
+</body>
+</html>

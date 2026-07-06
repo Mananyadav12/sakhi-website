@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Checkout – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:120px 2rem 3rem">
+  <p class="hero-eyebrow">Almost There</p>
+  <h1>Checkout</h1>
+</div>
+
+<div class="container">
+  <div class="checkout-layout">
+    <div class="checkout-form-wrap">
+      <h3>Delivery Details</h3>
+      <form id="checkoutForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="custName" placeholder="Priya Sharma" required/>
+          </div>
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" id="custPhone" placeholder="+91 98765 43210" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="custEmail" placeholder="priya@email.com" required/>
+        </div>
+        <div class="form-group">
+          <label>Full Address *</label>
+          <input type="text" id="custAddress" placeholder="House No, Street, Area" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" id="custCity" placeholder="Indore" required/>
+          </div>
+          <div class="form-group">
+            <label>State *</label>
+            <input type="text" id="custState" placeholder="Madhya Pradesh" required/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pincode *</label>
+            <input type="text" id="custPincode" placeholder="452001" maxlength="6" required/>
+          </div>
+          <div class="form-group">
+            <label>Landmark (optional)</label>
+            <input type="text" id="custLandmark" placeholder="Near XYZ"/>
+          </div>
+        </div>
+
+        <!-- DELIVERY OPTIONS -->
+        <div style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0">
+          <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.75rem">🚚 Delivery Options</p>
+          <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:.75rem;cursor:pointer">
+            <input type="radio" name="delivery" value="standard" checked onchange="updateTotals()" style="margin-top:3px;accent-color:#7B1C2E"/>
+            <div>
+              <span style="font-weight:500;color:var(--text-dark)">Standard Delivery</span>
+              <span style="color:#2D8A4E;font-weight:600;margin-left:8px">FREE</span>
+              <p style="font-size:.78rem;color:var(--text-light);margin-top:2px">5-7 business days</p>
+            </div>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">
+            <input type="radio" name="delivery" value="express" onchange="updateTotals()" style="margin-top:3px;accent-color:#7B1C2E"/>
+            <div>
+              <span style="font-weight:500;color:var(--text-dark)">Express Delivery</span>
+              <span style="color:var(--maroon);font-weight:600;margin-left:8px">+₹99</span>
+              <p style="font-size:.78rem;color:var(--text-light);margin-top:2px">2-3 business days</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- PAYMENT METHOD -->
+        <div style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0">
+          <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.75rem">💳 Payment Method</p>
+          <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:.75rem;cursor:pointer">
+            <input type="radio" name="payment" value="online" checked onchange="updateTotals()" style="margin-top:3px;accent-color:#7B1C2E"/>
+            <div>
+              <span style="font-weight:500;color:var(--text-dark)">Online Payment</span>
+              <p style="font-size:.78rem;color:var(--text-light);margin-top:2px">UPI, Cards, NetBanking, Wallets — Secured by Razorpay 🔒</p>
+            </div>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">
+            <input type="radio" name="payment" value="cod" onchange="updateTotals()" style="margin-top:3px;accent-color:#7B1C2E"/>
+            <div>
+              <span style="font-weight:500;color:var(--text-dark)">Cash on Delivery (COD)</span>
+              <span style="color:var(--maroon);font-weight:600;margin-left:8px">+₹50</span>
+              <p style="font-size:.78rem;color:var(--text-light);margin-top:2px">Pay when order arrives at your door</p>
+            </div>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="payBtn" style="width:100%;justify-content:center;font-size:1rem;padding:16px">
+          Pay & Place Order →
+        </button>
+      </form>
+    </div>
+
+    <div class="order-summary-box">
+      <h3>Your Order</h3>
+      <div id="checkoutItems"></div>
+      <div class="summary-row" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(201,146,42,.2)">
+        <span>Subtotal</span><span id="checkoutSubtotal">₹0</span>
+      </div>
+      <div class="summary-row">
+        <span>Delivery</span><span id="deliveryAmt" style="color:#2D8A4E">FREE</span>
+      </div>
+      <div class="summary-row">
+        <span>COD Charges</span><span id="codAmt">—</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span><span id="checkoutTotal">₹0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+let deliveryCharge = 0;
+let codCharge = 0;
+
+function updateTotals() {
+  const subtotal = cartTotal();
+  const deliveryVal = document.querySelector('input[name="delivery"]:checked')?.value;
+  const paymentVal = document.querySelector('input[name="payment"]:checked')?.value;
+
+  deliveryCharge = deliveryVal === 'express' ? 99 : 0;
+  codCharge = paymentVal === 'cod' ? 50 : 0;
+
+  const total = subtotal + deliveryCharge + codCharge;
+
+  document.getElementById('checkoutSubtotal').textContent = `₹${subtotal}`;
+  document.getElementById('deliveryAmt').textContent = deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge}`;
+  document.getElementById('deliveryAmt').style.color = deliveryCharge === 0 ? '#2D8A4E' : 'var(--maroon)';
+  document.getElementById('codAmt').textContent = codCharge > 0 ? `₹${codCharge}` : '—';
+  document.getElementById('checkoutTotal').textContent = `₹${total}`;
+
+  document.getElementById('payBtn').textContent = paymentVal === 'cod' ? 'Place Order (COD) →' : 'Pay & Place Order →';
+}
+
+function loadSummary() {
+  const cart = getCart();
+  if (cart.length === 0) { location.href = '/pages/cart.html'; return; }
+  const el = document.getElementById('checkoutItems');
+  el.innerHTML = cart.map(i => `
+    <div class="checkout-item">
+      <span>${i.name} (${i.size}) x${i.quantity}</span>
+      <span>₹${i.price * i.quantity}</span>
+    </div>`).join('');
+  updateTotals();
+}
+
+document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('payBtn');
+  btn.textContent = 'Processing...';
+  btn.disabled = true;
+
+  const cart = getCart();
+  const subtotal = cartTotal();
+  const total = subtotal + deliveryCharge + codCharge;
+  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
+  const deliveryType = document.querySelector('input[name="delivery"]:checked')?.value;
+
+  const orderData = {
+    customer_name: document.getElementById('custName').value,
+    customer_email: document.getElementById('custEmail').value,
+    customer_phone: document.getElementById('custPhone').value,
+    address: document.getElementById('custAddress').value,
+    city: document.getElementById('custCity').value,
+    state: document.getElementById('custState').value,
+    pincode: document.getElementById('custPincode').value,
+    items: cart,
+    total_amount: total,
+    payment_method: paymentMethod,
+    delivery_type: deliveryType
+  };
+
+  try {
+    const orderRes = await fetch(`${API_URL}/api/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+    const orderResult = await orderRes.json();
+
+    // COD — seedha order place
+    if (paymentMethod === 'cod') {
+        const orderRes = await fetch(`${API_URL}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        const orderResult = await orderRes.json();
+        localStorage.removeItem('sakhi_cart');
+        location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}`;
+        return;
+    }
+
+    // Online payment — Razorpay
+    const payRes = await fetch(`${API_URL}/api/payment/create-order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: total, orderId: orderResult.orderId })
+    });
+    const payData = await payRes.json();
+
+    const options = {
+      key: payData.keyId,
+      amount: payData.amount,
+      currency: 'INR',
+      name: 'Sakhi.co',
+      description: 'Handcrafted Kurtis',
+      order_id: payData.razorpayOrderId,
+      handler: async function(response) {
+        const verifyRes = await fetch(`${API_URL}/api/payment/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            orderId: orderResult.orderId
+          })
+        });
+        const verifyData = await verifyRes.json();
+        if (verifyData.success) {
+          localStorage.removeItem('sakhi_cart');
+          location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}&method=online`;
+        }
+      },
+      prefill: {
+        name: orderData.customer_name,
+        email: orderData.customer_email,
+        contact: orderData.customer_phone
+      },
+      theme: { color: '#7B1C2E' }
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
+    btn.textContent = 'Pay & Place Order →';
+    btn.disabled = false;
+  } catch (err) {
+    showToast('Something went wrong! Please try again.', 'error');
+    btn.textContent = paymentMethod === 'cod' ? 'Place Order (COD) →' : 'Pay & Place Order →';
+    btn.disabled = false;
+  }
+});
+
+document.addEventListener('DOMContentLoaded', loadSummary);
+</script>
+</body>
+</html>

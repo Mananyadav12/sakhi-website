@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Product – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/about.html">About</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge">0</span>
+      </button>
+      <div id="authBtn"></div>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:90px">
+  <div id="productDetail">
+    <!-- Skeleton loader -->
+    <div class="product-detail-grid">
+      <div class="skeleton" style="aspect-ratio:3/4;border-radius:20px"></div>
+      <div style="padding-top:1rem">
+        <div class="skeleton" style="height:40px;width:60%;border-radius:8px;margin-bottom:1rem"></div>
+        <div class="skeleton" style="height:24px;width:40%;border-radius:8px;margin-bottom:2rem"></div>
+        <div class="skeleton" style="height:120px;border-radius:8px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+let currentProduct = null;
+let selectedSize = null;
+
+async function loadProduct() {
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (!id) { location.href = '/pages/collections.html'; return; }
+
+  try {
+    const res = await fetch(`${API_URL}/api/products/${id}`);
+    const data = await res.json();
+    currentProduct = data.product;
+    document.title = `${currentProduct.name} – Sakhi.co`;
+    renderProduct(currentProduct);
+  } catch (err) {
+    document.getElementById('productDetail').innerHTML =
+      `<p style="text-align:center;padding:4rem;color:var(--text-light)">Product not found.</p>`;
+  }
+}
+
+function renderProduct(p) {
+  const discount = p.mrp > p.price ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
+  const sizeStock = p.size_stock || {};
+  const availableSizes = p.sizes || ['S','M','L','XL','XXL'];
+  const allSizes = ['XS','S','M','L','XL','XXL','3XL','4XL'];
+
+  // Check sold out
+  const hasSizeStock = Object.keys(sizeStock).length > 0;
+  const totalStock = Object.values(sizeStock).reduce((sum, qty) => sum + qty, 0);
+  const isSoldOut = hasSizeStock && totalStock === 0;
+
+  // Image
+  const imgHTML = p.images && p.images.length > 0
+    ? `<img src="${p.images[0]}" alt="${p.name}" class="detail-main-img"
+        onerror="this.parentElement.innerHTML='<div class=detail-img-placeholder>👗</div>'"/>`
+    : `<div class="detail-img-placeholder">👗</div>`;
+
+  // Sizes HTML
+  let sizesHTML = '';
+  if (isSoldOut) {
+    sizesHTML = `
+      <div style="background:#f8d7da;border:1px solid #f5c6cb;border-radius:12px;padding:14px;text-align:center;margin:1rem 0">
+        <span style="color:#58151c;font-weight:700;font-size:1.1rem">❌ Sold Out</span>
+        <p style="color:#58151c;font-size:.8rem;margin-top:.25rem">This product is currently unavailable</p>
+      </div>`;
+  } else {
+    const sizesToShow = hasSizeStock
+      ? allSizes.filter(s => sizeStock.hasOwnProperty(s))
+      : availableSizes;
+
+    sizesHTML = `
+      <p class="size-label" style="font-size:.85rem;font-weight:600;color:var(--text-mid);margin-bottom:.75rem">
+        Select Size: ${selectedSize ? `<span style="color:var(--maroon);font-weight:700">${selectedSize}</span>` : ''}
+      </p>
+      <div class="size-options" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem">
+        ${sizesToShow.map(s => {
+          const qty = sizeStock[s];
+          const isUnavailable = hasSizeStock && qty === 0;
+          const isLow = hasSizeStock && qty > 0 && qty <= 5;
+          return `
+            <button
+              class="size-btn ${isUnavailable ? 'out-of-stock' : ''} ${selectedSize === s ? 'selected' : ''}"
+              onclick="${isUnavailable ? '' : `selectSize('${s}', this)`}"
+              ${isUnavailable ? 'disabled' : ''}
+              style="position:relative;${isUnavailable ? 'opacity:.45;cursor:not-allowed;text-decoration:line-through;background:var(--cream-dark);' : ''}">
+              ${s}
+              ${isLow ? `<span style="position:absolute;top:-8px;right:-4px;background:#e67e22;color:#fff;font-size:.58rem;padding:1px 5px;border-radius:10px;font-weight:700;white-space:nowrap">Low</span>` : ''}
+              ${isUnavailable ? `<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#c0392b;font-size:1.2rem;pointer-events:none">✕</span>` : ''}
+            </button>`;
+        }).join('')}
+      </div>`;
+  }
+
+  document.getElementById('productDetail').innerHTML = `
+    <div class="product-detail-grid">
+      <div class="detail-images">
+        ${imgHTML}
+        ${p.images && p.images.length > 1 ? `
+        <div style="display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap">
+          ${p.images.map((img, i) => `
+            <img src="${img}" alt="${p.name} ${i+1}"
+              style="width:72px;height:90px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid ${i===0?'var(--maroon)':'transparent'};transition:border .2s"
+              onclick="document.querySelector('.detail-main-img').src='${img}';this.parentElement.querySelectorAll('img').forEach(el=>el.style.borderColor='transparent');this.style.borderColor='var(--maroon)'"/>
+          `).join('')}
+        </div>` : ''}
+      </div>
+
+      <div class="detail-info">
+        <p style="color:var(--text-light);font-size:.8rem;margin-bottom:.4rem;text-transform:capitalize;letter-spacing:.5px">
+          ${p.category} Kurti
+        </p>
+        <h1 style="font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);color:var(--maroon-dark);margin-bottom:.75rem;line-height:1.2">
+          ${p.name}
+        </h1>
+
+        <!-- PRICE -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span style="font-size:1.8rem;font-weight:700;color:var(--maroon)">₹${p.price}</span>
+          ${p.mrp ? `<span style="font-size:1rem;color:var(--text-light);text-decoration:line-through">₹${p.mrp}</span>` : ''}
+          ${discount > 0 ? `<span style="background:#e8f5ed;color:#2D8A4E;font-size:.85rem;font-weight:700;padding:4px 10px;border-radius:20px">${discount}% off</span>` : ''}
+        </div>
+
+        <!-- DESCRIPTION -->
+        <p style="color:var(--text-mid);line-height:1.75;margin-bottom:1.5rem;font-size:.95rem">
+          ${p.description || 'Beautiful handcrafted kurti in 100% pure cotton. Made with love by skilled artisans.'}
+        </p>
+
+        <!-- SIZES -->
+        ${sizesHTML}
+
+        <!-- STOCK STATUS -->
+        ${!isSoldOut ? `
+        <p style="font-size:.8rem;margin-bottom:1.5rem;${totalStock > 0 && totalStock <= 10 ? 'color:#e67e22;font-weight:600' : 'color:#2D8A4E'}">
+          ${hasSizeStock
+            ? (totalStock > 10 ? '✅ In Stock' : totalStock > 0 ? `⚠️ Only ${totalStock} pieces left!` : '')
+            : (p.stock > 10 ? '✅ In Stock' : p.stock > 0 ? `⚠️ Only ${p.stock} left!` : '')}
+        </p>` : ''}
+
+        <!-- ACTION BUTTONS -->
+        <div class="detail-actions" style="display:flex;gap:1rem;margin-bottom:1.5rem">
+          ${isSoldOut
+            ? `<button class="btn btn-primary" style="flex:1;justify-content:center;opacity:.5;cursor:not-allowed" disabled>
+                Sold Out
+               </button>`
+            : `<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="handleAddToCart()">
+                Add to Cart 🛍️
+               </button>
+               <button class="btn btn-outline" onclick="handleBuyNow()">
+                Buy Now →
+               </button>`
+          }
+        </div>
+
+        <!-- ASSURANCE -->
+        <div style="background:var(--cream-dark);border-radius:14px;padding:1.25rem">
+          <div style="display:flex;flex-direction:column;gap:.6rem">
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
+              🚚 <span>Free shipping on orders above ₹999</span>
+            </p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
+              🔄 <span>7-day hassle-free returns</span>
+            </p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
+              💳 <span>UPI, Cards, NetBanking & COD accepted</span>
+            </p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
+              🌿 <span>100% pure cotton — skin-friendly fabric</span>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- YOU MAY ALSO LIKE -->
+    <div style="margin-top:4rem">
+      <div class="section-header">
+        <p class="section-eyebrow">Explore More</p>
+        <h2 class="section-title">You may also like</h2>
+      </div>
+      <div class="products-grid" id="relatedProducts">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    </div>`;
+
+  // Load related products
+  loadRelated(p.category, p.id);
+}
+
+function selectSize(size, btn) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedSize = size;
+  // Update size label
+  const label = document.querySelector('.size-label');
+  if (label) label.innerHTML = `Select Size: <span style="color:var(--maroon);font-weight:700">${size}</span>`;
+}
+
+function handleAddToCart() {
+  if (!selectedSize) {
+    showToast('Please select a size first!', 'error');
+    // Shake size options
+    document.querySelector('.size-options')?.animate(
+      [{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],
+      {duration:300,iterations:2}
+    );
+    return;
+  }
+  addToCart(currentProduct, selectedSize);
+}
+
+function handleBuyNow() {
+  if (!selectedSize) {
+    showToast('Please select a size first!', 'error');
+    return;
+  }
+  addToCart(currentProduct, selectedSize);
+  location.href = '/pages/cart.html';
+}
+
+async function loadRelated(category, currentId) {
+  try {
+    const res = await fetch(`${API_URL}/api/products?category=${category}`);
+    const data = await res.json();
+    const related = (data.products || []).filter(p => p.id !== currentId).slice(0, 4);
+    const el = document.getElementById('relatedProducts');
+    if (!el) return;
+    if (related.length === 0) {
+      el.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-light)">No related products found.</p>';
+      return;
+    }
+    el.innerHTML = related.map(p => productCard(p)).join('');
+  } catch (err) {
+    console.log('Related load error:', err.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadProduct);
+</script>
+</body>
+</html>
