@@ -91,7 +91,25 @@
 <script>
 document.getElementById('contactForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  showToast('✅ Message sent! We will reply within 24 hours.');
+  
+  // Saari fields ka data nikal lo
+  const firstName = this.querySelector('input[type="text"]:nth-of-type(1)').value || '';
+  const lastName = this.querySelector('input[type="text"]:nth-of-type(2)').value || '';
+  const email = this.querySelector('input[type="email"]').value;
+  const topic = this.querySelector('select').value;
+  const message = this.querySelector('textarea').value;
+  
+  // Ek mast format mein message taiyar karo
+  const fullMessage = `*New Query on Sakhi.co* 🌸%0A%0A` +
+                      `*Name:* ${firstName} ${lastName}%0A` +
+                      `*Email:* ${email}%0A` +
+                      `*Topic:* ${topic}%0A` +
+                      `*Message:* ${message}`;
+                      
+  // WhatsApp par redirect kar do
+  window.open(`https://wa.me/919109479269?text=${fullMessage}`, '_blank');
+  
+  showToast('✅ Redirecting to WhatsApp...');
   this.reset();
 });
 </script>
