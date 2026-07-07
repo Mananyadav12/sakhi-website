@@ -58,12 +58,25 @@
       <h3>Send us a message</h3>
       <form id="contactForm">
         <div class="form-row">
-          <div class="form-group"><label>First Name</label><input type="text" placeholder="Priya" required/></div>
-          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Sharma" required/></div>
+          <!-- Dono inputs mein sahi IDs jod di hain 👇 -->
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="cFirstName" placeholder="Priya" required/>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="cLastName" placeholder="Sharma" required/>
+          </div>
         </div>
-        <div class="form-group"><label>Email</label><input type="email" placeholder="priya@email.com" required/></div>
-        <div class="form-group"><label>Topic</label>
-          <select>
+        <!-- Email input mein ID 👇 -->
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="cEmail" placeholder="priya@email.com" required/>
+        </div>
+        <!-- Select tag mein ID 👇 -->
+        <div class="form-group">
+          <label>Topic</label>
+          <select id="cTopic">
             <option>Order Query</option>
             <option>Returns & Refunds</option>
             <option>Product Question</option>
@@ -71,7 +84,11 @@
             <option>Other</option>
           </select>
         </div>
-        <div class="form-group"><label>Message</label><textarea placeholder="Tell us how we can help..." required></textarea></div>
+        <!-- Textarea mein ID 👇 -->
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="cMessage" placeholder="Tell us how we can help..." required></textarea>
+        </div>
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send Message</button>
       </form>
     </div>
