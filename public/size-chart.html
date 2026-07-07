@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Size Chart – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:140px 2rem 4rem">
+  <p class="hero-eyebrow">Find Your Perfect Fit</p>
+  <h1>Size Chart</h1>
+  <p>Measure yourself correctly to find your perfect Sakhi kurti size</p>
+</div>
+
+<div class="container" style="padding:4rem 2rem 6rem;max-width:900px">
+
+  <!-- HOW TO MEASURE -->
+  <div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem">
+    <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">📏 How to Measure</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+      <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
+        <p style="font-size:2rem;margin-bottom:.5rem">👚</p>
+        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem">Chest</p>
+        <p style="font-size:.82rem;color:var(--text-mid)">Measure around the fullest part of your chest, keeping the tape parallel to the ground</p>
+      </div>
+      <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
+        <p style="font-size:2rem;margin-bottom:.5rem">📐</p>
+        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem">Waist</p>
+        <p style="font-size:.82rem;color:var(--text-mid)">Measure around the narrowest part of your waist, usually 1 inch above your navel</p>
+      </div>
+      <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
+        <p style="font-size:2rem;margin-bottom:.5rem">📏</p>
+        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem">Hips</p>
+        <p style="font-size:.82rem;color:var(--text-mid)">Measure around the fullest part of your hips, usually 8-9 inches below your waist</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIZE TABLE -->
+  <div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem;overflow-x:auto">
+    <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">📊 Size Guide (in inches)</h2>
+    <table style="width:100%;border-collapse:collapse;min-width:500px">
+      <thead>
+        <tr style="background:var(--maroon)">
+          <th style="padding:14px;text-align:left;color:#E8B84B;font-size:.85rem;border-radius:10px 0 0 0">Size</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem">Chest (in)</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem">Waist (in)</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem">Hips (in)</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem;border-radius:0 10px 0 0">Kurti Length</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${[
+          ['XS', '32', '26', '35', '44'],
+          ['S', '34', '28', '37', '44'],
+          ['M', '36', '30', '39', '46'],
+          ['L', '38', '32', '41', '46'],
+          ['XL', '40', '34', '43', '48'],
+          ['XXL', '42', '36', '45', '48'],
+          ['3XL', '44', '38', '47', '50'],
+          ['4XL', '46', '40', '49', '50'],
+        ].map((row, i) => `
+          <tr style="background:${i % 2 === 0 ? 'var(--cream)' : 'var(--white)'}">
+            <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">${row[0]}</td>
+            <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">${row[1]}</td>
+            <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">${row[2]}</td>
+            <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">${row[3]}</td>
+            <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">${row[4]}"</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+    <p style="color:var(--text-light);font-size:.8rem;margin-top:1rem">* All measurements are approximate. If you're between sizes, we recommend sizing up.</p>
+  </div>
+
+  <!-- TIPS -->
+  <div style="background:var(--maroon);border-radius:20px;padding:2.5rem">
+    <h2 style="font-family:var(--font-display);color:var(--gold-light);margin-bottom:1.25rem">💡 Pro Tips</h2>
+    <ul style="color:rgba(255,255,255,.85);line-height:2;margin-left:1.5rem">
+      <li>Always measure over your undergarments</li>
+      <li>Keep the measuring tape snug but not tight</li>
+      <li>For a relaxed fit, go 1 size up</li>
+      <li>Our kurtis have 1-2 inch ease built in</li>
+      <li>Still unsure? <a href="/pages/contact.html" style="color:var(--gold-light);font-weight:600">Contact us</a> — we'll help!</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+</body>
+</html>

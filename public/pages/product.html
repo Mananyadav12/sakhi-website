@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Product – Sakhi.co</title>
+<meta name="description" content="Shop handcrafted pure cotton kurtis at Sakhi.co. Starting ₹649. Free shipping above ₹999."/>
 <link rel="stylesheet" href="../css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 </head>
@@ -38,7 +39,6 @@
 
 <div class="container" style="padding-top:90px">
   <div id="productDetail">
-    <!-- Skeleton loader -->
     <div class="product-detail-grid">
       <div class="skeleton" style="aspect-ratio:3/4;border-radius:20px"></div>
       <div style="padding-top:1rem">
@@ -48,6 +48,7 @@
       </div>
     </div>
   </div>
+  <div id="reviewsSection"></div>
 </div>
 
 <footer class="footer">
@@ -65,10 +66,12 @@
 <script>
 let currentProduct = null;
 let selectedSize = null;
+let currentProductId = null;
 
 async function loadProduct() {
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id) { location.href = '/pages/collections.html'; return; }
+  currentProductId = id;
 
   try {
     const res = await fetch(`${API_URL}/api/products/${id}`);
@@ -76,6 +79,7 @@ async function loadProduct() {
     currentProduct = data.product;
     document.title = `${currentProduct.name} – Sakhi.co`;
     renderProduct(currentProduct);
+    loadReviews(id);
   } catch (err) {
     document.getElementById('productDetail').innerHTML =
       `<p style="text-align:center;padding:4rem;color:var(--text-light)">Product not found.</p>`;
@@ -88,18 +92,15 @@ function renderProduct(p) {
   const availableSizes = p.sizes || ['S','M','L','XL','XXL'];
   const allSizes = ['XS','S','M','L','XL','XXL','3XL','4XL'];
 
-  // Check sold out
   const hasSizeStock = Object.keys(sizeStock).length > 0;
   const totalStock = Object.values(sizeStock).reduce((sum, qty) => sum + qty, 0);
   const isSoldOut = hasSizeStock && totalStock === 0;
 
-  // Image
   const imgHTML = p.images && p.images.length > 0
     ? `<img src="${p.images[0]}" alt="${p.name}" class="detail-main-img"
         onerror="this.parentElement.innerHTML='<div class=detail-img-placeholder>👗</div>'"/>`
     : `<div class="detail-img-placeholder">👗</div>`;
 
-  // Sizes HTML
   let sizesHTML = '';
   if (isSoldOut) {
     sizesHTML = `
@@ -116,7 +117,7 @@ function renderProduct(p) {
       <p class="size-label" style="font-size:.85rem;font-weight:600;color:var(--text-mid);margin-bottom:.75rem">
         Select Size: ${selectedSize ? `<span style="color:var(--maroon);font-weight:700">${selectedSize}</span>` : ''}
       </p>
-      <div class="size-options" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem">
+      <div class="size-options" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem">
         ${sizesToShow.map(s => {
           const qty = sizeStock[s];
           const isUnavailable = hasSizeStock && qty === 0;
@@ -132,7 +133,10 @@ function renderProduct(p) {
               ${isUnavailable ? `<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#c0392b;font-size:1.2rem;pointer-events:none">✕</span>` : ''}
             </button>`;
         }).join('')}
-      </div>`;
+      </div>
+      <a href="/pages/size-chart.html" style="font-size:.78rem;color:var(--maroon);text-decoration:none;display:inline-block;margin-bottom:1.25rem">
+        📏 Size Chart →
+      </a>`;
   }
 
   document.getElementById('productDetail').innerHTML = `
@@ -157,22 +161,18 @@ function renderProduct(p) {
           ${p.name}
         </h1>
 
-        <!-- PRICE -->
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap">
           <span style="font-size:1.8rem;font-weight:700;color:var(--maroon)">₹${p.price}</span>
           ${p.mrp ? `<span style="font-size:1rem;color:var(--text-light);text-decoration:line-through">₹${p.mrp}</span>` : ''}
           ${discount > 0 ? `<span style="background:#e8f5ed;color:#2D8A4E;font-size:.85rem;font-weight:700;padding:4px 10px;border-radius:20px">${discount}% off</span>` : ''}
         </div>
 
-        <!-- DESCRIPTION -->
         <p style="color:var(--text-mid);line-height:1.75;margin-bottom:1.5rem;font-size:.95rem">
           ${p.description || 'Beautiful handcrafted kurti in 100% pure cotton. Made with love by skilled artisans.'}
         </p>
 
-        <!-- SIZES -->
         ${sizesHTML}
 
-        <!-- STOCK STATUS -->
         ${!isSoldOut ? `
         <p style="font-size:.8rem;margin-bottom:1.5rem;${totalStock > 0 && totalStock <= 10 ? 'color:#e67e22;font-weight:600' : 'color:#2D8A4E'}">
           ${hasSizeStock
@@ -180,57 +180,37 @@ function renderProduct(p) {
             : (p.stock > 10 ? '✅ In Stock' : p.stock > 0 ? `⚠️ Only ${p.stock} left!` : '')}
         </p>` : ''}
 
-        <!-- ACTION BUTTONS -->
         <div class="detail-actions" style="display:flex;gap:1rem;margin-bottom:1.5rem">
           ${isSoldOut
-            ? `<button class="btn btn-primary" style="flex:1;justify-content:center;opacity:.5;cursor:not-allowed" disabled>
-                Sold Out
-               </button>`
-            : `<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="handleAddToCart()">
-                Add to Cart 🛍️
-               </button>
-               <button class="btn btn-outline" onclick="handleBuyNow()">
-                Buy Now →
-               </button>`
+            ? `<button class="btn btn-primary" style="flex:1;justify-content:center;opacity:.5;cursor:not-allowed" disabled>Sold Out</button>`
+            : `<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="handleAddToCart()">Add to Cart 🛍️</button>
+               <button class="btn btn-outline" onclick="handleBuyNow()">Buy Now →</button>`
           }
         </div>
 
-        <!-- ASSURANCE -->
         <div style="background:var(--cream-dark);border-radius:14px;padding:1.25rem">
           <div style="display:flex;flex-direction:column;gap:.6rem">
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
-              🚚 <span>Free shipping on orders above ₹999</span>
-            </p>
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
-              🔄 <span>7-day hassle-free returns</span>
-            </p>
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
-              💳 <span>UPI, Cards, NetBanking & COD accepted</span>
-            </p>
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">
-              🌿 <span>100% pure cotton — skin-friendly fabric</span>
-            </p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">🚚 <span>Free shipping on orders above ₹999</span></p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">🔄 <span><a href="/pages/refund.html" style="color:var(--maroon);text-decoration:none">7-day hassle-free returns</a></span></p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">💳 <span>UPI, Cards, NetBanking & COD accepted</span></p>
+            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">🌿 <span>100% pure cotton — skin-friendly fabric</span></p>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- YOU MAY ALSO LIKE -->
+    <!-- RELATED PRODUCTS -->
     <div style="margin-top:4rem">
       <div class="section-header">
         <p class="section-eyebrow">Explore More</p>
         <h2 class="section-title">You may also like</h2>
       </div>
       <div class="products-grid" id="relatedProducts">
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
+        <div class="skeleton"></div><div class="skeleton"></div>
+        <div class="skeleton"></div><div class="skeleton"></div>
       </div>
     </div>`;
 
-  // Load related products
   loadRelated(p.category, p.id);
 }
 
@@ -238,7 +218,6 @@ function selectSize(size, btn) {
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedSize = size;
-  // Update size label
   const label = document.querySelector('.size-label');
   if (label) label.innerHTML = `Select Size: <span style="color:var(--maroon);font-weight:700">${size}</span>`;
 }
@@ -246,7 +225,6 @@ function selectSize(size, btn) {
 function handleAddToCart() {
   if (!selectedSize) {
     showToast('Please select a size first!', 'error');
-    // Shake size options
     document.querySelector('.size-options')?.animate(
       [{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],
       {duration:300,iterations:2}
@@ -257,10 +235,7 @@ function handleAddToCart() {
 }
 
 function handleBuyNow() {
-  if (!selectedSize) {
-    showToast('Please select a size first!', 'error');
-    return;
-  }
+  if (!selectedSize) { showToast('Please select a size first!', 'error'); return; }
   addToCart(currentProduct, selectedSize);
   location.href = '/pages/cart.html';
 }
@@ -279,6 +254,115 @@ async function loadRelated(category, currentId) {
     el.innerHTML = related.map(p => productCard(p)).join('');
   } catch (err) {
     console.log('Related load error:', err.message);
+  }
+}
+
+// ── REVIEWS ──────────────────────────────────────────────
+async function loadReviews(productId) {
+  try {
+    const res = await fetch(`${API_URL}/api/reviews/${productId}`);
+    const data = await res.json();
+    const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+
+    document.getElementById('reviewsSection').innerHTML = `
+      <div style="margin-top:4rem;padding-bottom:4rem">
+        <div class="section-header">
+          <p class="section-eyebrow">Customer Reviews</p>
+          <h2 class="section-title">What people say</h2>
+        </div>
+
+        ${data.total > 0 ? `
+        <div style="background:var(--white);border-radius:16px;padding:2rem;margin-bottom:2rem;text-align:center;border:1px solid rgba(201,146,42,.15)">
+          <p style="font-size:3.5rem;font-weight:700;color:var(--maroon);line-height:1">${data.average}</p>
+          <p style="color:var(--gold);font-size:1.5rem;letter-spacing:4px;margin:.25rem 0">${stars(Math.round(data.average))}</p>
+          <p style="color:var(--text-light);font-size:.875rem">Based on ${data.total} review${data.total > 1 ? 's' : ''}</p>
+        </div>` : ''}
+
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem">
+          ${data.reviews && data.reviews.length > 0
+            ? data.reviews.map(r => `
+              <div style="background:var(--white);border-radius:16px;padding:1.5rem;border:1px solid rgba(201,146,42,.12)">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+                  <div style="display:flex;align-items:center;gap:.75rem">
+                    <div style="width:40px;height:40px;border-radius:50%;background:var(--maroon);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0">${r.user_name.charAt(0).toUpperCase()}</div>
+                    <div>
+                      <p style="font-weight:600;color:var(--maroon-dark);margin:0;font-size:.9rem">${r.user_name}</p>
+                      <p style="font-size:.75rem;color:var(--text-light);margin:0">${new Date(r.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</p>
+                    </div>
+                  </div>
+                  <span style="color:var(--gold);font-size:1rem;letter-spacing:2px">${stars(r.rating)}</span>
+                </div>
+                ${r.review ? `<p style="color:var(--text-mid);line-height:1.7;font-size:.9rem;margin:0;font-style:italic">"${r.review}"</p>` : ''}
+              </div>`).join('')
+            : '<div style="text-align:center;padding:2rem;color:var(--text-light);background:var(--white);border-radius:16px;border:1px solid rgba(201,146,42,.12)"><p style="font-size:2rem;margin-bottom:.5rem">💬</p><p>No reviews yet. Be the first!</p></div>'
+          }
+        </div>
+
+        <!-- WRITE REVIEW FORM -->
+        <div style="background:var(--white);border-radius:20px;padding:2rem;border:1px solid rgba(201,146,42,.15);box-shadow:var(--shadow)">
+          <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem;font-size:1.3rem">✍️ Write a Review</h3>
+          <form id="reviewForm">
+            <div class="form-row">
+              <div class="form-group"><label>Your Name *</label><input type="text" id="revName" placeholder="Priya Sharma" required/></div>
+              <div class="form-group"><label>Email (optional)</label><input type="email" id="revEmail" placeholder="priya@email.com"/></div>
+            </div>
+            <div class="form-group">
+              <label>Rating *</label>
+              <div style="display:flex;gap:.25rem;margin-top:.5rem">
+                ${[1,2,3,4,5].map(n => `
+                  <button type="button" onclick="setRating(${n})" id="star${n}"
+                    style="background:none;border:none;font-size:2rem;cursor:pointer;color:#ddd;padding:2px;transition:color .15s;line-height:1">★</button>`).join('')}
+              </div>
+              <input type="hidden" id="revRating"/>
+            </div>
+            <div class="form-group"><label>Your Review</label><textarea id="revText" rows="3" placeholder="Share your experience with this kurti..."></textarea></div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Submit Review 💕</button>
+          </form>
+        </div>
+      </div>`;
+
+    // Star rating
+    window.setRating = function(n) {
+      document.getElementById('revRating').value = n;
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById(`star${i}`).style.color = i <= n ? '#C9922A' : '#ddd';
+      }
+    };
+
+    // Review submit
+    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const rating = document.getElementById('revRating').value;
+      if (!rating) { showToast('Please select a rating!', 'error'); return; }
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = 'Submitting...'; btn.disabled = true;
+      try {
+        const res = await fetch(`${API_URL}/api/reviews`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            product_id: productId,
+            user_name: document.getElementById('revName').value,
+            user_email: document.getElementById('revEmail').value,
+            rating: parseInt(rating),
+            review: document.getElementById('revText').value
+          })
+        });
+        const data = await res.json();
+        if (data.review) {
+          showToast('Review submitted! Thank you 💕');
+          loadReviews(productId);
+        } else {
+          showToast(data.error || 'Please fill all required fields!', 'error');
+        }
+      } catch (err) {
+        showToast('Something went wrong!', 'error');
+      }
+      btn.textContent = 'Submit Review 💕'; btn.disabled = false;
+    });
+
+  } catch (err) {
+    console.log('Reviews error:', err.message);
   }
 }
 
