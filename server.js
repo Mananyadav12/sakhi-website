@@ -21,6 +21,7 @@ app.use('/api/orders', require('./routes/orders'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/users', require('./routes/users'));
 app.use('/api/track', require('./routes/tracking'));
 // ==================== NEWSLETTER ENDPOINT ====================
 // ✉️ Contact Form API Endpoint (Direct Brevo API)
