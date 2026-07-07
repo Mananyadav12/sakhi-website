@@ -21,8 +21,7 @@ app.use('/api/payment', require('./routes/payment'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/track', require('./routes/tracking'));
 // ==================== NEWSLETTER ENDPOINT ====================
-// ==================== NEWSLETTER ENDPOINT (Brevo) ====================
-// ✉️ Contact Form API Endpoint
+// ✉️ Contact Form API Endpoint (Direct Brevo API)
 app.post('/api/contact', async (req, res) => {
   const { name, email, topic, message } = req.body;
 
@@ -31,30 +30,63 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    // Nodemailer / Brevo transport use karke khud ko mail bhejo
-    const mailOptions = {
-      from: '"Sakhi Store Support" <kajalbharti2605@gmail.com>', // Brevo verified sender
-      to: 'kajalbharti2605@gmail.com', // Jahan aapko message chahiye
+    const https = require('https');
+
+    // Brevo API ke liye data structure taiyar karo
+    const emailData = JSON.stringify({
+      sender: { name: 'Sakhi Store Support', email: process.env.EMAIL_FROM || 'kajalbharti2605@gmail.com' },
+      to: [{ email: 'kajalbharti2605@gmail.com' }], // Jahan aapko customer ka message chahiye
       subject: `🌸 New Website Inquiry: ${topic}`,
-      html: `
-        <h3>New Contact Form Submission</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Customer Email:</strong> ${email}</p>
-        <p><strong>Topic:</strong> ${topic}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
+      htmlContent: `
+        <div style="font-family: sans-serif; max-width: 550px; margin: 0 auto; border: 2px solid #7B1C2E; padding: 25px; border-radius: 12px; background-color: #FDF8F2;">
+          <h3 style="color: #7B1C2E; border-bottom: 2px solid #7B1C2E; padding-bottom: 10px;">New Contact Form Submission</h3>
+          <p style="font-size: 15px;"><strong>Customer Name:</strong> ${name}</p>
+          <p style="font-size: 15px;"><strong>Customer Email:</strong> ${email}</p>
+          <p style="font-size: 15px;"><strong>Topic/Issue:</strong> ${topic}</p>
+          <div style="background-color: #F5EDE0; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #C9922A;">
+            <p style="margin: 0; font-weight: bold; color: #5C3040;">Message:</p>
+            <p style="margin-top: 5px; line-height: 1.6; color: #1A0A0F;">${message}</p>
+          </div>
+        </div>
       `
+    });
+
+    const options = {
+      hostname: 'api.brevo.com',
+      path: '/v3/smtp/email',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Length': Buffer.byteLength(emailData)
+      }
     };
 
-    // transporter.sendMail chala do (jo aapne pehle configure kiya tha)
-    await transporter.sendMail(mailOptions);
+    // Brevo ko direct request bhejo
+    await new Promise((resolve, reject) => {
+      const brevoReq = https.request(options, (r) => {
+        let data = '';
+        r.on('data', chunk => data += chunk);
+        r.on('end', () => {
+          if (r.statusCode >= 200 && r.statusCode < 300) resolve(data);
+          else reject(new Error(`Brevo API: ${r.statusCode} - ${data}`));
+        });
+      });
+      brevoReq.on('error', reject);
+      brevoReq.write(emailData);
+      brevoReq.end();
+    });
 
+    console.log('✅ Contact form message sent successfully from:', email);
     res.status(200).json({ message: 'Message sent successfully!' });
+
   } catch (error) {
-    console.error('Contact API Error:', error);
+    console.error('❌ Contact API Error:', error.message);
     res.status(500).json({ message: 'Internal server error, couldn\'t send mail.' });
   }
 });
+// ==================== NEWSLETTER ENDPOINT (Brevo) ====================
 app.post('/api/subscribe', async (req, res) => {
   try {
     const { email } = req.body;
