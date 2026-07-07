@@ -22,6 +22,39 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/track', require('./routes/tracking'));
 // ==================== NEWSLETTER ENDPOINT ====================
 // ==================== NEWSLETTER ENDPOINT (Brevo) ====================
+// ✉️ Contact Form API Endpoint
+app.post('/api/contact', async (req, res) => {
+  const { name, email, topic, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: 'Please fill all required fields' });
+  }
+
+  try {
+    // Nodemailer / Brevo transport use karke khud ko mail bhejo
+    const mailOptions = {
+      from: '"Sakhi Store Support" <kajalbharti2605@gmail.com>', // Brevo verified sender
+      to: 'kajalbharti2605@gmail.com', // Jahan aapko message chahiye
+      subject: `🌸 New Website Inquiry: ${topic}`,
+      html: `
+        <h3>New Contact Form Submission</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Customer Email:</strong> ${email}</p>
+        <p><strong>Topic:</strong> ${topic}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `
+    };
+
+    // transporter.sendMail chala do (jo aapne pehle configure kiya tha)
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Message sent successfully!' });
+  } catch (error) {
+    console.error('Contact API Error:', error);
+    res.status(500).json({ message: 'Internal server error, couldn\'t send mail.' });
+  }
+});
 app.post('/api/subscribe', async (req, res) => {
   try {
     const { email } = req.body;

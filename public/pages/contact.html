@@ -106,47 +106,55 @@
 <script src="../js/cart.js"></script>
 <script src="../js/main.js"></script>
 <script>
-document.getElementById('contactForm').addEventListener('submit', function(e) {
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
+  const btn = this.querySelector('button[type="submit"]');
+  const originalBtnText = btn.textContent;
+  
   try {
-    // Data check karne ke liye safe fetching
-    const fNameInput = document.getElementById('cFirstName');
-    const lNameInput = document.getElementById('cLastName');
-    const emailInput = document.getElementById('cEmail');
-    const topicInput = document.getElementById('cTopic');
-    const messageInput = document.getElementById('cMessage');
+    // 1. Data uthao
+    const firstName = document.getElementById('cFirstName').value.trim();
+    const lastName = document.getElementById('cLastName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const topic = document.getElementById('cTopic').value;
+    const message = document.getElementById('cMessage').value.trim();
 
-    // Agar upar koi id miss ho gayi ho toh console pehle hi bata dega
-    if (!fNameInput || !lNameInput || !emailInput || !topicInput || !messageInput) {
-      console.error("HTML Inputs missing! Please check if IDs are added correctly.");
-      alert("HTML fields mein IDs match nahi kar rahi hain. Ek baar IDs check karein!");
-      return;
+    // Button ko loading state mein daalo
+    btn.textContent = 'Sending Message...';
+    btn.disabled = true;
+
+    // 2. Apne Render Backend par data bhejo
+    // (Agar API variable config.js se aa raha hai toh thik, nahi toh direct Render URL daal dena)
+    const baseUrl = typeof API !== 'undefined' ? API : 'https://sakhi-website.onrender.com';
+    
+    const res = await fetch(`${baseUrl}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: `${firstName} ${lastName}`,
+        email: email,
+        topic: topic,
+        message: message
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('✅ Message sent successfully! We will get back to you soon.');
+      this.reset();
+    } else {
+      alert('❌ Failed to send message: ' + (data.message || 'Server error'));
     }
 
-    const firstName = fNameInput.value.trim();
-    const lastName = lNameInput.value.trim();
-    const email = emailInput.value.trim();
-    const topic = topicInput.value;
-    const message = messageInput.value.trim();
-    
-    // Message formatting for WhatsApp
-    const fullMessage = `*New Query on Sakhi.co* 🌸%0A%0A` +
-                        `*Name:* ${firstName} ${lastName}%0A` +
-                        `*Email:* ${email}%0A` +
-                        `*Topic:* ${topic}%0A` +
-                        `*Message:* ${message}`;
-                        
-    // WhatsApp redirect logic
-    const whatsappUrl = `https://wa.me/919302988402?text=${fullMessage}`;
-    window.open(whatsappUrl, '_blank');
-    
-    alert('✅ Redirecting to WhatsApp...');
-    this.reset();
-
   } catch (error) {
-    console.error("Form Exception caught:", error);
-    alert("Error details: " + error.message);
+    console.error("Form Submission Error:", error);
+    alert("❌ Connection error! Please try again later.");
+  } finally {
+    // Button wapas normal karo
+    btn.textContent = originalBtnText;
+    btn.disabled = false;
   }
 });
 </script>
