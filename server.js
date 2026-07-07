@@ -172,7 +172,65 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+// ==================== BREVO EMAIL HELPER FUNCTION ====================
+const sendWelcomeEmail = async (customerEmail, customerName) => {
+  const https = require('https');
 
+  const emailData = JSON.stringify({
+    sender: { name: 'Sakhi.co', email: process.env.EMAIL_FROM || 'kajalbharti2605@gmail.com' },
+    to: [{ email: customerEmail, name: customerName }],
+    subject: '🌸 Welcome to Sakhi.co – Your Account is Created! ✨',
+    htmlContent: `
+      <div style="font-family: sans-serif; max-width: 550px; margin: 0 auto; border: 2px solid #C9922A; padding: 30px; border-radius: 16px; background-color: #FDF8F2; color: #1A0A0F;">
+        <div style="text-align: center; margin-bottom: 25px;">
+          <h2 style="color: #7B1C2E; font-size: 24px; margin-bottom: 5px;">Namaste ${customerName}! ✨</h2>
+          <p style="color: #9B6070; font-size: 14px; font-style: italic; margin: 0;">Aapka account Sakhi.co par successfully create ho gaya hai.</p>
+        </div>
+        <div style="font-size: 15px; line-height: 1.8; color: #5C3040;">
+          <p>We are absolutely thrilled to have you in the <strong>Sakhi Sisterhood</strong>! 🌿 Ab aap apni pasandida handcrafted cotton kurtis ko aaram se track aur order kar sakte hain.</p>
+          <p style="background-color: #F5EDE0; border-left: 4px solid #7B1C2E; padding: 12px; border-radius: 8px; font-weight: 500;">
+            🛍️ <strong>Log In Details:</strong><br>
+            • Registered Email: ${customerEmail}<br>
+            • Status: Account Active Active! 🎉
+          </p>
+          <p>Happy Shopping, and please do let us know if you need any help!</p>
+        </div>
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed rgba(201,146,42,0.4);">
+          <p style="font-size: 12px; color: #9B6070; margin-top: 20px;">
+            Made with ❤️ in India | Sakhi.co Team<br/>Indore, Madhya Pradesh
+          </p>
+        </div>
+      </div>
+    `
+  });
+
+  const options = {
+    hostname: 'api.brevo.com',
+    path: '/v3/smtp/email',
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'api-key': process.env.BREVO_API_KEY,
+      'Content-Length': Buffer.byteLength(emailData)
+    }
+  };
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (r) => {
+      let data = '';
+      r.on('data', chunk => data += chunk);
+      r.on('end', () => {
+        if (r.statusCode >= 200 && r.statusCode < 300) resolve(data);
+        else reject(new Error(`Brevo: ${r.statusCode} - ${data}`));
+      });
+    });
+    req.on('error', reject);
+    req.write(emailData);
+    req.end();
+  });
+};
+// =====================================================================
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
