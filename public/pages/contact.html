@@ -93,33 +93,43 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
   e.preventDefault();
   
   try {
-    // ID ke jariye ekdum sahi data niklega ab
-    const firstName = document.getElementById('cFirstName').value;
-    const lastName = document.getElementById('cLastName').value;
-    const email = document.getElementById('cEmail').value;
-    const topic = document.getElementById('cTopic').value;
-    const message = document.getElementById('cMessage').value;
+    // Data check karne ke liye safe fetching
+    const fNameInput = document.getElementById('cFirstName');
+    const lNameInput = document.getElementById('cLastName');
+    const emailInput = document.getElementById('cEmail');
+    const topicInput = document.getElementById('cTopic');
+    const messageInput = document.getElementById('cMessage');
+
+    // Agar upar koi id miss ho gayi ho toh console pehle hi bata dega
+    if (!fNameInput || !lNameInput || !emailInput || !topicInput || !messageInput) {
+      console.error("HTML Inputs missing! Please check if IDs are added correctly.");
+      alert("HTML fields mein IDs match nahi kar rahi hain. Ek baar IDs check karein!");
+      return;
+    }
+
+    const firstName = fNameInput.value.trim();
+    const lastName = lNameInput.value.trim();
+    const email = emailInput.value.trim();
+    const topic = topicInput.value;
+    const message = messageInput.value.trim();
     
-    // Message text formatting
+    // Message formatting for WhatsApp
     const fullMessage = `*New Query on Sakhi.co* 🌸%0A%0A` +
                         `*Name:* ${firstName} ${lastName}%0A` +
                         `*Email:* ${email}%0A` +
                         `*Topic:* ${topic}%0A` +
                         `*Message:* ${message}`;
                         
-    // WhatsApp par redirect
-    window.open(`https://wa.me/919109479269?text=${fullMessage}`, '_blank');
+    // WhatsApp redirect logic
+    const whatsappUrl = `https://wa.me/919109479269?text=${fullMessage}`;
+    window.open(whatsappUrl, '_blank');
     
-    if (typeof showToast === 'function') {
-      showToast('✅ Redirecting to WhatsApp...');
-    } else {
-      alert('✅ Redirecting to WhatsApp...');
-    }
-    
+    alert('✅ Redirecting to WhatsApp...');
     this.reset();
+
   } catch (error) {
-    console.error("Form error:", error);
-    alert("Kuch galti hui! Console check karein.");
+    console.error("Form Exception caught:", error);
+    alert("Error details: " + error.message);
   }
 });
 </script>
