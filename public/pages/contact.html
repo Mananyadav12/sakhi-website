@@ -92,25 +92,35 @@
 document.getElementById('contactForm').addEventListener('submit', function(e) {
   e.preventDefault();
   
-  // Saari fields ka data nikal lo
-  const firstName = this.querySelector('input[type="text"]:nth-of-type(1)').value || '';
-  const lastName = this.querySelector('input[type="text"]:nth-of-type(2)').value || '';
-  const email = this.querySelector('input[type="email"]').value;
-  const topic = this.querySelector('select').value;
-  const message = this.querySelector('textarea').value;
-  
-  // Ek mast format mein message taiyar karo
-  const fullMessage = `*New Query on Sakhi.co* 🌸%0A%0A` +
-                      `*Name:* ${firstName} ${lastName}%0A` +
-                      `*Email:* ${email}%0A` +
-                      `*Topic:* ${topic}%0A` +
-                      `*Message:* ${message}`;
-                      
-  // WhatsApp par redirect kar do
-  window.open(`https://wa.me/919109479269?text=${fullMessage}`, '_blank');
-  
-  showToast('✅ Redirecting to WhatsApp...');
-  this.reset();
+  try {
+    // ID ke jariye ekdum sahi data niklega ab
+    const firstName = document.getElementById('cFirstName').value;
+    const lastName = document.getElementById('cLastName').value;
+    const email = document.getElementById('cEmail').value;
+    const topic = document.getElementById('cTopic').value;
+    const message = document.getElementById('cMessage').value;
+    
+    // Message text formatting
+    const fullMessage = `*New Query on Sakhi.co* 🌸%0A%0A` +
+                        `*Name:* ${firstName} ${lastName}%0A` +
+                        `*Email:* ${email}%0A` +
+                        `*Topic:* ${topic}%0A` +
+                        `*Message:* ${message}`;
+                        
+    // WhatsApp par redirect
+    window.open(`https://wa.me/919302988402?text=${fullMessage}`, '_blank');
+    
+    if (typeof showToast === 'function') {
+      showToast('✅ Redirecting to WhatsApp...');
+    } else {
+      alert('✅ Redirecting to WhatsApp...');
+    }
+    
+    this.reset();
+  } catch (error) {
+    console.error("Form error:", error);
+    alert("Kuch galti hui! Console check karein.");
+  }
 });
 </script>
 </body>
