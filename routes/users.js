@@ -45,78 +45,12 @@ router.post('/register', async (req, res) => {
       { expiresIn: '30d' }
     );
 
-    // ==================== 🌸 ADDED: BREVO WELCOME EMAIL LOGIC ====================
-    try {
-      const https = require('https');
-
-      const emailData = JSON.stringify({
-        sender: { name: 'Sakhi.co', email: process.env.EMAIL_FROM || 'kajalbharti2605@gmail.com' },
-        to: [{ email: data[0].email, name: data[0].name }],
-        subject: '🌸 Welcome to Sakhi.co – Your Account is Created! ✨',
-        htmlContent: `
-          <div style="font-family: sans-serif; max-width: 550px; margin: 0 auto; border: 2px solid #C9922A; padding: 30px; border-radius: 16px; background-color: #FDF8F2; color: #1A0A0F;">
-            <div style="text-align: center; margin-bottom: 25px;">
-              <h2 style="color: #7B1C2E; font-size: 24px; margin-bottom: 5px;">Namaste ${data[0].name}! ✨</h2>
-              <p style="color: #9B6070; font-size: 14px; font-style: italic; margin: 0;">Aapka account Sakhi.co par successfully create ho gaya hai.</p>
-            </div>
-            <div style="font-size: 15px; line-height: 1.8; color: #5C3040;">
-              <p>We are absolutely thrilled to have you in the <strong>Sakhi Sisterhood</strong>! 🌿 Ab aap apni pasandida handcrafted cotton kurtis ko aaram se track aur order kar sakte hain.</p>
-              <p style="background-color: #F5EDE0; border-left: 4px solid #7B1C2E; padding: 12px; border-radius: 8px; font-weight: 500;">
-                🛍️ <strong>Log In Details:</strong><br>
-                • Registered Email: ${data[0].email}<br>
-                • Status: Account Active! 🎉
-              </p>
-              <p>Happy Shopping, and please do let us know if you need any help!</p>
-            </div>
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed rgba(201,146,42,0.4);">
-              <p style="font-size: 12px; color: #9B6070; margin-top: 20px;">
-                Made with ❤️ in India | Sakhi.co Team<br/>Indore, Madhya Pradesh
-              </p>
-            </div>
-          </div>
-        `
-      });
-
-      const options = {
-        hostname: 'api.brevo.com',
-        path: '/v3/smtp/email',
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'api-key': process.env.BREVO_API_KEY,
-          'Content-Length': Buffer.byteLength(emailData)
-        }
-      };
-
-      // Direct request to Brevo without blocking the response
-      const brevoReq = https.request(options, (r) => {
-        let resData = '';
-        r.on('data', chunk => resData += chunk);
-        r.on('end', () => {
-          if (r.statusCode >= 200 && r.statusCode < 300) {
-            console.log(`✅ Welcome email sent to: ${data[0].email}`);
-          } else {
-            console.error(`❌ Brevo email failed with status: ${r.statusCode}`);
-          }
-        });
-      });
-
-      brevoReq.on('error', (e) => console.error('❌ Brevo request error:', e.message));
-      brevoReq.write(emailData);
-      brevoReq.end();
-
-    } catch (mailErr) {
-      // Agar email bhejte waqt koi galti ho, toh signup crash na ho, isiliye catch lagaya hai
-      console.error('❌ Welcome email error catch:', mailErr.message);
-    }
-    // =============================================================================
-
     res.status(201).json({ token, user: data[0], message: 'Account created!' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 // LOGIN
 router.post('/login', async (req, res) => {
   try {
