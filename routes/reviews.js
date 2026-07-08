@@ -41,6 +41,30 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// GET all reviews globally (homepage ke liye)
+router.get('/all/global', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`*, products(name)`)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (error) throw error;
+
+    const reviews = (data || []).map(r => ({
+      ...r,
+      product_name: r.products?.name || 'Sakhi Kurti'
+    }));
+
+    const avg = reviews.length > 0
+      ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+      : 0;
+
+    res.json({ reviews, average: avg, total: reviews.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // DELETE review (admin)
 router.delete('/:id', auth, async (req, res) => {
