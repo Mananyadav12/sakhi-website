@@ -185,6 +185,10 @@ function renderProduct(p) {
             ? `<button class="btn btn-primary" style="flex:1;justify-content:center;opacity:.5;cursor:not-allowed" disabled>Sold Out</button>`
             : `<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="handleAddToCart()">Add to Cart 🛍️</button>
                <button class="btn btn-outline" onclick="handleBuyNow()">Buy Now →</button>`
+               <!-- Design tum apne style.css ke hisab se change kar sakte ho -->
+               <button id="shareBtn" class="btn btn-secondary" style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                🔗 Share Product
+              </button>
           }
         </div>
 
@@ -361,7 +365,7 @@ async function loadReviews(productId) {
       btn.textContent = 'Submit Review 💕'; btn.disabled = false;
     });
 
-  } catch (err) {
+  } catch (err) { 
     console.log('Reviews error:', err.message);
   }
 }
