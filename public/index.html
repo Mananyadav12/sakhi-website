@@ -164,74 +164,20 @@
 </section>
 
 <!-- GLOBAL REVIEWS -->
-<!-- GLOBAL REVIEWS -->
 <section class="section testimonials-section">
   <div class="container">
     <div class="section-header">
       <p class="section-eyebrow">Loved Across India</p>
       <h2 class="section-title">What our customers say</h2>
     </div>
-
-    <!-- Rating Summary -->
     <div id="globalRatingSummary" style="text-align:center;margin-bottom:2rem"></div>
-
-    <!-- Reviews Grid -->
     <div class="testimonials-grid" id="globalReviews">
       <div class="testimonial-card"><div style="height:80px;background:var(--cream-dark);border-radius:8px"></div></div>
       <div class="testimonial-card"><div style="height:80px;background:var(--cream-dark);border-radius:8px"></div></div>
       <div class="testimonial-card"><div style="height:80px;background:var(--cream-dark);border-radius:8px"></div></div>
     </div>
-
-    <!-- Write Review Button -->
-    <div style="text-align:center;margin-top:2.5rem">
-      <button onclick="openReviewModal()" class="btn btn-outline" style="gap:.5rem">
-        ✍️ Write a Review
-      </button>
-    </div>
   </div>
 </section>
-
-<!-- WRITE REVIEW MODAL -->
-<div id="reviewModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:1rem">
-  <div style="background:var(--white);border-radius:20px;padding:2rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
-      <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin:0">Write a Review 💕</h3>
-      <button onclick="closeReviewModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light);line-height:1">&times;</button>
-    </div>
-    <form id="globalReviewForm">
-      <div class="form-group" style="margin-bottom:1rem">
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Your Name *</label>
-        <input type="text" id="gRevName" placeholder="Priya Sharma" required
-          style="width:100%;padding:12px 16px;border:1.5px solid rgba(201,146,42,.25);border-radius:var(--radius);font-size:.9rem;font-family:inherit;outline:none;background:var(--cream)"/>
-      </div>
-      <div class="form-group" style="margin-bottom:1rem">
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Email (optional)</label>
-        <input type="email" id="gRevEmail" placeholder="priya@email.com"
-          style="width:100%;padding:12px 16px;border:1.5px solid rgba(201,146,42,.25);border-radius:var(--radius);font-size:.9rem;font-family:inherit;outline:none;background:var(--cream)"/>
-      </div>
-      <div class="form-group" style="margin-bottom:1rem">
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Which Product? *</label>
-        <select id="gRevProduct" required
-          style="width:100%;padding:12px 16px;border:1.5px solid rgba(201,146,42,.25);border-radius:var(--radius);font-size:.9rem;font-family:inherit;outline:none;background:var(--cream)">
-          <option value="">Select a product...</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:1rem">
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Rating *</label>
-        <div style="display:flex;gap:.25rem;margin-top:.5rem">
-          ${[1,2,3,4,5].map(n => `<button type="button" onclick="setGlobalRating(${n})" id="gStar${n}" style="background:none;border:none;font-size:2rem;cursor:pointer;color:#ddd;padding:2px;line-height:1;transition:color .15s">★</button>`).join('')}
-        </div>
-        <input type="hidden" id="gRevRating"/>
-      </div>
-      <div class="form-group" style="margin-bottom:1.5rem">
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Your Review</label>
-        <textarea id="gRevText" rows="3" placeholder="Share your experience..."
-          style="width:100%;padding:12px 16px;border:1.5px solid rgba(201,146,42,.25);border-radius:var(--radius);font-size:.9rem;font-family:inherit;outline:none;background:var(--cream);resize:vertical"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Submit Review 💕</button>
-    </form>
-  </div>
-</div>
 
 <section class="newsletter-section">
   <div class="container">
@@ -381,154 +327,6 @@ async function loadGlobalReviews() {
       </div>`;
   }
 }
-<script>
-// Global Reviews Load
-async function loadGlobalReviews() {
-  try {
-    const res = await fetch(`${API_URL}/api/reviews/all/global`);
-    const data = await res.json();
-    const reviews = data.reviews || [];
-
-    if (reviews.length > 0) {
-      const avg = (reviews.reduce((s,r) => s + r.rating, 0) / reviews.length).toFixed(1);
-      const stars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
-      document.getElementById('globalRatingSummary').innerHTML = `
-        <div style="display:inline-flex;align-items:center;gap:1rem;background:var(--white);border-radius:50px;padding:.75rem 2rem;border:1px solid rgba(201,146,42,.2);box-shadow:var(--shadow)">
-          <span style="font-size:1.8rem;font-weight:700;color:var(--maroon)">${avg}</span>
-          <span style="color:var(--gold);font-size:1.2rem;letter-spacing:3px">${stars}</span>
-          <span style="color:var(--text-light);font-size:.875rem">${reviews.length} reviews</span>
-        </div>`;
-    }
-
-    const show = reviews.slice(0, 3);
-    if (show.length === 0) {
-      document.getElementById('globalReviews').innerHTML = `
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p>"The fabric quality is stunning — so soft and breathable. I've bought 4 kurtis and each one is better than the last!"</p>
-          <div class="reviewer"><div class="reviewer-avatar">P</div><div><strong>Priya S.</strong><span>Mumbai</span></div></div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p>"Absolutely love the fit. The stitching is so clean and flatters my shape perfectly. Sakhi is my go-to brand now."</p>
-          <div class="reviewer"><div class="reviewer-avatar">A</div><div><strong>Ananya R.</strong><span>Delhi</span></div></div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p>"College, office, family events — I wear Sakhi kurtis everywhere. The prints are so unique and price is amazing!"</p>
-          <div class="reviewer"><div class="reviewer-avatar">D</div><div><strong>Divya M.</strong><span>Indore</span></div></div>
-        </div>`;
-      return;
-    }
-
-    document.getElementById('globalReviews').innerHTML = show.map(r => `
-      <div class="testimonial-card">
-        <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-        <p>"${r.review || 'Great product! Loved it.'}"</p>
-        <div class="reviewer">
-          <div class="reviewer-avatar">${r.user_name.charAt(0).toUpperCase()}</div>
-          <div><strong>${r.user_name}</strong><span>${r.product_name || 'Sakhi Kurti'}</span></div>
-        </div>
-      </div>`).join('');
-  } catch(err) {
-    document.getElementById('globalReviews').innerHTML = `
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p>"The fabric quality is stunning — so soft and breathable!"</p>
-        <div class="reviewer"><div class="reviewer-avatar">P</div><div><strong>Priya S.</strong><span>Mumbai</span></div></div>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p>"Absolutely love the fit. Sakhi is my go-to brand now."</p>
-        <div class="reviewer"><div class="reviewer-avatar">A</div><div><strong>Ananya R.</strong><span>Delhi</span></div></div>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p>"The prints are so unique and the price is amazing!"</p>
-        <div class="reviewer"><div class="reviewer-avatar">D</div><div><strong>Divya M.</strong><span>Indore</span></div></div>
-      </div>`;
-  }
-}
-
-// Review Modal
-function openReviewModal() {
-  document.getElementById('reviewModal').style.display = 'flex';
-  loadProductsForReview();
-}
-
-function closeReviewModal() {
-  document.getElementById('reviewModal').style.display = 'none';
-}
-
-// Load products in dropdown
-async function loadProductsForReview() {
-  try {
-    const res = await fetch(`${API_URL}/api/products`);
-    const data = await res.json();
-    const select = document.getElementById('gRevProduct');
-    select.innerHTML = '<option value="">Select a product...</option>';
-    (data.products || []).forEach(p => {
-      select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
-    });
-  } catch(err) {
-    console.log('Products load error:', err.message);
-  }
-}
-
-// Star rating
-function setGlobalRating(n) {
-  document.getElementById('gRevRating').value = n;
-  for (let i = 1; i <= 5; i++) {
-    document.getElementById(`gStar${i}`).style.color = i <= n ? '#C9922A' : '#ddd';
-  }
-}
-
-// Close modal on outside click
-document.getElementById('reviewModal')?.addEventListener('click', function(e) {
-  if (e.target === this) closeReviewModal();
-});
-
-// Submit review
-document.getElementById('globalReviewForm')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const rating = document.getElementById('gRevRating').value;
-  const productId = document.getElementById('gRevProduct').value;
-  if (!rating) { showToast('Please select a rating!', 'error'); return; }
-  if (!productId) { showToast('Please select a product!', 'error'); return; }
-
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.textContent = 'Submitting...'; btn.disabled = true;
-
-  try {
-    const res = await fetch(`${API_URL}/api/reviews`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        product_id: productId,
-        user_name: document.getElementById('gRevName').value,
-        user_email: document.getElementById('gRevEmail').value,
-        rating: parseInt(rating),
-        review: document.getElementById('gRevText').value
-      })
-    });
-    const data = await res.json();
-    if (data.review) {
-      showToast('Review submitted! Thank you 💕');
-      closeReviewModal();
-      document.getElementById('globalReviewForm').reset();
-      for (let i = 1; i <= 5; i++) document.getElementById(`gStar${i}`).style.color = '#ddd';
-      loadGlobalReviews();
-    } else {
-      showToast(data.error || 'Please fill all required fields!', 'error');
-    }
-  } catch(err) {
-    showToast('Something went wrong!', 'error');
-  }
-  btn.textContent = 'Submit Review 💕'; btn.disabled = false;
-});
-
-document.addEventListener('DOMContentLoaded', loadGlobalReviews);
-</script>
 
 document.addEventListener('DOMContentLoaded', loadGlobalReviews);
 </script>
