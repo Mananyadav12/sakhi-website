@@ -133,6 +133,83 @@ function copyToClipboard(text) {
     showToast('🔗 Link copied!');
   });
 }
+function productCard(p) {
+  const discount = p.mrp > p.price
+    ? Math.round(((p.mrp - p.price) / p.mrp) * 100)
+    : 0;
+
+  const imgHTML = p.images && p.images.length > 0
+    ? `<img src="${p.images[0]}" alt="${p.name}" class="product-img" loading="lazy"/>`
+    : `<div class="product-img-placeholder"><span>👗</span><small>Sakhi.co</small></div>`;
+
+  const productLink = `${window.location.origin}/pages/product.html?id=${p.id}`;
+  const wishlist = getWishlist();
+  const isWished = wishlist.some(w => w.id === p.id);
+
+  return `
+    <div class="product-card" onclick="location.href='/pages/product.html?id=${p.id}'">
+      <!-- Wishlist + Share buttons on image -->
+      <div style="position:relative">
+        ${imgHTML}
+        <div style="position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px">
+          <!-- Wishlist Heart -->
+          <button onclick="event.stopPropagation();toggleWishlist('${p.id}','${p.name.replace(/'/g,"\\'")}','${p.price}','${p.images?.[0]||''}',this)"
+            style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.95);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:transform .2s"
+            onmouseover="this.style.transform='scale(1.1)'"
+            onmouseout="this.style.transform='scale(1)'"
+            id="wish-${p.id}">
+            ${isWished ? '❤️' : '🤍'}
+          </button>
+          <!-- Share -->
+          <button onclick="event.stopPropagation();shareProduct('${p.id}','${p.name.replace(/'/g,"\\'")}','${productLink}')"
+            style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.95);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:transform .2s"
+            onmouseover="this.style.transform='scale(1.1)'"
+            onmouseout="this.style.transform='scale(1)'">
+            🔗
+          </button>
+        </div>
+      </div>
+      <div class="product-info">
+        <span class="product-badge">New</span>
+        <div class="product-name">${p.name}</div>
+        <div class="product-type" style="text-transform:capitalize">${p.category}</div>
+        <div class="product-price-row">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="product-price">₹${p.price}</span>
+            ${p.mrp ? `<span class="product-mrp">₹${p.mrp}</span>` : ''}
+          </div>
+          ${discount > 0 ? `<span class="product-discount">${discount}% off</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+// Share function
+function shareProduct(id, name, link) {
+  if (navigator.share) {
+    navigator.share({
+      title: `${name} – Sakhi.co`,
+      text: `Check out this beautiful kurti from Sakhi.co! 👗`,
+      url: link
+    }).catch(() => copyToClipboard(link));
+  } else {
+    copyToClipboard(link);
+  }
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('🔗 Link copied! Share with your friends.');
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('🔗 Link copied!');
+  });
+}
 
 // Run on homepage
 document.addEventListener('DOMContentLoaded', loadFeaturedProducts);

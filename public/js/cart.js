@@ -74,5 +74,43 @@ function showToast(msg, type = 'success') {
   t.className = 'toast show ' + type;
   setTimeout(() => { t.className = 'toast'; }, 2800);
 }
+// ── WISHLIST ──────────────────────────────────────────────
+
+function getWishlist() {
+  return JSON.parse(localStorage.getItem('sakhi_wishlist') || '[]');
+}
+
+function saveWishlist(list) {
+  localStorage.setItem('sakhi_wishlist', JSON.stringify(list));
+  updateWishlistBadge();
+}
+
+function toggleWishlist(id, name, price, image, btn) {
+  const wishlist = getWishlist();
+  const exists = wishlist.findIndex(w => w.id === id);
+
+  if (exists !== -1) {
+    wishlist.splice(exists, 1);
+    if (btn) btn.innerHTML = '🤍';
+    showToast('Removed from wishlist');
+  } else {
+    wishlist.push({ id, name, price, image });
+    if (btn) btn.innerHTML = '❤️';
+    showToast('Added to wishlist ❤️');
+  }
+  saveWishlist(wishlist);
+}
+
+function updateWishlistBadge() {
+  const count = getWishlist().length;
+  document.querySelectorAll('.wishlist-badge').forEach(el => {
+    el.textContent = count;
+    el.style.display = count > 0 ? 'flex' : 'none';
+  });
+}
+
+function isWishlisted(id) {
+  return getWishlist().some(w => w.id === id);
+}
 
 document.addEventListener('DOMContentLoaded', updateCartBadge);

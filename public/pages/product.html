@@ -179,6 +179,19 @@ function renderProduct(p) {
             ? (totalStock > 10 ? '✅ In Stock' : totalStock > 0 ? `⚠️ Only ${totalStock} pieces left!` : '')
             : (p.stock > 10 ? '✅ In Stock' : p.stock > 0 ? `⚠️ Only ${p.stock} left!` : '')}
         </p>` : ''}
+        // Action buttons ke saath wishlist + share
+        `<div style="display:flex;gap:.75rem;margin-bottom:1rem">
+          <button onclick="toggleWishlistDetail()"
+          id="wishlistDetailBtn"
+          style="flex:1;padding:11px;border-radius:var(--radius);border:1.5px solid rgba(201,146,42,.3);background:none;cursor:pointer;font-size:.9rem;font-weight:500;color:var(--text-mid);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px">
+          ${isWishlisted(p.id) ? '❤️ Wishlisted' : '🤍 Add to Wishlist'}
+          </button>
+          <button onclick="shareCurrentProduct()"
+          style="width:46px;height:46px;border-radius:var(--radius);border:1.5px solid rgba(201,146,42,.3);background:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s"
+          title="Share this product">
+          🔗
+         </button>
+        </div>`
 
         <div class="detail-actions" style="display:flex;gap:1rem;margin-bottom:1.5rem">
           ${isSoldOut
@@ -384,6 +397,50 @@ function shareCurrentProduct() {
       text: `Check out this beautiful kurti from Sakhi.co! 👗`,
       url: link
     }).catch(() => copyLink(link));
+  } else {
+    copyLink(link);
+  }
+}
+
+function copyLink(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('🔗 Link copied! Share with your friends.');
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('🔗 Link copied!');
+  });
+}
+function toggleWishlistDetail() {
+  const btn = document.getElementById('wishlistDetailBtn');
+  const p = currentProduct;
+  const wished = isWishlisted(p.id);
+
+  const wishlist = getWishlist();
+  if (wished) {
+    const idx = wishlist.findIndex(w => w.id === p.id);
+    wishlist.splice(idx, 1);
+    saveWishlist(wishlist);
+    btn.innerHTML = '🤍 Add to Wishlist';
+    showToast('Removed from wishlist');
+  } else {
+    wishlist.push({ id: p.id, name: p.name, price: p.price, image: p.images?.[0] || '' });
+    saveWishlist(wishlist);
+    btn.innerHTML = '❤️ Wishlisted';
+    showToast('Added to wishlist ❤️');
+  }
+}
+
+function shareCurrentProduct() {
+  const link = window.location.href;
+  const name = currentProduct?.name || 'Sakhi Kurti';
+  if (navigator.share) {
+    navigator.share({ title: `${name} – Sakhi.co`, text: 'Check out this beautiful kurti! 👗', url: link })
+      .catch(() => copyLink(link));
   } else {
     copyLink(link);
   }

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Wishlist – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/about.html">About</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge">0</span>
+      </button>
+      <div id="authBtn"></div>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:140px 2rem 4rem">
+  <p class="hero-eyebrow">Saved Items</p>
+  <h1>My Wishlist ❤️</h1>
+  <p>Your favourite kurtis, saved for later</p>
+</div>
+
+<div class="container" style="padding:3rem 2rem 6rem">
+  <div id="wishlistContent"></div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+function renderWishlist() {
+  const wishlist = getWishlist();
+  const el = document.getElementById('wishlistContent');
+
+  if (wishlist.length === 0) {
+    el.innerHTML = `
+      <div style="text-align:center;padding:4rem 2rem;background:var(--white);border-radius:20px;border:1px solid rgba(201,146,42,.12)">
+        <p style="font-size:4rem;margin-bottom:1rem">🤍</p>
+        <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:.75rem">Your wishlist is empty</h3>
+        <p style="color:var(--text-light);margin-bottom:2rem">Save your favourite kurtis here — heart any product to add it!</p>
+        <a href="/pages/collections.html" class="btn btn-primary">Browse Collections</a>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+      <p style="color:var(--text-light);font-size:.9rem">${wishlist.length} item${wishlist.length > 1 ? 's' : ''} saved</p>
+      <button onclick="clearWishlist()" style="background:none;border:1px solid #ddd;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;color:var(--text-light)">
+        Clear All
+      </button>
+    </div>
+    <div class="products-grid" id="wishlistGrid"></div>`;
+
+  document.getElementById('wishlistGrid').innerHTML = wishlist.map(item => `
+    <div class="product-card">
+      <div style="position:relative">
+        ${item.image
+          ? `<img src="${item.image}" alt="${item.name}" class="product-img" loading="lazy"/>`
+          : `<div class="product-img-placeholder"><span>👗</span></div>`}
+        <button onclick="removeFromWishlistPage('${item.id}')"
+          style="position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.95);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 2px 8px rgba(0,0,0,.15)">
+          ❤️
+        </button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${item.name}</div>
+        <div class="product-price-row" style="margin-top:.5rem">
+          <span class="product-price">₹${item.price}</span>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem">
+          <button onclick="location.href='/pages/product.html?id=${item.id}'"
+            class="btn btn-primary" style="flex:1;justify-content:center;padding:10px;font-size:.82rem">
+            View Product
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function removeFromWishlistPage(id) {
+  const wishlist = getWishlist().filter(w => w.id !== id);
+  saveWishlist(wishlist);
+  renderWishlist();
+  showToast('Removed from wishlist');
+}
+
+function clearWishlist() {
+  if (!confirm('Clear all items from wishlist?')) return;
+  saveWishlist([]);
+  renderWishlist();
+}
+
+document.addEventListener('DOMContentLoaded', renderWishlist);
+</script>
+</body>
+</html>
