@@ -76,13 +76,16 @@ function productCard(p) {
     ? `<img src="${p.images[0]}" alt="${p.name}" class="product-img" loading="lazy"/>`
     : `<div class="product-img-placeholder"><span>👗</span><small>Sakhi.co</small></div>`;
 
+  // Shareable product link
+  const productLink = `${window.location.origin}/pages/product.html?id=${p.id}`;
+
   return `
-    <div class="product-card" onclick="location.href='pages/product.html?id=${p.id}'">
+    <div class="product-card" onclick="location.href='/pages/product.html?id=${p.id}'">
       ${imgHTML}
       <div class="product-info">
         <span class="product-badge">New</span>
         <div class="product-name">${p.name}</div>
-        <div class="product-type">${p.category}</div>
+        <div class="product-type" style="text-transform:capitalize">${p.category}</div>
         <div class="product-price-row">
           <div style="display:flex;align-items:center;gap:6px">
             <span class="product-price">₹${p.price}</span>
@@ -90,8 +93,45 @@ function productCard(p) {
           </div>
           ${discount > 0 ? `<span class="product-discount">${discount}% off</span>` : ''}
         </div>
+        <!-- Share Button -->
+        <button onclick="event.stopPropagation();shareProduct('${p.id}','${p.name.replace(/'/g,"\\'")}','${productLink}')"
+          style="margin-top:.75rem;background:none;border:1px solid rgba(201,146,42,.3);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.78rem;color:var(--text-mid);display:flex;align-items:center;gap:5px;transition:all .2s;width:100%;justify-content:center"
+          onmouseover="this.style.borderColor='var(--maroon)';this.style.color='var(--maroon)'"
+          onmouseout="this.style.borderColor='rgba(201,146,42,.3)';this.style.color='var(--text-mid)'">
+          🔗 Share this kurti
+        </button>
       </div>
     </div>`;
+}
+
+// Share product function
+function shareProduct(id, name, link) {
+  if (navigator.share) {
+    // Native share on mobile
+    navigator.share({
+      title: `${name} – Sakhi.co`,
+      text: `Check out this beautiful kurti from Sakhi.co! 👗`,
+      url: link
+    }).catch(() => copyToClipboard(link));
+  } else {
+    // Copy to clipboard on desktop
+    copyToClipboard(link);
+  }
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('🔗 Link copied! Share it with your friends.');
+  }).catch(() => {
+    // Fallback
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('🔗 Link copied!');
+  });
 }
 
 // Run on homepage
