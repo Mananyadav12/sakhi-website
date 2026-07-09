@@ -187,6 +187,13 @@ function renderProduct(p) {
                <button class="btn btn-outline" onclick="handleBuyNow()">Buy Now →</button>`
           }
         </div>
+        // renderProduct function mein detail-actions ke baad add karo:
+        `<button onclick="shareCurrentProduct()" 
+        style="width:100%;margin-bottom:1.5rem;background:none;border:1px solid rgba(201,146,42,.3);border-radius:var(--radius);padding:11px;cursor:pointer;font-size:.875rem;color:var(--text-mid);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s"
+        onmouseover="this.style.borderColor='var(--maroon)';this.style.color='var(--maroon)'"
+        onmouseout="this.style.borderColor='rgba(201,146,42,.3)';this.style.color='var(--text-mid)'">
+        🔗 Share this kurti
+      </button>`
 
         <div style="background:var(--cream-dark);border-radius:14px;padding:1.25rem">
           <div style="display:flex;flex-direction:column;gap:.6rem">
@@ -329,6 +336,7 @@ async function loadReviews(productId) {
       }
     };
 
+
     // Review submit
     document.getElementById('reviewForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -364,6 +372,34 @@ async function loadReviews(productId) {
   } catch (err) {
     console.log('Reviews error:', err.message);
   }
+}
+function shareCurrentProduct() {
+  const link = window.location.href;
+  const name = currentProduct?.name || 'Sakhi Kurti';
+
+  if (navigator.share) {
+    navigator.share({
+      title: `${name} – Sakhi.co`,
+      text: `Check out this beautiful kurti from Sakhi.co! 👗`,
+      url: link
+    }).catch(() => copyLink(link));
+  } else {
+    copyLink(link);
+  }
+}
+
+function copyLink(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('🔗 Link copied! Share with your friends.');
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('🔗 Link copied!');
+  });
 }
 
 document.addEventListener('DOMContentLoaded', loadProduct);
