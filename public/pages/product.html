@@ -373,34 +373,6 @@ async function loadReviews(productId) {
     console.log('Reviews error:', err.message);
   }
 }
-function shareCurrentProduct() {
-  const link = window.location.href;
-  const name = currentProduct?.name || 'Sakhi Kurti';
-
-  if (navigator.share) {
-    navigator.share({
-      title: `${name} – Sakhi.co`,
-      text: `Check out this beautiful kurti from Sakhi.co! 👗`,
-      url: link
-    }).catch(() => copyLink(link));
-  } else {
-    copyLink(link);
-  }
-}
-
-function copyLink(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('🔗 Link copied! Share with your friends.');
-  }).catch(() => {
-    const el = document.createElement('textarea');
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    showToast('🔗 Link copied!');
-  });
-}
 
 document.addEventListener('DOMContentLoaded', loadProduct);
 </script>
