@@ -67,7 +67,19 @@
         <label class="filter-option"><input type="checkbox" value="corset"/> Corset Back</label>
       </div>
       <div class="filter-group">
-        <h4>Price</h4>
+        <h4>Price Range</h4>
+        <div style="padding:.5rem 0">
+          <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
+            <span style="font-size:.82rem;color:var(--text-mid);font-weight:600">₹<span id="priceMin">0</span></span>
+            <span style="font-size:.82rem;color:var(--text-mid);font-weight:600">₹<span id="priceMax">2000</span></span>
+          </div>
+          <input type="range" id="priceRange" min="0" max="2000" value="2000" step="50"
+          style="width:100%;accent-color:var(--maroon);cursor:pointer"
+          oninput="filterByPrice(this.value)"/>
+          <p style="font-size:.75rem;color:var(--text-light);margin-top:.5rem">Drag to filter by max price</p>
+        </div>
+       </div>
+      
         <label class="filter-option"><input type="checkbox" value="under750"/> Under ₹750</label>
         <label class="filter-option"><input type="checkbox" value="750to900"/> ₹750 – ₹900</label>
         <label class="filter-option"><input type="checkbox" value="above900"/> ₹900+</label>
@@ -174,6 +186,11 @@ document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(cb =>
     renderProducts(filtered);
   });
 });
+function filterByPrice(maxPrice) {
+  document.getElementById('priceMax').textContent = maxPrice;
+  const filtered = allProducts.filter(p => p.price <= parseInt(maxPrice));
+  renderProducts(filtered);
+}
 
 // Sort
 document.getElementById('sortSelect').addEventListener('change', function() {

@@ -321,3 +321,41 @@ body { font-family: var(--font-body); background: var(--cream); color: var(--tex
 .size-chip.low-stock::after { content: 'Low'; position: absolute; top: -8px; right: -4px; background: #f39c12; color: #fff; font-size: .6rem; padding: 1px 5px; border-radius: 10px; font-weight: 700; }
 .size-btn:disabled { opacity: .4; cursor: not-allowed; text-decoration: line-through; }
 .size-btn:disabled:hover { background: none; color: var(--text-mid); border-color: rgba(201,146,42,.3); transform: none; }
+/* Product Image Zoom */
+.product-card .product-img {
+  transition: transform .4s ease;
+}
+.product-card:hover .product-img {
+  transform: scale(1.05);
+}
+.product-card {
+  overflow: hidden;
+}
+
+/* Detail image zoom */
+.detail-main-img {
+  transition: transform .4s ease;
+  cursor: zoom-in;
+}
+.detail-images:hover .detail-main-img {
+  transform: scale(1.03);
+}
+
+/* Search overlay animation */
+#searchOverlay {
+  animation: fadeIn .2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Wishlist heart animation */
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.heart-pop {
+  animation: heartPop .3s ease;
+}
