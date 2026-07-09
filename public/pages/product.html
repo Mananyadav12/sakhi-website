@@ -189,12 +189,12 @@ function renderProduct(p) {
         </div>
 
         <button onclick="shareCurrentProduct()"
-          style="width:100%;margin-bottom:1.5rem;background:none;border:1px solid rgba(201,146,42,.3);border-radius:var(--radius);padding:11px;cursor:pointer;font-size:.875rem;color:var(--text-mid);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s"
-          onmouseover="this.style.borderColor='var(--maroon)';this.style.color='var(--maroon)'"
-          onmouseout="this.style.borderColor='rgba(201,146,42,.3)';this.style.color='var(--text-mid)'">
-          🔗 Share this kurti
+        style="width:36px;height:36px;border-radius:50%;background:var(--white);border:1px solid rgba(201,146,42,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s;flex-shrink:0"
+        onmouseover="this.style.borderColor='var(--maroon)';this.style.background='var(--cream)'"
+        onmouseout="this.style.borderColor='rgba(201,146,42,.3)';this.style.background='var(--white)'"
+        title="Share this kurti">
+        🔗
         </button>
-
 
         <div style="background:var(--cream-dark);border-radius:14px;padding:1.25rem">
           <div style="display:flex;flex-direction:column;gap:.6rem">
@@ -402,7 +402,6 @@ function copyLink(text) {
     showToast('🔗 Link copied!');
   });
 }
-
 
 document.addEventListener('DOMContentLoaded', loadProduct);
 </script>
