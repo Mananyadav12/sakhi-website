@@ -166,9 +166,7 @@ app.post('/api/subscribe', async (req, res) => {
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-app.get('/pages/size-chart.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'pages', 'size-chart.html'));
-});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
