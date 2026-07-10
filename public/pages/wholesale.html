@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Wholesale Enquiry – Sakhi.co</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="../images/logo.jpeg" alt="Sakhi" class="logo-img"/>
+      <span class="brand-name">sakhi.co</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/collections.html">Collections</a></li>
+      <li><a href="/pages/contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero" style="padding:140px 2rem 4rem">
+  <p class="hero-eyebrow">Business Orders</p>
+  <h1>Wholesale & Bulk Enquiry</h1>
+  <p>Order 10+ pieces and get special wholesale pricing. Perfect for boutiques, resellers & gifting!</p>
+</div>
+
+<div class="container" style="padding:4rem 2rem 6rem">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start">
+
+    <!-- Benefits -->
+    <div>
+      <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">Why Buy Wholesale?</h2>
+
+      <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2rem">
+        <div style="display:flex;gap:1rem;align-items:flex-start;background:var(--white);padding:1.25rem;border-radius:14px;border:1px solid rgba(201,146,42,.15)">
+          <span style="font-size:1.8rem;flex-shrink:0">💸</span>
+          <div>
+            <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.25rem">Up to 30% Off</p>
+            <p style="font-size:.875rem;color:var(--text-light)">Special wholesale pricing on bulk orders of 10+ pieces</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;background:var(--white);padding:1.25rem;border-radius:14px;border:1px solid rgba(201,146,42,.15)">
+          <span style="font-size:1.8rem;flex-shrink:0">🚚</span>
+          <div>
+            <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.25rem">Free Shipping</p>
+            <p style="font-size:.875rem;color:var(--text-light)">Free delivery on all wholesale orders across India</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;background:var(--white);padding:1.25rem;border-radius:14px;border:1px solid rgba(201,146,42,.15)">
+          <span style="font-size:1.8rem;flex-shrink:0">🎨</span>
+          <div>
+            <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.25rem">Custom Designs</p>
+            <p style="font-size:.875rem;color:var(--text-light)">Custom prints and designs available for 50+ pieces</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:flex-start;background:var(--white);padding:1.25rem;border-radius:14px;border:1px solid rgba(201,146,42,.15)">
+          <span style="font-size:1.8rem;flex-shrink:0">📦</span>
+          <div>
+            <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.25rem">Mixed Sizes</p>
+            <p style="font-size:.875rem;color:var(--text-light)">Order across sizes XS to 4XL in single bulk order</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--maroon);border-radius:16px;padding:1.5rem">
+        <p style="color:var(--gold-light);font-weight:600;margin-bottom:.75rem">📱 Quick Connect</p>
+        <a href="https://wa.me/919302988402?text=Hi%20Sakhi%2C%20I%20want%20to%20enquire%20about%20wholesale%20orders!"
+          target="_blank"
+          style="display:flex;align-items:center;gap:8px;background:#25D366;color:white;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:.9rem;justify-content:center">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/>
+          </svg>
+          WhatsApp for Wholesale
+        </a>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="contact-form-wrap">
+      <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">Send Enquiry</h3>
+      <form id="wholesaleForm">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="wName" placeholder="Your name" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" id="wPhone" placeholder="+91 98765 43210" required/>
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="wEmail" placeholder="you@email.com" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" id="wBusiness" placeholder="Your shop / boutique name"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" id="wCity" placeholder="Indore" required/>
+          </div>
+          <div class="form-group">
+            <label>Quantity Needed *</label>
+            <select id="wQty" required>
+              <option value="">Select...</option>
+              <option value="10-25">10–25 pieces</option>
+              <option value="25-50">25–50 pieces</option>
+              <option value="50-100">50–100 pieces</option>
+              <option value="100+">100+ pieces</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Products Interested In</label>
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem">
+            <label style="display:flex;align-items:center;gap:6px;font-size:.875rem;cursor:pointer">
+              <input type="checkbox" value="square" style="accent-color:#7B1C2E"/> Square Neck
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.875rem;cursor:pointer">
+              <input type="checkbox" value="bell" style="accent-color:#7B1C2E"/> Bell Sleeves
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.875rem;cursor:pointer">
+              <input type="checkbox" value="straight" style="accent-color:#7B1C2E"/> Straight Cut
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.875rem;cursor:pointer">
+              <input type="checkbox" value="halter" style="accent-color:#7B1C2E"/> Halter Neck
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.875rem;cursor:pointer">
+              <input type="checkbox" value="all" style="accent-color:#7B1C2E"/> All Styles
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="wMessage" rows="3" placeholder="Any specific requirements, custom designs, delivery timeline..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
+          Send Wholesale Enquiry →
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+      <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+document.getElementById('wholesaleForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+
+  const interests = [...document.querySelectorAll('#wholesaleForm input[type="checkbox"]:checked')]
+    .map(c => c.value).join(', ');
+
+  const data = {
+    name: document.getElementById('wName').value,
+    phone: document.getElementById('wPhone').value,
+    email: document.getElementById('wEmail').value,
+    business: document.getElementById('wBusiness').value,
+    city: document.getElementById('wCity').value,
+    quantity: document.getElementById('wQty').value,
+    interests,
+    message: document.getElementById('wMessage').value
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/api/wholesale`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast('✅ Enquiry sent! We will contact you within 24 hours.');
+      e.target.reset();
+    } else {
+      showToast('Something went wrong!', 'error');
+    }
+  } catch(err) {
+    showToast('Something went wrong!', 'error');
+  }
+  btn.textContent = 'Send Wholesale Enquiry →'; btn.disabled = false;
+});
+</script>
+</body>
+</html>

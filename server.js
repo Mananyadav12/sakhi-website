@@ -16,6 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/api/products', require('./routes/products'));
+app.use('/api/wholesale', require('./routes/wholesale'));
 app.use('/api/coupons', require('./routes/coupons'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/payment', require('./routes/payment'));

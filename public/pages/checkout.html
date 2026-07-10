@@ -127,6 +127,22 @@
             </div>
           </label>
         </div>
+        <!-- GIFT WRAPPING -->
+        <div style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0">
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer">
+            <input type="checkbox" id="giftWrap" onchange="updateTotals()"
+            style="margin-top:3px;accent-color:#7B1C2E;width:18px;height:18px;flex-shrink:0"/>
+            <div>
+              <p style="font-weight:600;color:var(--maroon-dark);margin:0 0 4px">🎁 Gift Wrapping</p>
+              <p style="font-size:.82rem;color:var(--text-light);margin:0">Beautiful packaging with handwritten note — <strong style="color:var(--maroon)">+₹49</strong></p>
+            </div>
+          </label>
+          <div id="giftMessageBox" style="display:none;margin-top:1rem">
+            <input type="text" id="giftMessage" placeholder="Write your gift message (optional)"
+            maxlength="100"
+            style="width:100%;padding:10px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.875rem;font-family:inherit;outline:none;background:white"/>
+          </div>
+        </div>
 
         <button type="submit" class="btn btn-primary" id="payBtn" style="width:100%;justify-content:center;font-size:1rem;padding:16px">
           Pay & Place Order →
@@ -136,6 +152,10 @@
 
     <div class="order-summary-box">
       <h3>Your Order</h3>
+      <div class="summary-row" id="giftWrapRow" style="display:none">
+        <span>🎁 Gift Wrapping</span>
+        <span style="color:var(--maroon)">+₹49</span>
+      </div>
       <div id="checkoutItems"></div>
       <div class="summary-row" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(201,146,42,.2)">
         <span>Subtotal</span><span id="checkoutSubtotal">₹0</span>
@@ -170,12 +190,21 @@
 <script src="../js/main.js"></script>
 <script>
 let deliveryCharge = 0;
+let giftWrapCharge = 0;
 let codCharge = 0;
 
 function updateTotals() {
   const subtotal = cartTotal();
   const deliveryVal = document.querySelector('input[name="delivery"]:checked')?.value;
   const paymentVal = document.querySelector('input[name="payment"]:checked')?.value;
+  // Gift wrap
+  const giftWrap = document.getElementById('giftWrap')?.checked;
+  giftWrapCharge = giftWrap ? 49 : 0;
+  document.getElementById('giftMessageBox').style.display = giftWrap ? 'block' : 'none';
+  const total = Math.max(0, subtotal + deliveryCharge + codCharge + giftWrapCharge - couponDiscount);
+  const giftWrapRow = document.getElementById('giftWrapRow');
+  if (giftWrapRow) giftWrapRow.style.display = giftWrapCharge > 0 ? 'flex' : 'none';
+  
 
   deliveryCharge = deliveryVal === 'express' ? 99 : 0;
   codCharge = paymentVal === 'cod' ? 50 : 0;
@@ -234,6 +263,8 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     total_amount: total,
     payment_method: paymentMethod,
     delivery_type: deliveryType
+    gift_wrap: giftWrapCharge > 0,
+    gift_message: document.getElementById('giftMessage')?.value || ''
   };
 
   try {

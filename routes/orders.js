@@ -187,6 +187,7 @@ const sendStatusEmail = async (order, status) => {
         </div>
       </div>`
     });
+    
 
     const options = {
       hostname: 'api.brevo.com',
@@ -219,7 +220,34 @@ const sendStatusEmail = async (order, status) => {
     console.log('❌ Status email error:', err.message);
   }
 };
+// Add loyalty points after order
+async function addLoyaltyPoints(userEmail, orderAmount, orderId) {
+  try {
+    const points = Math.floor(orderAmount / 10); // ₹10 = 1 point
+    const { data: user } = await supabase
+      .from('users').select('id,loyalty_points,total_orders')
+      .eq('email', userEmail).single();
 
+    if (user) {
+      await supabase.from('users').update({
+        loyalty_points: (user.loyalty_points || 0) + points,
+        total_orders: (user.total_orders || 0) + 1
+      }).eq('id', user.id);
+
+      await supabase.from('loyalty_transactions').insert([{
+        user_id: user.id,
+        points,
+        type: 'earned',
+        description: `Order #${orderId} — ₹${orderAmount}`,
+        created_at: new Date()
+      }]);
+
+      console.log(`✅ ${points} points added to ${userEmail}`);
+    }
+  } catch(err) {
+    console.log('Loyalty points error:', err.message);
+  }
+}
 // POST create order
 router.post('/', async (req, res) => {
   try {
@@ -254,6 +282,10 @@ router.post('/', async (req, res) => {
         console.log('Email error:', err.message)
       );
     }
+    if (exact_method === 'cod') {
+  sendConfirmationEmail(data[0]).catch(err => console.log('Email error:', err.message));
+  addLoyaltyPoints(customer_email, total_amount, order_number).catch(console.error);
+}
 
     res.status(201).json({
       success: true,
@@ -266,6 +298,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // GET all orders (admin only)
 router.get('/', auth, async (req, res) => {
