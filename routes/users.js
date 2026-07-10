@@ -252,6 +252,31 @@ router.post('/cart', userAuth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// GET loyalty points
+router.get('/loyalty', userAuth, async (req, res) => {
+  try {
+    const { data: user } = await supabase
+      .from('users')
+      .select('loyalty_points,total_orders')
+      .eq('id', req.user.id).single();
+
+    const { data: transactions } = await supabase
+      .from('loyalty_transactions')
+      .select('*')
+      .eq('user_id', req.user.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    res.json({
+      points: user?.loyalty_points || 0,
+      total_orders: user?.total_orders || 0,
+      transactions: transactions || [],
+      value: Math.floor((user?.loyalty_points || 0) / 10) // ₹1 per 10 points
+    });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;
 module.exports.userAuth = userAuth;
