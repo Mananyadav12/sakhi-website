@@ -11,14 +11,23 @@ const razorpay = new Razorpay({
 });
 
 // Create payment order
+// Create payment order
 router.post('/create-order', async (req, res) => {
   try {
     const { amount, orderId } = req.body;
+
+    // 🛡️ Added Safety Check: Amount ko float number mein convert karo aur validate karo
+    const parsedAmount = parseFloat(amount);
+    if (!parsedAmount || isNaN(parsedAmount)) {
+      return res.status(400).json({ error: 'Valid Amount required to create Razorpay order!' });
+    }
+
     const options = {
-      amount: Math.round(amount * 100),
+      amount: Math.round(parsedAmount * 100), // safe round off
       currency: 'INR',
-      receipt: orderId
+      receipt: orderId ? String(orderId) : `receipt_${Date.now()}` // fallback unique receipt if missing
     };
+
     const order = await razorpay.orders.create(options);
     res.json({
       razorpayOrderId: order.id,
@@ -26,6 +35,7 @@ router.post('/create-order', async (req, res) => {
       keyId: process.env.RAZORPAY_KEY_ID
     });
   } catch (err) {
+    console.error("❌ Razorpay order creation failed:", err.message); // Server logs mein exact error dikhegi
     res.status(500).json({ error: err.message });
   }
 });
