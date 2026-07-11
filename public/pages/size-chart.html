@@ -4,12 +4,19 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Size Chart – Sakhi.co</title>
-<meta name="description" content="Find your perfect Sakhi kurti size with our detailed size chart guide."/>
 <link rel="stylesheet" href="../css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R0VWP57W8J');
+</script>
 </head>
 <body>
-
 <nav class="navbar" id="navbar">
   <div class="nav-container">
     <a href="/" class="nav-logo">
@@ -22,15 +29,6 @@
       <li><a href="/pages/contact.html">Contact</a></li>
     </ul>
     <div class="nav-actions">
-      <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
-        </svg>
-        <span class="cart-badge">0</span>
-      </button>
-      <div id="authBtn"></div>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -47,256 +45,125 @@
   <!-- HOW TO MEASURE -->
   <div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem">
     <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">📏 How to Measure</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem">
-      <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
+    <div style="display:flex;gap:1rem;overflow-x:auto;padding-bottom:.5rem;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory">
+      <div style="flex:0 0 220px;scroll-snap-align:start;text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
         <p style="font-size:2rem;margin-bottom:.5rem">👚</p>
-        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem;font-size:.95rem">Chest</p>
-        <p style="font-size:.82rem;color:var(--text-mid);line-height:1.6">Measure around the fullest part of your chest, keeping tape parallel to ground</p>
+        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem">Chest</p>
+        <p style="font-size:.82rem;color:var(--text-mid)">Measure around the fullest part of your chest, keeping the tape parallel to the ground</p>
       </div>
-      <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
+      <div style="flex:0 0 220px;scroll-snap-align:start;text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
         <p style="font-size:2rem;margin-bottom:.5rem">📐</p>
-        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem;font-size:.95rem">Waist</p>
-        <p style="font-size:.82rem;color:var(--text-mid);line-height:1.6">Measure around the narrowest part of your waist, 1 inch above navel</p>
+        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem">Waist</p>
+        <p style="font-size:.82rem;color:var(--text-mid)">Measure around the narrowest part of your waist, usually 1 inch above your navel</p>
       </div>
-      <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
+      <div style="flex:0 0 220px;scroll-snap-align:start;text-align:center;padding:1.25rem;background:var(--cream);border-radius:14px">
         <p style="font-size:2rem;margin-bottom:.5rem">📏</p>
-        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem;font-size:.95rem">Hips</p>
-        <p style="font-size:.82rem;color:var(--text-mid);line-height:1.6">Measure around the fullest part of your hips, 8-9 inches below waist</p>
+        <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.4rem">Hips</p>
+        <p style="font-size:.82rem;color:var(--text-mid)">Measure around the fullest part of your hips, usually 8-9 inches below your waist</p>
       </div>
     </div>
   </div>
 
-  <!-- SIZE TABLE — Mobile Scrollable -->
-  <div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem">
-    <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:.75rem">📊 Size Guide</h2>
-    <p style="color:var(--text-light);font-size:.82rem;margin-bottom:1.25rem">👈 Scroll horizontally on mobile</p>
-
-    <!-- Scrollable wrapper -->
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(201,146,42,.15)">
-      <table style="width:100%;border-collapse:collapse;min-width:480px">
-        <thead>
-          <tr style="background:var(--maroon)">
-            <th style="padding:14px 16px;text-align:center;color:#E8B84B;font-size:.85rem;white-space:nowrap">Size</th>
-            <th style="padding:14px 16px;text-align:center;color:#E8B84B;font-size:.85rem;white-space:nowrap">Chest (in)</th>
-            <th style="padding:14px 16px;text-align:center;color:#E8B84B;font-size:.85rem;white-space:nowrap">Waist (in)</th>
-            <th style="padding:14px 16px;text-align:center;color:#E8B84B;font-size:.85rem;white-space:nowrap">Hips (in)</th>
-            <th style="padding:14px 16px;text-align:center;color:#E8B84B;font-size:.85rem;white-space:nowrap">Length (in)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background:var(--cream);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--cream)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">XS</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">32</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">26</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">35</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">44"</td>
-          </tr>
-          <tr style="background:var(--white);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--white)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">S</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">34</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">28</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">37</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">44"</td>
-          </tr>
-          <tr style="background:var(--cream);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--cream)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">M</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">36</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">30</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">39</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">46"</td>
-          </tr>
-          <tr style="background:var(--white);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--white)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">L</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">38</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">32</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">41</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">46"</td>
-          </tr>
-          <tr style="background:var(--cream);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--cream)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">XL</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">40</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">34</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">43</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">48"</td>
-          </tr>
-          <tr style="background:var(--white);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--white)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">XXL</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">42</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">36</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">45</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">48"</td>
-          </tr>
-          <tr style="background:var(--cream);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--cream)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">3XL</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">44</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">38</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">47</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">50"</td>
-          </tr>
-          <tr style="background:var(--white);transition:background .2s" onmouseover="this.style.background='#f0dde5'" onmouseout="this.style.background='var(--white)'">
-            <td style="padding:13px 16px;text-align:center;font-weight:700;color:var(--maroon);font-size:1rem">4XL</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">46</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">40</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">49</td>
-            <td style="padding:13px 16px;text-align:center;color:var(--text-mid)">50"</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="color:var(--text-light);font-size:.78rem;margin-top:1rem">* All measurements are approximate. If between sizes, we recommend sizing up.</p>
-  </div>
-
-  <!-- SIZE FINDER TOOL -->
-  <div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem">
-    <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:.5rem">🔍 Find My Size</h2>
-    <p style="color:var(--text-light);font-size:.875rem;margin-bottom:1.5rem">Enter your measurements — we'll suggest the best size!</p>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
-      <div>
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Chest (inches)</label>
-        <input type="number" id="myChest" placeholder="e.g. 36" min="28" max="56"
-          style="width:100%;padding:11px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;background:var(--cream)"/>
-      </div>
-      <div>
-        <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Waist (inches)</label>
-        <input type="number" id="myWaist" placeholder="e.g. 30" min="22" max="50"
-          style="width:100%;padding:11px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;background:var(--cream)"/>
-      </div>
-    </div>
-
-    <button onclick="findMySize()" class="btn btn-primary" style="width:100%;justify-content:center">
-      Find My Size 🎯
-    </button>
-
-    <div id="sizeResult" style="display:none;margin-top:1.25rem;padding:1.25rem;background:var(--cream);border-radius:14px;text-align:center">
-      <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.5rem">Your recommended size</p>
-      <p id="suggestedSize" style="font-size:2.5rem;font-weight:700;color:var(--maroon);margin:0"></p>
-      <p id="sizeNote" style="font-size:.82rem;color:var(--text-mid);margin-top:.5rem"></p>
-      <a href="/pages/collections.html" class="btn btn-outline" style="margin-top:1rem;display:inline-flex">
-        Shop This Size →
-      </a>
-    </div>
+  <!-- SIZE TABLE -->
+  <div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem;overflow-x:auto">
+    <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">📊 Size Guide (in inches)</h2>
+    <table style="width:100%;border-collapse:collapse;min-width:500px">
+      <thead>
+        <tr style="background:var(--maroon)">
+          <th style="padding:14px;text-align:left;color:#E8B84B;font-size:.85rem;border-radius:10px 0 0 0">Size</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem">Chest (in)</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem">Waist (in)</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem">Hips (in)</th>
+          <th style="padding:14px;text-align:center;color:#E8B84B;font-size:.85rem;border-radius:0 10px 0 0">Kurti Length</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ✅ FIXED: Plain HTML Alternate backgrounds preserved perfectly -->
+        <tr style="background:var(--cream)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">XS</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">32</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">26</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">35</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">44"</td>
+        </tr>
+        <tr style="background:var(--white)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">S</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">34</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">28</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">37</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">44"</td>
+        </tr>
+        <tr style="background:var(--cream)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">M</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">36</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">30</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">39</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">46"</td>
+        </tr>
+        <tr style="background:var(--white)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">L</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">38</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">32</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">41</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">46"</td>
+        </tr>
+        <tr style="background:var(--cream)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">XL</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">40</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">34</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">43</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">48"</td>
+        </tr>
+        <tr style="background:var(--white)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">XXL</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">42</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">36</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">45</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">48"</td>
+        </tr>
+        <tr style="background:var(--cream)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">3XL</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">44</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">38</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">47</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">50"</td>
+        </tr>
+        <tr style="background:var(--white)">
+          <td style="padding:12px 14px;font-weight:700;color:var(--maroon)">4XL</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">46</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">40</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">49</td>
+          <td style="padding:12px 14px;text-align:center;color:var(--text-mid)">50"</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="color:var(--text-light);font-size:.8rem;margin-top:1rem">* All measurements are approximate. If you're between sizes, we recommend sizing up.</p>
   </div>
 
   <!-- TIPS -->
   <div style="background:var(--maroon);border-radius:20px;padding:2.5rem">
     <h2 style="font-family:var(--font-display);color:var(--gold-light);margin-bottom:1.25rem">💡 Pro Tips</h2>
-    <div style="display:flex;flex-direction:column;gap:.75rem">
-      <div style="display:flex;align-items:flex-start;gap:.75rem">
-        <span style="color:var(--gold-light);font-size:1rem;flex-shrink:0;margin-top:2px">✦</span>
-        <p style="color:rgba(255,255,255,.85);font-size:.9rem;margin:0;line-height:1.6">Always measure over your undergarments for accuracy</p>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:.75rem">
-        <span style="color:var(--gold-light);font-size:1rem;flex-shrink:0;margin-top:2px">✦</span>
-        <p style="color:rgba(255,255,255,.85);font-size:.9rem;margin:0;line-height:1.6">Keep the measuring tape snug but not tight</p>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:.75rem">
-        <span style="color:var(--gold-light);font-size:1rem;flex-shrink:0;margin-top:2px">✦</span>
-        <p style="color:rgba(255,255,255,.85);font-size:.9rem;margin:0;line-height:1.6">For a relaxed fit, go 1 size up from your measurement</p>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:.75rem">
-        <span style="color:var(--gold-light);font-size:1rem;flex-shrink:0;margin-top:2px">✦</span>
-        <p style="color:rgba(255,255,255,.85);font-size:.9rem;margin:0;line-height:1.6">Our kurtis have 1-2 inch ease already built in</p>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:.75rem">
-        <span style="color:var(--gold-light);font-size:1rem;flex-shrink:0;margin-top:2px">✦</span>
-        <p style="color:rgba(255,255,255,.85);font-size:.9rem;margin:0;line-height:1.6">
-          Still unsure?
-          <a href="/pages/contact.html" style="color:var(--gold-light);font-weight:600">Contact us</a>
-          — we'll help you find the perfect fit!
-        </p>
-      </div>
-    </div>
+    <ul style="color:rgba(255,255,255,.85);line-height:2;margin-left:1.5rem">
+      <li>Always measure over your undergarments</li>
+      <li>Keep the measuring tape snug but not tight</li>
+      <li>For a relaxed fit, go 1 size up</li>
+      <li>Our kurtis have 1-2 inch ease built in</li>
+      <li>Still unsure? <a href="/pages/contact.html" style="color:var(--gold-light);font-weight:600">Contact us</a> — we'll help!</li>
+    </ul>
   </div>
 
 </div>
 
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
-      <div>
-        <img src="../images/logo.jpeg" alt="Sakhi" class="footer-logo-img"/>
-        <p class="brand-tagline">Craft worn daily.<br/>Made for every woman.</p>
-      </div>
-      <div class="footer-links"><h4>Shop</h4><ul>
-        <li><a href="/pages/collections.html">All Kurtis</a></li>
-        <li><a href="/pages/collections.html?cat=square">Square Neck</a></li>
-        <li><a href="/pages/collections.html?cat=bell">Bell Sleeves</a></li>
-      </ul></div>
-      <div class="footer-links"><h4>Help</h4><ul>
-        <li><a href="/pages/contact.html">Contact Us</a></li>
-        <li><a href="/pages/track.html">Track Order</a></li>
-        <li><a href="/pages/refund.html">Returns</a></li>
-        <li><a href="/pages/size-chart.html">Size Chart</a></li>
-      </ul></div>
-      <div class="footer-links"><h4>Company</h4><ul>
-        <li><a href="/pages/about.html">About</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-      </ul></div>
-    </div>
-    <div class="footer-bottom">
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
       <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
     </div>
   </div>
 </footer>
-
 <script src="../js/config.js"></script>
 <script src="../js/cart.js"></script>
 <script src="../js/main.js"></script>
-<script src="../js/auth.js"></script>
-<script>
-const sizeData = [
-  { size: 'XS', chest: 32, waist: 26, hips: 35 },
-  { size: 'S',  chest: 34, waist: 28, hips: 37 },
-  { size: 'M',  chest: 36, waist: 30, hips: 39 },
-  { size: 'L',  chest: 38, waist: 32, hips: 41 },
-  { size: 'XL', chest: 40, waist: 34, hips: 43 },
-  { size: 'XXL',chest: 42, waist: 36, hips: 45 },
-  { size: '3XL',chest: 44, waist: 38, hips: 47 },
-  { size: '4XL',chest: 46, waist: 40, hips: 49 },
-];
-
-function findMySize() {
-  const chest = parseInt(document.getElementById('myChest').value);
-  const waist = parseInt(document.getElementById('myWaist').value);
-  const resultEl = document.getElementById('sizeResult');
-  const sizeEl = document.getElementById('suggestedSize');
-  const noteEl = document.getElementById('sizeNote');
-
-  if (!chest && !waist) {
-    showToast('Please enter at least one measurement!', 'error');
-    return;
-  }
-
-  let bestMatch = null;
-  let minDiff = Infinity;
-
-  sizeData.forEach(s => {
-    let diff = 0;
-    if (chest) diff += Math.abs(s.chest - chest);
-    if (waist) diff += Math.abs(s.waist - waist);
-    if (diff < minDiff) { minDiff = diff; bestMatch = s; }
-  });
-
-  if (bestMatch) {
-    sizeEl.textContent = bestMatch.size;
-    if (chest && chest > bestMatch.chest) {
-      noteEl.textContent = `Your chest (${chest}") is slightly larger — consider sizing up!`;
-    } else if (waist && waist > bestMatch.waist) {
-      noteEl.textContent = `Your waist (${waist}") is slightly larger — consider sizing up!`;
-    } else {
-      noteEl.textContent = `Perfect fit for chest ${bestMatch.chest}" and waist ${bestMatch.waist}"`;
-    }
-    resultEl.style.display = 'block';
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}
-
-// Allow Enter key
-document.getElementById('myChest').addEventListener('keydown', e => { if (e.key === 'Enter') findMySize(); });
-document.getElementById('myWaist').addEventListener('keydown', e => { if (e.key === 'Enter') findMySize(); });
-</script>
-
 <!-- BACK TO TOP -->
 <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
   style="display:none;position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;border-radius:50%;background:var(--maroon);color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow-lg);z-index:400;align-items:center;justify-content:center;transition:all .3s">
