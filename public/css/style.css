@@ -359,3 +359,60 @@ body { font-family: var(--font-body); background: var(--cream); color: var(--tex
 .heart-pop {
   animation: heartPop .3s ease;
 }
+/* ── MOBILE FIT — ADDITIONAL FIXES (kuch purana hataya nahi, sirf add kiya) ── */
+
+/* Images kabhi bhi container se bahar na jaayein */
+img { max-width: 100%; height: auto; }
+.logo-img, .hero-logo-badge, .footer-logo-img, .newsletter-logo img,
+.detail-main-img, .product-img, .about-logo-large { height: auto; }
+
+/* Navbar chhoti screens pe tight fit ke liye */
+@media (max-width: 480px) {
+  .nav-container { padding: 0 1rem; }
+  .brand-name { font-size: 1.15rem; }
+  .logo-img { width: 38px; height: 38px; }
+  .nav-actions { gap: 2px; }
+  .icon-btn { padding: 6px; }
+}
+
+/* Extra small phones — 480px aur usse chhote (iPhone SE, purane Android) */
+@media (max-width: 480px) {
+  .container { padding: 0 1.25rem; }
+  .section { padding: 3.5rem 0; }
+
+  .hero { padding: 90px 1.25rem 2.5rem; }
+  .hero-title { font-size: clamp(2rem, 8vw, 2.6rem); }
+  .hero-sub { font-size: .95rem; max-width: 100%; }
+  .hero-btns { flex-direction: column; width: 100%; }
+  .hero-btns .btn { width: 100%; justify-content: center; }
+  .hero-logo-badge { width: 170px; height: 170px; }
+  .hero-ring { width: 210px; height: 210px; }
+  .hero-ring2 { width: 250px; height: 250px; }
+
+  .categories-grid { grid-template-columns: repeat(2,1fr); gap: .75rem; }
+  .category-card { padding: 1.25rem .75rem; }
+
+  .products-grid, .all-products-grid { grid-template-columns: repeat(2,1fr); gap: .9rem; }
+  .product-info { padding: .8rem 1rem 1.1rem; }
+  .product-price-row { flex-wrap: wrap; gap: 6px; }
+
+  .testimonial-card { padding: 1.3rem; }
+  .value-card { padding: 1.4rem; }
+
+  .newsletter-form { gap: .6rem; }
+  .newsletter-box h2 { font-size: 1.5rem; }
+
+  .form-row { grid-template-columns: 1fr; }
+  .checkout-form-wrap, .contact-form-wrap, .auth-box { padding: 1.5rem; }
+
+  .cart-item { flex-wrap: wrap; }
+  .cart-item-img { width: 70px; height: 88px; }
+
+  .detail-info h1 { font-size: 1.5rem; }
+  .detail-price { font-size: 1.4rem; }
+  .size-options { gap: .5rem; }
+  .size-btn { padding: 7px 14px; font-size: .8rem; }
+
+  .track-step .step-label { font-size: .68rem; }
+  .step-dot { width: 32px; height: 32px; }
+}
