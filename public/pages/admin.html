@@ -6,6 +6,26 @@
 <title>Sakhi Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
+<!-- WHOLESALE TAB -->
+<div class="tab" id="tab-wholesale">
+  <div class="panel">
+    <div class="panel-head"><h2>Wholesale Enquiries</h2></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Quantity</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="wholesaleTbl"></tbody>
+    </table>
+  </div>
+</div>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,sans-serif;background:#f5f5f7;color:#1a1a2e}
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#5A1220,#7B1C2E)}
@@ -73,6 +93,15 @@ tr:hover td{background:#fafafa}
 .size-stock-cell input:focus{border-color:#7B1C2E}
 .size-stock-cell input[value="0"]{background:#fff5f5;color:#c0392b}
 </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R0VWP57W8J');
+</script>
 </head>
 <body>
 
@@ -102,6 +131,12 @@ tr:hover td{background:#fafafa}
       <button class="sidebar-btn active" onclick="showTab('dashboard',this)"><span class="icon">📊</span>Dashboard</button>
       <button class="sidebar-btn" onclick="showTab('products',this)"><span class="icon">👗</span>Products</button>
       <button class="sidebar-btn" onclick="showTab('orders',this)"><span class="icon">📦</span>Orders</button>
+      <button class="sidebar-btn" onclick="showTab('coupons',this)">
+        <span class="icon">🎟️</span>Coupons
+      </button>
+      <button class="sidebar-btn" onclick="showTab('wholesale',this)">
+        <span class="icon">🏪</span>Wholesale
+      </button>
     </nav>
   </aside>
 
@@ -152,6 +187,67 @@ tr:hover td{background:#fafafa}
       </div>
     </div>
   </main>
+</div>
+<!-- COUPONS TAB -->
+<div class="tab" id="tab-coupons">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Coupon Codes</h2>
+      <button class="btn-add" onclick="openCouponModal()">+ Add Coupon</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Discount</th>
+          <th>Min Order</th>
+          <th>Used / Max</th>
+          <th>Expires</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="couponsTbl"></tbody>
+    </table>
+  </div>
+</div>
+<!-- COUPON MODAL -->
+<div class="modal" id="couponModal">
+  <div class="modal-box">
+    <h3>Add New Coupon</h3>
+    <form id="couponForm">
+      <div class="mform-group">
+        <label>Coupon Code *</label>
+        <input type="text" id="cCode" placeholder="SAKHI10" style="text-transform:uppercase" required/>
+      </div>
+      <div class="mform-row">
+        <div class="mform-group">
+          <label>Discount % (0 if flat)</label>
+          <input type="number" id="cPercent" placeholder="10" min="0" max="100"/>
+        </div>
+        <div class="mform-group">
+          <label>Flat Discount ₹ (0 if %)</label>
+          <input type="number" id="cAmount" placeholder="50" min="0"/>
+        </div>
+      </div>
+      <div class="mform-row">
+        <div class="mform-group">
+          <label>Min Order Amount ₹</label>
+          <input type="number" id="cMinOrder" placeholder="500" min="0"/>
+        </div>
+        <div class="mform-group">
+          <label>Max Uses</label>
+          <input type="number" id="cMaxUses" placeholder="100" min="1"/>
+        </div>
+      </div>
+      <div class="mform-group">
+        <label>Expiry Date (optional)</label>
+        <input type="date" id="cExpiry"/>
+      </div>
+      <button type="submit" class="btn-save">Create Coupon</button>
+      <button type="button" class="btn-cancel" onclick="closeCouponModal()">Cancel</button>
+    </form>
+  </div>
 </div>
 
 <!-- ADD/EDIT PRODUCT MODAL -->
@@ -243,7 +339,9 @@ function showTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
   document.getElementById('pageTitle').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+  if (name === 'wholesale') loadWholesale();
   if (name === 'products') loadProducts();
+  if (name === 'coupons') loadCoupons();
   if (name === 'orders') loadOrders();
 }
 
@@ -263,6 +361,75 @@ async function loadStats() {
       <td>${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
     </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
 }
+// Coupons tab
+async function loadCoupons() {
+  const res = await fetch(`${API}/api/coupons`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const d = await res.json();
+  document.getElementById('couponsTbl').innerHTML = (d.coupons || []).map(c => `
+    <tr>
+      <td><strong style="color:#7B1C2E;font-size:1rem;letter-spacing:1px">${c.code}</strong></td>
+      <td>${c.discount_percent > 0 ? `${c.discount_percent}%` : `₹${c.discount_amount}`}</td>
+      <td>₹${c.min_order}</td>
+      <td>${c.used_count} / ${c.max_uses}</td>
+      <td>${c.expires_at ? new Date(c.expires_at).toLocaleDateString('en-IN') : 'No expiry'}</td>
+      <td>
+        <span class="badge" style="background:${c.active ? '#d1e7dd' : '#f8d7da'};color:${c.active ? '#0a3622' : '#58151c'}">
+          ${c.active ? 'Active' : 'Inactive'}
+        </span>
+      </td>
+      <td>
+        <button class="action-btn btn-del" onclick="deleteCoupon('${c.id}')">Deactivate</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No coupons yet</td></tr>';
+}
+
+function openCouponModal() {
+  document.getElementById('couponModal').classList.add('open');
+  document.getElementById('couponForm').reset();
+}
+
+function closeCouponModal() {
+  document.getElementById('couponModal').classList.remove('open');
+}
+
+document.getElementById('couponForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = 'Creating...'; btn.disabled = true;
+
+  await fetch(`${API}/api/coupons`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      code: document.getElementById('cCode').value.toUpperCase(),
+      discount_percent: parseInt(document.getElementById('cPercent').value) || 0,
+      discount_amount: parseInt(document.getElementById('cAmount').value) || 0,
+      min_order: parseInt(document.getElementById('cMinOrder').value) || 0,
+      max_uses: parseInt(document.getElementById('cMaxUses').value) || 100,
+      expires_at: document.getElementById('cExpiry').value || null
+    })
+  });
+
+  closeCouponModal();
+  loadCoupons();
+  showToast('Coupon created!');
+  btn.textContent = 'Create Coupon'; btn.disabled = false;
+});
+
+async function deleteCoupon(id) {
+  if (!confirm('Deactivate this coupon?')) return;
+  await fetch(`${API}/api/coupons/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  loadCoupons();
+  showToast('Coupon deactivated!');
+}
+
+// showTab function mein ye add karo
+// if (name === 'coupons') loadCoupons();
 
 async function loadProducts() {
   const res = await fetch(`${API}/api/products`);
@@ -338,6 +505,54 @@ function editProduct(p) {
     input.value = (p.size_stock && p.size_stock[size] !== undefined) ? p.size_stock[size] : '';
   });
 }
+async function loadWholesale() {
+  const res = await fetch(`${API}/api/wholesale`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const d = await res.json();
+  document.getElementById('wholesaleTbl').innerHTML = (d.enquiries || []).map(e => `
+    <tr>
+      <td>
+        <strong>${e.name}</strong><br/>
+        <small style="color:#9B6070">${e.email}</small>
+      </td>
+      <td>
+        <a href="https://wa.me/91${e.phone.replace(/[^0-9]/g,'')}" target="_blank"
+          style="color:#25D366;font-weight:600;text-decoration:none">
+          💬 ${e.phone}
+        </a>
+      </td>
+      <td>${e.city}</td>
+      <td><span style="background:#d1e7dd;color:#0a3622;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600">${e.quantity}</span></td>
+      <td>${new Date(e.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</td>
+      <td>
+        <span class="badge" style="background:${e.status==='new'?'#fff3cd':e.status==='contacted'?'#d1e7dd':'#f8d7da'};color:${e.status==='new'?'#856404':e.status==='contacted'?'#0a3622':'#58151c'}">
+          ${e.status}
+        </span>
+      </td>
+      <td>
+        <select onchange="updateWholesaleStatus('${e.id}',this.value)"
+          style="padding:5px;border:1px solid #ddd;border-radius:6px;font-size:.8rem">
+          <option value="">Update...</option>
+          <option value="contacted">Contacted</option>
+          <option value="converted">Converted</option>
+          <option value="closed">Closed</option>
+        </select>
+      </td>
+    </tr>`).join('') ||
+    '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No enquiries yet</td></tr>';
+}
+
+async function updateWholesaleStatus(id, status) {
+  if (!status) return;
+  await fetch(`${API}/api/wholesale/${id}/status`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  loadWholesale();
+  showToast('Status updated!');
+}
 
 document.getElementById('productForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -402,6 +617,7 @@ window.addEventListener('scroll', () => {
   const btn = document.getElementById('backToTop');
   if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
 });
+
 </script>
 </body>
 </html>

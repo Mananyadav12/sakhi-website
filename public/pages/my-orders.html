@@ -6,6 +6,15 @@
 <title>My Orders – Sakhi.co</title>
 <link rel="stylesheet" href="../css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R0VWP57W8J');
+</script>
 </head>
 <body>
 <nav class="navbar" id="navbar">
@@ -47,6 +56,27 @@
 <script src="../js/auth.js"></script>
 <script>
 const statusEmoji = { pending:'🕐', confirmed:'✅', processing:'📦', shipped:'🚚', delivered:'🎉', cancelled:'❌' };
+async function cancelOrder(orderId, trackingId) {
+  const reason = prompt('Reason for cancellation (optional):') || 'Cancelled by customer';
+  if (!confirm('Are you sure you want to cancel this order?')) return;
+
+  try {
+    const res = await fetch(`${API_URL}/api/orders/${orderId}/cancel`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tracking_id: trackingId, reason })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('Order cancelled successfully!');
+      loadOrders();
+    } else {
+      showToast(data.error || 'Cannot cancel this order!', 'error');
+    }
+  } catch(err) {
+    showToast('Something went wrong!', 'error');
+  }
+}
 
 async function loadOrders() {
   const token = localStorage.getItem('sakhi_user_token');
@@ -103,6 +133,12 @@ async function loadOrders() {
           <a href="/pages/track.html?id=${o.tracking_id}" class="btn btn-outline" style="padding:8px 18px;font-size:.85rem">
             Track Order
           </a>
+          ${['pending','confirmed','processing'].includes(o.status) ? `
+          <button onclick="cancelOrder('${o.id}','${o.tracking_id}')"
+          class="btn btn-outline"
+          style="padding:8px 18px;font-size:.85rem;color:#c0392b;border-color:#c0392b">
+          Cancel Order
+          </button>` : ''}
           ${o.status === 'delivered' ? `<button class="btn btn-primary" style="padding:8px 18px;font-size:.85rem" onclick="reorder('${o.id}')">Reorder</button>` : ''}
         </div>
       </div>`).join('');
@@ -123,6 +159,7 @@ window.addEventListener('scroll', () => {
   const btn = document.getElementById('backToTop');
   if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
 });
+
 </script>
 </body>
 </html>

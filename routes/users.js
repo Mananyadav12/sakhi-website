@@ -17,6 +17,113 @@ const userAuth = async (req, res, next) => {
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
+const crypto = require('crypto');
+
+// Forgot password — send reset email
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const { data: user } = await supabase
+      .from('users').select('id,name,email').eq('email', email).single();
+
+    if (!user) {
+      // Security ke liye same response
+      return res.json({ message: 'If email exists, reset link sent!' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await supabase.from('password_resets').insert([{
+      email,
+      token: resetToken,
+      expires_at: expiresAt
+    }]);
+
+    const resetLink = `${process.env.FRONTEND_URL}/pages/reset-password.html?token=${resetToken}`;
+
+    const emailData = JSON.stringify({
+      sender: { name: 'Sakhi.co', email: process.env.EMAIL_FROM },
+      to: [{ email, name: user.name }],
+      subject: '🔐 Reset Your Password – Sakhi.co',
+      htmlContent: `
+        <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto">
+          <div style="background:#7B1C2E;padding:30px;text-align:center;border-radius:16px 16px 0 0">
+            <h1 style="color:#E8B84B;margin:0">sakhi.co</h1>
+          </div>
+          <div style="padding:30px;background:#fff">
+            <h2 style="color:#5A1220">Reset Your Password</h2>
+            <p style="color:#5C3040">Hi ${user.name}, we received a request to reset your password.</p>
+            <div style="text-align:center;margin:2rem 0">
+              <a href="${resetLink}"
+                style="background:#7B1C2E;color:#fff;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;display:inline-block">
+                Reset Password →
+              </a>
+            </div>
+            <p style="color:#9B6070;font-size:13px">This link expires in 1 hour. If you didn't request this, ignore this email.</p>
+          </div>
+          <div style="background:#5A1220;padding:16px;text-align:center;border-radius:0 0 16px 16px">
+            <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0">© 2026 Sakhi.co</p>
+          </div>
+        </div>`
+    });
+
+    const https = require('https');
+    const options = {
+      hostname: 'api.brevo.com',
+      path: '/v3/smtp/email',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Length': Buffer.byteLength(emailData)
+      }
+    };
+
+    await new Promise((resolve, reject) => {
+      const req = https.request(options, (response) => {
+        let data = '';
+        response.on('data', chunk => data += chunk);
+        response.on('end', () => resolve(data));
+      });
+      req.on('error', reject);
+      req.write(emailData);
+      req.end();
+    });
+
+    res.json({ message: 'If email exists, reset link sent!' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Reset password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    const { data: reset, error } = await supabase
+      .from('password_resets')
+      .select('*')
+      .eq('token', token)
+      .eq('used', false)
+      .single();
+
+    if (error || !reset) return res.status(400).json({ error: 'Invalid or expired reset link!' });
+    if (new Date(reset.expires_at) < new Date()) return res.status(400).json({ error: 'Reset link expired!' });
+
+    const password_hash = await bcrypt.hash(password, 10);
+
+    await supabase.from('users').update({ password_hash }).eq('email', reset.email);
+    await supabase.from('password_resets').update({ used: true }).eq('token', token);
+
+    res.json({ message: 'Password reset successful!' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ── Welcome Email via Brevo HTTP API ─────────────────────
 const sendWelcomeEmail = async (user) => {
@@ -274,6 +381,36 @@ router.get('/loyalty', userAuth, async (req, res) => {
       value: Math.floor((user?.loyalty_points || 0) / 10) // ₹1 per 10 points
     });
   } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+// Redeem loyalty points
+router.post('/loyalty/redeem', userAuth, async (req, res) => {
+  try {
+    const { points_to_use } = req.body;
+
+    const { data: user } = await supabase
+      .from('users')
+      .select('loyalty_points')
+      .eq('id', req.user.id)
+      .single();
+
+    if (!user) return res.status(404).json({ error: 'User not found!' });
+    if (user.loyalty_points < points_to_use) {
+      return res.status(400).json({ error: `You only have ${user.loyalty_points} points!` });
+    }
+
+    // 10 points = ₹1
+    const discount = Math.floor(points_to_use / 10);
+
+    res.json({
+      valid: true,
+      points_used: points_to_use,
+      discount,
+      remaining_points: user.loyalty_points - points_to_use,
+      message: `🎉 ${points_to_use} points redeemed! You get ₹${discount} off`
+    });
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });

@@ -159,7 +159,34 @@ const sendConfirmationEmail = async (order) => {
     console.log('❌ Email error:', err.message);
   }
 };
+// Loyalty points deduct karo if used
+if (req.body.loyalty_points_used && req.body.loyalty_points_used > 0) {
+  const { data: user } = await supabase
+    .from('users')
+    .select('id,loyalty_points')
+    .eq('email', customer_email)
+    .single();
 
+  if (user) {
+    const newPoints = Math.max(0, user.loyalty_points - req.body.loyalty_points_used);
+    await supabase.from('users').update({ loyalty_points: newPoints }).eq('id', user.id);
+
+    await supabase.from('loyalty_transactions').insert([{
+      user_id: user.id,
+      points: -req.body.loyalty_points_used,
+      type: 'redeemed',
+      description: `Redeemed for Order #${order_number}`,
+      created_at: new Date()
+    }]);
+  }
+}
+
+// Earn points on this order
+if (exact_method !== 'cod') {
+  // Online payment ke baad earn (cod ke liye payment.js mein hoga)
+} else {
+  addLoyaltyPoints(customer_email, total_amount, order_number).catch(console.error);
+}
 // Status update email via Brevo API
 const sendStatusEmail = async (order, status) => {
   try {
@@ -335,6 +362,92 @@ router.put('/:id/status', auth, async (req, res) => {
     }
 
     res.json({ message: 'Status updated!', order: data[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+// Cancel order by user
+router.put('/:id/cancel', async (req, res) => {
+  try {
+    const { tracking_id, reason } = req.body;
+
+    // Verify order belongs to user via tracking_id
+    const { data: order, error: fetchError } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('id', req.params.id)
+      .eq('tracking_id', tracking_id)
+      .single();
+
+    if (fetchError || !order) {
+      return res.status(404).json({ error: 'Order not found!' });
+    }
+
+    // Only pending/confirmed orders can be cancelled
+    if (['shipped', 'delivered', 'cancelled'].includes(order.status)) {
+      return res.status(400).json({
+        error: `Cannot cancel order — already ${order.status}!`
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('orders')
+      .update({
+        status: 'cancelled',
+        cancellation_reason: reason || 'Cancelled by customer',
+        cancelled_at: new Date(),
+        updated_at: new Date()
+      })
+      .eq('id', req.params.id)
+      .select();
+
+    if (error) throw error;
+
+    // Send cancellation email
+    const cancelEmailData = JSON.stringify({
+      sender: { name: 'Sakhi.co', email: process.env.EMAIL_FROM },
+      to: [{ email: order.customer_email, name: order.customer_name }],
+      subject: `Order Cancelled #${order.order_number} – Sakhi.co`,
+      htmlContent: `
+        <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto">
+          <div style="background:#7B1C2E;padding:30px;text-align:center;border-radius:16px 16px 0 0">
+            <h1 style="color:#E8B84B;margin:0">sakhi.co</h1>
+          </div>
+          <div style="padding:30px;background:#fff">
+            <h2 style="color:#5A1220">Order Cancelled</h2>
+            <p style="color:#5C3040">Hi ${order.customer_name}, your order <strong>#${order.order_number}</strong> has been cancelled.</p>
+            ${order.payment_status === 'paid' ? `
+            <div style="background:#FDF8F2;border-radius:12px;padding:16px;margin:16px 0;border:1px solid rgba(201,146,42,.2)">
+              <p style="color:#5C3040;margin:0"><strong>Refund:</strong> ₹${order.total_amount} will be refunded within 5-7 business days.</p>
+            </div>` : ''}
+            <p style="color:#9B6070">Reason: ${reason || 'Cancelled by customer'}</p>
+            <p style="color:#9B6070">Need help? Contact us at <a href="mailto:${process.env.EMAIL_FROM}" style="color:#7B1C2E">${process.env.EMAIL_FROM}</a></p>
+          </div>
+          <div style="background:#5A1220;padding:16px;text-align:center;border-radius:0 0 16px 16px">
+            <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0">© 2026 Sakhi.co</p>
+          </div>
+        </div>`
+    });
+
+    const https = require('https');
+    const options = {
+      hostname: 'api.brevo.com',
+      path: '/v3/smtp/email',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Length': Buffer.byteLength(cancelEmailData)
+      }
+    };
+
+    const reqEmail = https.request(options, () => {});
+    reqEmail.on('error', console.error);
+    reqEmail.write(cancelEmailData);
+    reqEmail.end();
+
+    res.json({ success: true, message: 'Order cancelled!', order: data[0] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

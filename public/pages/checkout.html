@@ -7,6 +7,15 @@
 <link rel="stylesheet" href="../css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R0VWP57W8J');
+</script>
 </head>
 <body>
 
@@ -143,6 +152,24 @@
             style="width:100%;padding:10px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.875rem;font-family:inherit;outline:none;background:white"/>
           </div>
         </div>
+        <!-- LOYALTY POINTS -->
+        <div id="loyaltySection" style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0;display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+            <p style="font-weight:600;color:var(--maroon-dark);margin:0">⭐ Your Loyalty Points</p>
+            <span id="availablePoints" style="background:var(--maroon);color:var(--gold-light);padding:4px 12px;border-radius:20px;font-size:.82rem;font-weight:600">0 points</span>
+          </div>
+          <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.75rem">10 points = ₹1 discount</p>
+          <div style="display:flex;gap:.75rem;align-items:center">
+            <input type="number" id="pointsToUse" placeholder="Points to redeem"
+            min="10" step="10"
+            style="flex:1;padding:10px 14px;border:1.5px solid rgba(201,146,42,.3);border-radius:10px;font-size:.875rem;outline:none;font-family:inherit"/>
+           <button type="button" onclick="redeemPoints()"
+            class="btn btn-outline" style="padding:10px 18px;font-size:.875rem;white-space:nowrap">
+            Redeem
+           </button>
+         </div>
+         <p id="loyaltyMsg" style="font-size:.82rem;margin-top:.5rem;display:none"></p>
+        </div>
 
         <button type="submit" class="btn btn-primary" id="payBtn" style="width:100%;justify-content:center;font-size:1rem;padding:16px">
           Pay & Place Order →
@@ -173,6 +200,10 @@
         <span>🎟️ Coupon Discount</span>
         <span id="couponDiscountAmt">-₹0</span>
       </div>
+      <div class="summary-row" id="loyaltyDiscountRow" style="display:none;color:#2D8A4E">
+        <span>⭐ Loyalty Discount</span>
+        <span id="loyaltyDiscountAmt">-₹0</span>
+      </div>
     </div>
   </div>
 </div>
@@ -189,56 +220,124 @@
 <script src="../js/cart.js"></script>
 <script src="../js/main.js"></script>
 <script>
+// Variables pehle declare karo
 let deliveryCharge = 0;
 let giftWrapCharge = 0;
 let codCharge = 0;
+let couponDiscount = 0;
+let appliedCoupon = null;
 
 function updateTotals() {
+  // Final total mein loyalty discount bhi add karo
+  const total = Math.max(0,
+  subtotal + deliveryCharge + codCharge + giftWrapCharge
+  - couponDiscount - loyaltyDiscount
+);
   const subtotal = cartTotal();
   const deliveryVal = document.querySelector('input[name="delivery"]:checked')?.value;
   const paymentVal = document.querySelector('input[name="payment"]:checked')?.value;
+
+  // Delivery charge
+  deliveryCharge = deliveryVal === 'express' ? 99 : 0;
+
+  // COD charge
+  codCharge = paymentVal === 'cod' ? 50 : 0;
+
   // Gift wrap
   const giftWrap = document.getElementById('giftWrap')?.checked;
   giftWrapCharge = giftWrap ? 49 : 0;
   document.getElementById('giftMessageBox').style.display = giftWrap ? 'block' : 'none';
-  const total = Math.max(0, subtotal + deliveryCharge + codCharge + giftWrapCharge - couponDiscount);
+
+  // Gift wrap row show/hide
   const giftWrapRow = document.getElementById('giftWrapRow');
   if (giftWrapRow) giftWrapRow.style.display = giftWrapCharge > 0 ? 'flex' : 'none';
-  
 
-  deliveryCharge = deliveryVal === 'express' ? 99 : 0;
-  codCharge = paymentVal === 'cod' ? 50 : 0;
+  // Final total — ek baar calculate karo
+  const total = Math.max(0, subtotal + deliveryCharge + codCharge + giftWrapCharge - couponDiscount);
 
-  const total = Math.max(0, subtotal + deliveryCharge + codCharge - couponDiscount);
-
+  // Update UI
   document.getElementById('checkoutSubtotal').textContent = `₹${subtotal}`;
   document.getElementById('deliveryAmt').textContent = deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge}`;
   document.getElementById('deliveryAmt').style.color = deliveryCharge === 0 ? '#2D8A4E' : 'var(--maroon)';
   document.getElementById('codAmt').textContent = codCharge > 0 ? `₹${codCharge}` : '—';
+  document.getElementById('checkoutTotal').textContent = `₹${total}`;
 
-  // Coupon discount row
+  // Coupon row
   const couponRow = document.getElementById('couponDiscountRow');
   if (couponRow) {
     couponRow.style.display = couponDiscount > 0 ? 'flex' : 'none';
     document.getElementById('couponDiscountAmt').textContent = `-₹${couponDiscount}`;
   }
 
-  document.getElementById('checkoutTotal').textContent = `₹${total}`;
-  document.getElementById('payBtn').textContent = paymentVal === 'cod' ? 'Place Order (COD) →' : 'Pay & Place Order →';
+  // Button text
+  document.getElementById('payBtn').textContent = paymentVal === 'cod'
+    ? 'Place Order (COD) →'
+    : 'Pay & Place Order →';
 }
 
 function loadSummary() {
   const cart = getCart();
   if (cart.length === 0) { location.href = '/pages/cart.html'; return; }
+
   const el = document.getElementById('checkoutItems');
   el.innerHTML = cart.map(i => `
     <div class="checkout-item">
       <span>${i.name} (${i.size}) x${i.quantity}</span>
       <span>₹${i.price * i.quantity}</span>
     </div>`).join('');
+
+  // Autofill if user logged in
+  const user = JSON.parse(localStorage.getItem('sakhi_user') || 'null');
+  if (user) {
+    if (user.name) document.getElementById('custName').value = user.name;
+    if (user.phone) document.getElementById('custPhone').value = user.phone;
+    if (user.email) document.getElementById('custEmail').value = user.email;
+    if (user.address) document.getElementById('custAddress').value = user.address;
+    if (user.city) document.getElementById('custCity').value = user.city;
+    if (user.state) document.getElementById('custState').value = user.state;
+    if (user.pincode) document.getElementById('custPincode').value = user.pincode;
+  }
+
   updateTotals();
+  loadLoyaltyPoints();
 }
 
+// Coupon apply
+async function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim();
+  const msg = document.getElementById('couponMsg');
+  if (!code) return;
+
+  try {
+    const res = await fetch(`${API_URL}/api/coupons/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, order_amount: cartTotal() })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      couponDiscount = data.discount;
+      appliedCoupon = data.coupon;
+      msg.textContent = data.message;
+      msg.style.color = '#2D8A4E';
+      msg.style.display = 'block';
+    } else {
+      couponDiscount = 0;
+      appliedCoupon = null;
+      msg.textContent = '❌ ' + (data.error || 'Invalid coupon!');
+      msg.style.color = '#c0392b';
+      msg.style.display = 'block';
+    }
+    updateTotals();
+  } catch (err) {
+    document.getElementById('couponMsg').textContent = '❌ Something went wrong!';
+    document.getElementById('couponMsg').style.color = '#c0392b';
+    document.getElementById('couponMsg').style.display = 'block';
+  }
+}
+
+// Form submit
 document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = document.getElementById('payBtn');
@@ -247,11 +346,13 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
 
   const cart = getCart();
   const subtotal = cartTotal();
-  const total = subtotal + deliveryCharge + codCharge;
+  const total = Math.max(0, subtotal + deliveryCharge + codCharge + giftWrapCharge - couponDiscount);
   const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
   const deliveryType = document.querySelector('input[name="delivery"]:checked')?.value;
 
   const orderData = {
+    loyalty_points_used: loyaltyPointsUsed,
+    loyalty_discount: loyaltyDiscount,
     customer_name: document.getElementById('custName').value,
     customer_email: document.getElementById('custEmail').value,
     customer_phone: document.getElementById('custPhone').value,
@@ -262,12 +363,15 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     items: cart,
     total_amount: total,
     payment_method: paymentMethod,
-    delivery_type: deliveryType
+    delivery_type: deliveryType,
     gift_wrap: giftWrapCharge > 0,
-    gift_message: document.getElementById('giftMessage')?.value || ''
+    gift_message: document.getElementById('giftMessage')?.value || '',
+    coupon_code: appliedCoupon?.code || '',
+    coupon_discount: couponDiscount
   };
 
   try {
+    // Create order in DB — SIRF EK BAAR
     const orderRes = await fetch(`${API_URL}/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -275,17 +379,20 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     });
     const orderResult = await orderRes.json();
 
-    // COD — seedha order place
+    if (!orderResult.orderId) {
+      throw new Error('Order creation failed!');
+    }
+
+    // COD — seedha success page
     if (paymentMethod === 'cod') {
-        const orderRes = await fetch(`${API_URL}/api/orders`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        });
-        const orderResult = await orderRes.json();
-        localStorage.removeItem('sakhi_cart');
-        location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}`;
-        return;
+      localStorage.setItem('sakhi_last_order', JSON.stringify({
+        order_number: orderResult.order_number,
+        total_amount: total,
+        items: cart
+      }));
+      localStorage.removeItem('sakhi_cart');
+      location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}&method=cod`;
+      return;
     }
 
     // Online payment — Razorpay
@@ -316,8 +423,23 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
         });
         const verifyData = await verifyRes.json();
         if (verifyData.success) {
+          localStorage.setItem('sakhi_last_order', JSON.stringify({
+            order_number: orderResult.order_number,
+            total_amount: total,
+            items: cart
+          }));
           localStorage.removeItem('sakhi_cart');
           location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}&method=online`;
+        } else {
+          showToast('Payment verification failed!', 'error');
+          btn.textContent = 'Pay & Place Order →';
+          btn.disabled = false;
+        }
+      },
+      modal: {
+        ondismiss: function() {
+          btn.textContent = 'Pay & Place Order →';
+          btn.disabled = false;
         }
       },
       prefill: {
@@ -327,56 +449,20 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
       },
       theme: { color: '#7B1C2E' }
     };
+
     const rzp = new Razorpay(options);
     rzp.open();
-    btn.textContent = 'Pay & Place Order →';
-    btn.disabled = false;
+
   } catch (err) {
     showToast('Something went wrong! Please try again.', 'error');
     btn.textContent = paymentMethod === 'cod' ? 'Place Order (COD) →' : 'Pay & Place Order →';
     btn.disabled = false;
   }
 });
-let couponDiscount = 0;
-let appliedCoupon = null;
-
-async function applyCoupon() {
-  const code = document.getElementById('couponInput').value.trim();
-  const msg = document.getElementById('couponMsg');
-  if (!code) return;
-
-  try {
-    const res = await fetch(`${API_URL}/api/coupons/apply`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, order_amount: cartTotal() })
-    });
-    const data = await res.json();
-
-    if (data.valid) {
-      couponDiscount = data.discount;
-      appliedCoupon = data.coupon;
-      msg.textContent = data.message;
-      msg.style.color = '#2D8A4E';
-      msg.style.display = 'block';
-      updateTotals();
-    } else {
-      couponDiscount = 0;
-      appliedCoupon = null;
-      msg.textContent = '❌ ' + (data.error || 'Invalid coupon!');
-      msg.style.color = '#c0392b';
-      msg.style.display = 'block';
-      updateTotals();
-    }
-  } catch (err) {
-    msg.textContent = '❌ Something went wrong!';
-    msg.style.color = '#c0392b';
-    msg.style.display = 'block';
-  }
-}
 
 document.addEventListener('DOMContentLoaded', loadSummary);
 </script>
+
 <!-- BACK TO TOP -->
 <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
   style="display:none;position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;border-radius:50%;background:var(--maroon);color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow-lg);z-index:400;align-items:center;justify-content:center;transition:all .3s">
@@ -387,6 +473,78 @@ window.addEventListener('scroll', () => {
   const btn = document.getElementById('backToTop');
   if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
 });
+let loyaltyDiscount = 0;
+let loyaltyPointsUsed = 0;
+
+// Load loyalty points if logged in
+async function loadLoyaltyPoints() {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_URL}/api/users/loyalty`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    if (data.points > 0) {
+      document.getElementById('loyaltySection').style.display = 'block';
+      document.getElementById('availablePoints').textContent = `${data.points} points = ₹${data.value}`;
+      document.getElementById('pointsToUse').max = data.points;
+    }
+  } catch(err) {
+    console.log('Loyalty load error:', err.message);
+  }
+}
+
+async function redeemPoints() {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) {
+    showToast('Please login to redeem points!', 'error');
+    return;
+  }
+
+  const points = parseInt(document.getElementById('pointsToUse').value);
+  const msg = document.getElementById('loyaltyMsg');
+
+  if (!points || points < 10) {
+    msg.textContent = '❌ Minimum 10 points required!';
+    msg.style.color = '#c0392b';
+    msg.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/api/users/loyalty/redeem`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ points_to_use: points })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      loyaltyDiscount = data.discount;
+      loyaltyPointsUsed = data.points_used;
+      msg.textContent = data.message;
+      msg.style.color = '#2D8A4E';
+      msg.style.display = 'block';
+      document.getElementById('availablePoints').textContent =
+        `${data.remaining_points} points remaining`;
+      updateTotals();
+    } else {
+      msg.textContent = '❌ ' + (data.error || 'Cannot redeem!');
+      msg.style.color = '#c0392b';
+      msg.style.display = 'block';
+    }
+  } catch(err) {
+    msg.textContent = '❌ Something went wrong!';
+    msg.style.color = '#c0392b';
+    msg.style.display = 'block';
+  }
+}
 </script>
 </body>
 </html>

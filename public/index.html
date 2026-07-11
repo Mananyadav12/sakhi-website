@@ -16,6 +16,15 @@
 <link rel="canonical" href="https://sakhikurtis.netlify.app"/>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R0VWP57W8J');
+</script>
 </head>
 <body>
 
@@ -186,6 +195,36 @@
   </div>
 </section>
 
+<!-- INSTAGRAM FEED -->
+<section class="section" style="background:var(--white);padding:4rem 0">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Follow Us</p>
+      <h2 class="section-title">@sakhi_.co on Instagram</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-bottom:2rem" id="instaFeed">
+      <!-- Placeholder boxes -->
+      <div style="aspect-ratio:1;background:var(--cream-dark);border-radius:8px"></div>
+      <div style="aspect-ratio:1;background:var(--cream-dark);border-radius:8px"></div>
+      <div style="aspect-ratio:1;background:var(--cream-dark);border-radius:8px"></div>
+      <div style="aspect-ratio:1;background:var(--cream-dark);border-radius:8px"></div>
+      <div style="aspect-ratio:1;background:var(--cream-dark);border-radius:8px"></div>
+      <div style="aspect-ratio:1;background:var(--cream-dark);border-radius:8px"></div>
+    </div>
+    <div style="text-align:center">
+      <a href="https://www.instagram.com/sakhi_.co" target="_blank"
+        class="btn btn-outline" style="gap:.5rem">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+        Follow on Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="newsletter-section">
   <div class="container">
     <div class="newsletter-box">
@@ -259,6 +298,7 @@
 </footer>
 
 <script src="js/config.js"></script>
+<script src="js/push.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
 <script src="js/auth.js"></script>
