@@ -220,86 +220,172 @@
 <script src="../js/cart.js"></script>
 <script src="../js/main.js"></script>
 <script>
-// Variables pehle declare karo
+// Sab variables pehle declare
 let deliveryCharge = 0;
 let giftWrapCharge = 0;
 let codCharge = 0;
 let couponDiscount = 0;
+let loyaltyDiscount = 0;
+let loyaltyPointsUsed = 0;
 let appliedCoupon = null;
 
 function updateTotals() {
-  // Final total mein loyalty discount bhi add karo
-  const total = Math.max(0,
-  subtotal + deliveryCharge + codCharge + giftWrapCharge
-  - couponDiscount - loyaltyDiscount
-);
   const subtotal = cartTotal();
   const deliveryVal = document.querySelector('input[name="delivery"]:checked')?.value;
   const paymentVal = document.querySelector('input[name="payment"]:checked')?.value;
 
-  // Delivery charge
   deliveryCharge = deliveryVal === 'express' ? 99 : 0;
-
-  // COD charge
   codCharge = paymentVal === 'cod' ? 50 : 0;
 
-  // Gift wrap
   const giftWrap = document.getElementById('giftWrap')?.checked;
   giftWrapCharge = giftWrap ? 49 : 0;
   document.getElementById('giftMessageBox').style.display = giftWrap ? 'block' : 'none';
 
-  // Gift wrap row show/hide
   const giftWrapRow = document.getElementById('giftWrapRow');
   if (giftWrapRow) giftWrapRow.style.display = giftWrapCharge > 0 ? 'flex' : 'none';
 
-  // Final total — ek baar calculate karo
-  const total = Math.max(0, subtotal + deliveryCharge + codCharge + giftWrapCharge - couponDiscount);
+  const total = Math.max(0,
+    subtotal + deliveryCharge + codCharge + giftWrapCharge
+    - couponDiscount - loyaltyDiscount
+  );
 
-  // Update UI
   document.getElementById('checkoutSubtotal').textContent = `₹${subtotal}`;
   document.getElementById('deliveryAmt').textContent = deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge}`;
   document.getElementById('deliveryAmt').style.color = deliveryCharge === 0 ? '#2D8A4E' : 'var(--maroon)';
   document.getElementById('codAmt').textContent = codCharge > 0 ? `₹${codCharge}` : '—';
   document.getElementById('checkoutTotal').textContent = `₹${total}`;
 
-  // Coupon row
   const couponRow = document.getElementById('couponDiscountRow');
   if (couponRow) {
     couponRow.style.display = couponDiscount > 0 ? 'flex' : 'none';
     document.getElementById('couponDiscountAmt').textContent = `-₹${couponDiscount}`;
   }
 
-  // Button text
+  const loyaltyRow = document.getElementById('loyaltyDiscountRow');
+  if (loyaltyRow) {
+    loyaltyRow.style.display = loyaltyDiscount > 0 ? 'flex' : 'none';
+    if (document.getElementById('loyaltyDiscountAmt')) {
+      document.getElementById('loyaltyDiscountAmt').textContent = `-₹${loyaltyDiscount}`;
+    }
+  }
+
   document.getElementById('payBtn').textContent = paymentVal === 'cod'
     ? 'Place Order (COD) →'
     : 'Pay & Place Order →';
 }
 
 function loadSummary() {
+  // Cart check karo
   const cart = getCart();
-  if (cart.length === 0) { location.href = '/pages/cart.html'; return; }
+  console.log('Cart items:', cart); // Debug
 
+  // Cart empty hai toh redirect mat karo turant
+  // Pehle check karo ki cart actually empty hai ya load nahi hui
+  if (!cart || cart.length === 0) {
+    // 500ms baad dobara check karo
+    setTimeout(() => {
+      const retryCart = getCart();
+      if (!retryCart || retryCart.length === 0) {
+        showToast('Your cart is empty!', 'error');
+        setTimeout(() => {
+          location.href = '/pages/collections.html';
+        }, 1500);
+        return;
+      }
+      renderCartItems(retryCart);
+    }, 500);
+    return;
+  }
+
+  renderCartItems(cart);
+}
+
+function renderCartItems(cart) {
   const el = document.getElementById('checkoutItems');
+  if (!el) return;
+
   el.innerHTML = cart.map(i => `
-    <div class="checkout-item">
-      <span>${i.name} (${i.size}) x${i.quantity}</span>
-      <span>₹${i.price * i.quantity}</span>
+    <div class="checkout-item" style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(201,146,42,.1);font-size:.875rem">
+      <span style="color:var(--text-dark)">${i.name} <span style="color:var(--text-light)">(${i.size}) x${i.quantity}</span></span>
+      <span style="font-weight:600;color:var(--maroon)">₹${i.price * i.quantity}</span>
     </div>`).join('');
 
-  // Autofill if user logged in
+  // Autofill if logged in
   const user = JSON.parse(localStorage.getItem('sakhi_user') || 'null');
   if (user) {
     if (user.name) document.getElementById('custName').value = user.name;
     if (user.phone) document.getElementById('custPhone').value = user.phone;
     if (user.email) document.getElementById('custEmail').value = user.email;
-    if (user.address) document.getElementById('custAddress').value = user.address;
-    if (user.city) document.getElementById('custCity').value = user.city;
-    if (user.state) document.getElementById('custState').value = user.state;
-    if (user.pincode) document.getElementById('custPincode').value = user.pincode;
+    if (user.address) document.getElementById('custAddress').value = user.address || '';
+    if (user.city) document.getElementById('custCity').value = user.city || '';
+    if (user.state) document.getElementById('custState').value = user.state || '';
+    if (user.pincode) document.getElementById('custPincode').value = user.pincode || '';
   }
 
   updateTotals();
   loadLoyaltyPoints();
+}
+
+// Loyalty points load
+async function loadLoyaltyPoints() {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_URL}/api/users/loyalty`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    const section = document.getElementById('loyaltySection');
+    if (section && data.points > 0) {
+      section.style.display = 'block';
+      const el = document.getElementById('availablePoints');
+      if (el) el.textContent = `${data.points} points = ₹${data.value}`;
+      const input = document.getElementById('pointsToUse');
+      if (input) input.max = data.points;
+    }
+  } catch(err) {
+    console.log('Loyalty load error:', err.message);
+  }
+}
+
+// Redeem loyalty points
+async function redeemPoints() {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) {
+    showToast('Please login to redeem points!', 'error');
+    return;
+  }
+
+  const points = parseInt(document.getElementById('pointsToUse')?.value);
+  const msg = document.getElementById('loyaltyMsg');
+  if (!points || points < 10) {
+    if (msg) { msg.textContent = '❌ Minimum 10 points required!'; msg.style.color = '#c0392b'; msg.style.display = 'block'; }
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/api/users/loyalty/redeem`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ points_to_use: points })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      loyaltyDiscount = data.discount;
+      loyaltyPointsUsed = data.points_used;
+      if (msg) { msg.textContent = data.message; msg.style.color = '#2D8A4E'; msg.style.display = 'block'; }
+      const avail = document.getElementById('availablePoints');
+      if (avail) avail.textContent = `${data.remaining_points} points remaining`;
+      updateTotals();
+    } else {
+      if (msg) { msg.textContent = '❌ ' + (data.error || 'Cannot redeem!'); msg.style.color = '#c0392b'; msg.style.display = 'block'; }
+    }
+  } catch(err) {
+    if (msg) { msg.textContent = '❌ Something went wrong!'; msg.style.color = '#c0392b'; msg.style.display = 'block'; }
+  }
 }
 
 // Coupon apply
@@ -321,19 +407,18 @@ async function applyCoupon() {
       appliedCoupon = data.coupon;
       msg.textContent = data.message;
       msg.style.color = '#2D8A4E';
-      msg.style.display = 'block';
     } else {
       couponDiscount = 0;
       appliedCoupon = null;
       msg.textContent = '❌ ' + (data.error || 'Invalid coupon!');
       msg.style.color = '#c0392b';
-      msg.style.display = 'block';
     }
+    msg.style.display = 'block';
     updateTotals();
-  } catch (err) {
-    document.getElementById('couponMsg').textContent = '❌ Something went wrong!';
-    document.getElementById('couponMsg').style.color = '#c0392b';
-    document.getElementById('couponMsg').style.display = 'block';
+  } catch(err) {
+    msg.textContent = '❌ Something went wrong!';
+    msg.style.color = '#c0392b';
+    msg.style.display = 'block';
   }
 }
 
@@ -345,14 +430,22 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
   btn.disabled = true;
 
   const cart = getCart();
+  if (!cart || cart.length === 0) {
+    showToast('Cart is empty!', 'error');
+    btn.textContent = 'Pay & Place Order →';
+    btn.disabled = false;
+    return;
+  }
+
   const subtotal = cartTotal();
-  const total = Math.max(0, subtotal + deliveryCharge + codCharge + giftWrapCharge - couponDiscount);
-  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
-  const deliveryType = document.querySelector('input[name="delivery"]:checked')?.value;
+  const total = Math.max(0,
+    subtotal + deliveryCharge + codCharge + giftWrapCharge
+    - couponDiscount - loyaltyDiscount
+  );
+  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || 'online';
+  const deliveryType = document.querySelector('input[name="delivery"]:checked')?.value || 'standard';
 
   const orderData = {
-    loyalty_points_used: loyaltyPointsUsed,
-    loyalty_discount: loyaltyDiscount,
     customer_name: document.getElementById('custName').value,
     customer_email: document.getElementById('custEmail').value,
     customer_phone: document.getElementById('custPhone').value,
@@ -367,11 +460,13 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     gift_wrap: giftWrapCharge > 0,
     gift_message: document.getElementById('giftMessage')?.value || '',
     coupon_code: appliedCoupon?.code || '',
-    coupon_discount: couponDiscount
+    coupon_discount: couponDiscount,
+    loyalty_points_used: loyaltyPointsUsed,
+    loyalty_discount: loyaltyDiscount
   };
 
   try {
-    // Create order in DB — SIRF EK BAAR
+    // Order create karo — SIRF EK BAAR
     const orderRes = await fetch(`${API_URL}/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -379,65 +474,82 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     });
     const orderResult = await orderRes.json();
 
-    if (!orderResult.orderId) {
-      throw new Error('Order creation failed!');
+    if (!orderResult.orderId && !orderResult.order?.id) {
+      throw new Error(orderResult.error || 'Order creation failed!');
     }
 
-    // COD — seedha success page
+    const orderId = orderResult.orderId || orderResult.order?.id;
+    const orderNumber = orderResult.order_number || orderResult.order?.order_number;
+    const trackingId = orderResult.tracking_id || orderResult.order?.tracking_id;
+
+    // COD — seedha success
     if (paymentMethod === 'cod') {
       localStorage.setItem('sakhi_last_order', JSON.stringify({
-        order_number: orderResult.order_number,
+        order_number: orderNumber,
         total_amount: total,
         items: cart
       }));
       localStorage.removeItem('sakhi_cart');
-      location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}&method=cod`;
+      updateCartBadge();
+      location.href = `/pages/order-success.html?tracking=${trackingId}&order=${orderNumber}&method=cod`;
       return;
     }
 
-    // Online payment — Razorpay
+    // Online — Razorpay
     const payRes = await fetch(`${API_URL}/api/payment/create-order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: total, orderId: orderResult.orderId })
+      body: JSON.stringify({ amount: total, orderId })
     });
     const payData = await payRes.json();
 
+    if (!payData.razorpayOrderId) {
+      throw new Error('Payment initialization failed!');
+    }
+
     const options = {
-      key: payData.keyId,
+      key: payData.keyId || RAZORPAY_KEY,
       amount: payData.amount,
       currency: 'INR',
       name: 'Sakhi.co',
       description: 'Handcrafted Kurtis',
       order_id: payData.razorpayOrderId,
       handler: async function(response) {
-        const verifyRes = await fetch(`${API_URL}/api/payment/verify`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            orderId: orderResult.orderId
-          })
-        });
-        const verifyData = await verifyRes.json();
-        if (verifyData.success) {
-          localStorage.setItem('sakhi_last_order', JSON.stringify({
-            order_number: orderResult.order_number,
-            total_amount: total,
-            items: cart
-          }));
-          localStorage.removeItem('sakhi_cart');
-          location.href = `/pages/order-success.html?tracking=${orderResult.tracking_id}&order=${orderResult.order_number}&method=online`;
-        } else {
-          showToast('Payment verification failed!', 'error');
+        try {
+          const verifyRes = await fetch(`${API_URL}/api/payment/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              orderId
+            })
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyData.success) {
+            localStorage.setItem('sakhi_last_order', JSON.stringify({
+              order_number: orderNumber,
+              total_amount: total,
+              items: cart
+            }));
+            localStorage.removeItem('sakhi_cart');
+            updateCartBadge();
+            location.href = `/pages/order-success.html?tracking=${trackingId}&order=${orderNumber}&method=online`;
+          } else {
+            showToast('Payment verification failed! Contact support.', 'error');
+            btn.textContent = 'Pay & Place Order →';
+            btn.disabled = false;
+          }
+        } catch(err) {
+          showToast('Verification error! Contact support.', 'error');
           btn.textContent = 'Pay & Place Order →';
           btn.disabled = false;
         }
       },
       modal: {
         ondismiss: function() {
+          showToast('Payment cancelled!', 'error');
           btn.textContent = 'Pay & Place Order →';
           btn.disabled = false;
         }
@@ -453,13 +565,15 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     const rzp = new Razorpay(options);
     rzp.open();
 
-  } catch (err) {
-    showToast('Something went wrong! Please try again.', 'error');
+  } catch(err) {
+    console.error('Checkout error:', err);
+    showToast(err.message || 'Something went wrong! Please try again.', 'error');
     btn.textContent = paymentMethod === 'cod' ? 'Place Order (COD) →' : 'Pay & Place Order →';
     btn.disabled = false;
   }
 });
 
+// Page load
 document.addEventListener('DOMContentLoaded', loadSummary);
 </script>
 
@@ -473,78 +587,6 @@ window.addEventListener('scroll', () => {
   const btn = document.getElementById('backToTop');
   if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
 });
-let loyaltyDiscount = 0;
-let loyaltyPointsUsed = 0;
-
-// Load loyalty points if logged in
-async function loadLoyaltyPoints() {
-  const token = localStorage.getItem('sakhi_user_token');
-  if (!token) return;
-
-  try {
-    const res = await fetch(`${API_URL}/api/users/loyalty`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await res.json();
-
-    if (data.points > 0) {
-      document.getElementById('loyaltySection').style.display = 'block';
-      document.getElementById('availablePoints').textContent = `${data.points} points = ₹${data.value}`;
-      document.getElementById('pointsToUse').max = data.points;
-    }
-  } catch(err) {
-    console.log('Loyalty load error:', err.message);
-  }
-}
-
-async function redeemPoints() {
-  const token = localStorage.getItem('sakhi_user_token');
-  if (!token) {
-    showToast('Please login to redeem points!', 'error');
-    return;
-  }
-
-  const points = parseInt(document.getElementById('pointsToUse').value);
-  const msg = document.getElementById('loyaltyMsg');
-
-  if (!points || points < 10) {
-    msg.textContent = '❌ Minimum 10 points required!';
-    msg.style.color = '#c0392b';
-    msg.style.display = 'block';
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_URL}/api/users/loyalty/redeem`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ points_to_use: points })
-    });
-    const data = await res.json();
-
-    if (data.valid) {
-      loyaltyDiscount = data.discount;
-      loyaltyPointsUsed = data.points_used;
-      msg.textContent = data.message;
-      msg.style.color = '#2D8A4E';
-      msg.style.display = 'block';
-      document.getElementById('availablePoints').textContent =
-        `${data.remaining_points} points remaining`;
-      updateTotals();
-    } else {
-      msg.textContent = '❌ ' + (data.error || 'Cannot redeem!');
-      msg.style.color = '#c0392b';
-      msg.style.display = 'block';
-    }
-  } catch(err) {
-    msg.textContent = '❌ Something went wrong!';
-    msg.style.color = '#c0392b';
-    msg.style.display = 'block';
-  }
-}
 </script>
 </body>
 </html>
