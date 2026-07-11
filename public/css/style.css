@@ -416,3 +416,26 @@ img { max-width: 100%; height: auto; }
   .track-step .step-label { font-size: .68rem; }
   .step-dot { width: 32px; height: 32px; }
 }
+/* ── CHECKOUT MOBILE OVERFLOW FIX ── */
+html, body { overflow-x: hidden; max-width: 100%; }
+.checkout-form-wrap, .order-summary-box { max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
+
+@media (max-width: 600px) {
+  .checkout-form-wrap div[style*="display:flex"] {
+    flex-wrap: wrap;
+  }
+  .checkout-form-wrap input[type="text"],
+  .checkout-form-wrap input[type="number"],
+  .checkout-form-wrap input[type="email"],
+  .checkout-form-wrap input[type="tel"] {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .checkout-form-wrap button.btn-outline {
+    width: 100%;
+    margin-top: .5rem;
+  }
+  .checkout-layout { padding: 1.5rem 0 4rem; }
+  .container { overflow-x: hidden; }
+}
