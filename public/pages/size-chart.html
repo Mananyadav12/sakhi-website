@@ -139,6 +139,89 @@
     </table>
     <p style="color:var(--text-light);font-size:.8rem;margin-top:1rem">* All measurements are approximate. If you're between sizes, we recommend sizing up.</p>
   </div>
+  <!-- SIZE FINDER TOOL -->
+<div style="background:var(--white);border-radius:20px;padding:2.5rem;border:1px solid rgba(201,146,42,.15);margin-bottom:2rem">
+  <h2 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:.5rem">🔍 Find My Size</h2>
+  <p style="color:var(--text-light);font-size:.875rem;margin-bottom:1.5rem">Enter your measurements — we'll suggest the best size!</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+    <div>
+      <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Chest (inches)</label>
+      <input type="number" id="myChest" placeholder="e.g. 36" min="28" max="56"
+        style="width:100%;padding:11px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;background:var(--cream)"/>
+    </div>
+    <div>
+      <label style="display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:.4rem">Waist (inches)</label>
+      <input type="number" id="myWaist" placeholder="e.g. 30" min="22" max="50"
+        style="width:100%;padding:11px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.9rem;outline:none;font-family:inherit;background:var(--cream)"/>
+    </div>
+  </div>
+
+  <button onclick="findMySize()" class="btn btn-primary" style="width:100%;justify-content:center">
+    Find My Size 🎯
+  </button>
+
+  <div id="sizeResult" style="display:none;margin-top:1.25rem;padding:1.25rem;background:var(--cream);border-radius:14px;text-align:center">
+    <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.5rem">Your recommended size</p>
+    <p id="suggestedSize" style="font-size:2.5rem;font-weight:700;color:var(--maroon);margin:0"></p>
+    <p id="sizeNote" style="font-size:.82rem;color:var(--text-mid);margin-top:.5rem"></p>
+    <a href="/pages/collections.html" class="btn btn-outline" style="margin-top:1rem;display:inline-flex">
+      Shop This Size →
+    </a>
+  </div>
+</div>
+
+<script>
+const sizeData = [
+  { size: 'XS',  chest: 32, waist: 26 },
+  { size: 'S',   chest: 34, waist: 28 },
+  { size: 'M',   chest: 36, waist: 30 },
+  { size: 'L',   chest: 38, waist: 32 },
+  { size: 'XL',  chest: 40, waist: 34 },
+  { size: 'XXL', chest: 42, waist: 36 },
+  { size: '3XL', chest: 44, waist: 38 },
+  { size: '4XL', chest: 46, waist: 40 },
+];
+
+function findMySize() {
+  const chest = parseInt(document.getElementById('myChest').value);
+  const waist = parseInt(document.getElementById('myWaist').value);
+  const resultEl = document.getElementById('sizeResult');
+  const sizeEl = document.getElementById('suggestedSize');
+  const noteEl = document.getElementById('sizeNote');
+
+  if (!chest && !waist) {
+    alert('Please enter at least one measurement!');
+    return;
+  }
+
+  let bestMatch = null;
+  let minDiff = Infinity;
+
+  sizeData.forEach(s => {
+    let diff = 0;
+    if (chest) diff += Math.abs(s.chest - chest);
+    if (waist) diff += Math.abs(s.waist - waist);
+    if (diff < minDiff) { minDiff = diff; bestMatch = s; }
+  });
+
+  if (bestMatch) {
+    sizeEl.textContent = bestMatch.size;
+    if (chest && chest > bestMatch.chest) {
+      noteEl.textContent = `Your chest (${chest}") is slightly larger — consider sizing up!`;
+    } else if (waist && waist > bestMatch.waist) {
+      noteEl.textContent = `Your waist (${waist}") is slightly larger — consider sizing up!`;
+    } else {
+      noteEl.textContent = `Perfect fit for chest ${bestMatch.chest}" and waist ${bestMatch.waist}"`;
+    }
+    resultEl.style.display = 'block';
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+document.getElementById('myChest').addEventListener('keydown', e => { if (e.key === 'Enter') findMySize(); });
+document.getElementById('myWaist').addEventListener('keydown', e => { if (e.key === 'Enter') findMySize(); });
+</script>
 
   <!-- TIPS -->
   <div style="background:var(--maroon);border-radius:20px;padding:2.5rem">
@@ -170,7 +253,7 @@
   ↑
 </button>
 <script>
-window.addEventListener('scroll', () => {
+window.addEventListener('scroll', () => { 
   const btn = document.getElementById('backToTop');
   if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
 });
