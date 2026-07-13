@@ -414,6 +414,82 @@ router.post('/loyalty/redeem', userAuth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// GET all addresses
+router.get('/addresses', userAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('user_addresses')
+      .select('*')
+      .eq('user_id', req.user.id)
+      .order('is_default', { ascending: false });
+    if (error) throw error;
+    res.json({ addresses: data || [] });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST add address
+router.post('/addresses', userAuth, async (req, res) => {
+  try {
+    const { name, phone, address, city, state, pincode, landmark, is_default } = req.body;
+
+    // Agar default hai toh baaki sab false karo
+    if (is_default) {
+      await supabase.from('user_addresses')
+        .update({ is_default: false })
+        .eq('user_id', req.user.id);
+    }
+
+    const { data, error } = await supabase.from('user_addresses').insert([{
+      user_id: req.user.id,
+      name, phone, address, city, state, pincode, landmark,
+      is_default: is_default || false
+    }]).select();
+
+    if (error) throw error;
+    res.status(201).json({ address: data[0], message: 'Address saved!' });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT update address
+router.put('/addresses/:id', userAuth, async (req, res) => {
+  try {
+    const { name, phone, address, city, state, pincode, landmark, is_default } = req.body;
+
+    if (is_default) {
+      await supabase.from('user_addresses')
+        .update({ is_default: false })
+        .eq('user_id', req.user.id);
+    }
+
+    const { data, error } = await supabase.from('user_addresses')
+      .update({ name, phone, address, city, state, pincode, landmark, is_default: is_default || false })
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id)
+      .select();
+
+    if (error) throw error;
+    res.json({ address: data[0], message: 'Address updated!' });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE address
+router.delete('/addresses/:id', userAuth, async (req, res) => {
+  try {
+    await supabase.from('user_addresses')
+      .delete()
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id);
+    res.json({ message: 'Address deleted!' });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;
 module.exports.userAuth = userAuth;
