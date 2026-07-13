@@ -7,13 +7,11 @@
 <link rel="stylesheet" href="../css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-R0VWP57W8J');
 </script>
 </head>
@@ -45,44 +43,74 @@
     <div class="checkout-form-wrap">
       <h3>Delivery Details</h3>
       <form id="checkoutForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Full Name *</label>
-            <input type="text" id="custName" placeholder="Priya Sharma" required/>
+
+        <!-- ═══ SAVED ADDRESSES (naya add hua) ═══ -->
+        <div id="savedAddressSection" style="display:none;margin-bottom:1.5rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <h4 style="font-family:var(--font-display);color:var(--maroon-dark);margin:0">📍 Saved Addresses</h4>
+            <button type="button" onclick="showNewAddressForm()"
+              style="background:none;border:1px solid var(--maroon);color:var(--maroon);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600">
+              + New Address
+            </button>
+          </div>
+          <div id="addressList"></div>
+        </div>
+
+        <!-- ═══ NEW/MANUAL ADDRESS FORM — tera purana form isi div ke andar wrap hua hai ═══ -->
+        <div id="newAddressForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="custName" placeholder="Priya Sharma" required/>
+            </div>
+            <div class="form-group">
+              <label>Phone *</label>
+              <input type="tel" id="custPhone" placeholder="+91 98765 43210" required/>
+            </div>
           </div>
           <div class="form-group">
-            <label>Phone *</label>
-            <input type="tel" id="custPhone" placeholder="+91 98765 43210" required/>
+            <label>Email *</label>
+            <input type="email" id="custEmail" placeholder="priya@email.com" required/>
+          </div>
+          <div class="form-group">
+            <label>Full Address *</label>
+            <input type="text" id="custAddress" placeholder="House No, Street, Area" required/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" id="custCity" placeholder="Indore" required/>
+            </div>
+            <div class="form-group">
+              <label>State *</label>
+              <input type="text" id="custState" placeholder="Madhya Pradesh" required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Pincode *</label>
+              <input type="text" id="custPincode" placeholder="452001" maxlength="6" required/>
+            </div>
+            <div class="form-group">
+              <label>Landmark (optional)</label>
+              <input type="text" id="custLandmark" placeholder="Near XYZ"/>
+            </div>
+          </div>
+
+          <!-- SAVE ADDRESS CHECKBOX — logged in users ke liye (naya add hua) -->
+          <div id="saveAddressCheck" style="display:none;margin-top:.75rem">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;color:var(--text-mid)">
+              <input type="checkbox" id="saveAddress" style="accent-color:#7B1C2E;width:16px;height:16px"/>
+              Save this address for future orders
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;color:var(--text-mid);margin-top:.5rem">
+              <input type="checkbox" id="makeDefault" style="accent-color:#7B1C2E;width:16px;height:16px"/>
+              Set as default address
+            </label>
           </div>
         </div>
-        <div class="form-group">
-          <label>Email *</label>
-          <input type="email" id="custEmail" placeholder="priya@email.com" required/>
-        </div>
-        <div class="form-group">
-          <label>Full Address *</label>
-          <input type="text" id="custAddress" placeholder="House No, Street, Area" required/>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>City *</label>
-            <input type="text" id="custCity" placeholder="Indore" required/>
-          </div>
-          <div class="form-group">
-            <label>State *</label>
-            <input type="text" id="custState" placeholder="Madhya Pradesh" required/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Pincode *</label>
-            <input type="text" id="custPincode" placeholder="452001" maxlength="6" required/>
-          </div>
-          <div class="form-group">
-            <label>Landmark (optional)</label>
-            <input type="text" id="custLandmark" placeholder="Near XYZ"/>
-          </div>
-        </div>
+        <!-- ═══ NEW ADDRESS FORM END ═══ -->
+
         <!-- COUPON CODE -->
         <div style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0">
           <p style="font-weight:600;color:var(--maroon-dark);margin-bottom:.75rem">🎟️ Have a Coupon?</p>
@@ -136,6 +164,7 @@
             </div>
           </label>
         </div>
+
         <!-- GIFT WRAPPING -->
         <div style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0">
           <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer">
@@ -152,6 +181,7 @@
             style="width:100%;padding:10px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.875rem;font-family:inherit;outline:none;background:white"/>
           </div>
         </div>
+
         <!-- LOYALTY POINTS -->
         <div id="loyaltySection" style="background:#f5ede0;border-radius:12px;padding:1.25rem;margin:1rem 0;display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
@@ -228,6 +258,7 @@ let couponDiscount = 0;
 let loyaltyDiscount = 0;
 let loyaltyPointsUsed = 0;
 let appliedCoupon = null;
+let selectedAddressId = null;
 
 function updateTotals() {
   const subtotal = cartTotal();
@@ -275,14 +306,10 @@ function updateTotals() {
 }
 
 function loadSummary() {
-  // Cart check karo
   const cart = getCart();
-  console.log('Cart items:', cart); // Debug
+  console.log('Cart items:', cart);
 
-  // Cart empty hai toh redirect mat karo turant
-  // Pehle check karo ki cart actually empty hai ya load nahi hui
   if (!cart || cart.length === 0) {
-    // 500ms baad dobara check karo
     setTimeout(() => {
       const retryCart = getCart();
       if (!retryCart || retryCart.length === 0) {
@@ -324,7 +351,142 @@ function renderCartItems(cart) {
 
   updateTotals();
   loadLoyaltyPoints();
+  loadSavedAddresses(); // naya add hua
 }
+
+// ═══ SAVED ADDRESSES FUNCTIONS (naya add hua) ═══
+let loadedAddresses = [];
+
+async function loadSavedAddresses() {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) return;
+
+  const saveCheck = document.getElementById('saveAddressCheck');
+  if (saveCheck) saveCheck.style.display = 'block';
+
+  try {
+    const res = await fetch(`${API_URL}/api/users/addresses`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const addresses = data.addresses || [];
+    loadedAddresses = addresses;
+
+    if (addresses.length === 0) return;
+
+    document.getElementById('savedAddressSection').style.display = 'block';
+
+    const listEl = document.getElementById('addressList');
+    listEl.innerHTML = addresses.map(addr => `
+      <div onclick="selectAddress('${addr.id}')" id="addrCard-${addr.id}"
+        style="padding:1.25rem;border:2px solid ${addr.is_default ? 'var(--maroon)' : 'rgba(201,146,42,.2)'};
+        border-radius:14px;cursor:pointer;margin-bottom:.75rem;transition:all .2s;
+        background:${addr.is_default ? 'rgba(123,28,46,.04)' : 'var(--white)'}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem">
+          <div>
+            <p style="font-weight:600;color:var(--maroon-dark);margin:0 0 4px">${addr.name}
+              ${addr.is_default ? '<span style="background:var(--maroon);color:#E8B84B;font-size:.68rem;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600">DEFAULT</span>' : ''}
+            </p>
+            <p style="color:var(--text-mid);font-size:.875rem;margin:0 0 2px">${addr.address}</p>
+            <p style="color:var(--text-mid);font-size:.875rem;margin:0 0 2px">${addr.city}, ${addr.state} – ${addr.pincode}</p>
+            <p style="color:var(--text-light);font-size:.8rem;margin:0">📱 ${addr.phone || ''}</p>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-shrink:0">
+            <button onclick="event.stopPropagation();deleteAddress('${addr.id}')"
+              style="background:none;border:1px solid #f8d7da;color:#c0392b;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.75rem">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    const defaultAddr = addresses.find(a => a.is_default) || addresses[0];
+    if (defaultAddr) selectAddress(defaultAddr.id);
+
+    document.getElementById('newAddressForm').style.display = 'none';
+
+  } catch(err) {
+    console.log('Address load error:', err.message);
+  }
+}
+
+function selectAddress(id) {
+  selectedAddressId = id;
+
+  document.querySelectorAll('[id^="addrCard-"]').forEach(el => {
+    el.style.borderColor = 'rgba(201,146,42,.2)';
+    el.style.background = 'var(--white)';
+  });
+  const selected = document.getElementById(`addrCard-${id}`);
+  if (selected) {
+    selected.style.borderColor = 'var(--maroon)';
+    selected.style.background = 'rgba(123,28,46,.04)';
+  }
+
+  // Fill form fields from the matching address data
+  const addr = loadedAddresses.find(a => String(a.id) === String(id));
+  if (addr) {
+    if (document.getElementById('custName')) document.getElementById('custName').value = addr.name || '';
+    if (document.getElementById('custPhone')) document.getElementById('custPhone').value = addr.phone || '';
+    if (document.getElementById('custAddress')) document.getElementById('custAddress').value = addr.address || '';
+    if (document.getElementById('custCity')) document.getElementById('custCity').value = addr.city || '';
+    if (document.getElementById('custState')) document.getElementById('custState').value = addr.state || '';
+    if (document.getElementById('custPincode')) document.getElementById('custPincode').value = addr.pincode || '';
+  }
+
+  document.getElementById('newAddressForm').style.display = 'none';
+}
+
+function showNewAddressForm() {
+  selectedAddressId = null;
+  document.getElementById('newAddressForm').style.display = 'block';
+  document.querySelectorAll('[id^="addrCard-"]').forEach(el => {
+    el.style.borderColor = 'rgba(201,146,42,.2)';
+    el.style.background = 'var(--white)';
+  });
+  ['custName','custPhone','custAddress','custCity','custState','custPincode'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('custName').focus();
+}
+
+async function deleteAddress(id) {
+  if (!confirm('Delete this address?')) return;
+  const token = localStorage.getItem('sakhi_user_token');
+  await fetch(`${API_URL}/api/users/addresses/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  showToast('Address deleted!');
+  loadSavedAddresses();
+}
+
+async function saveNewAddress(orderData) {
+  const token = localStorage.getItem('sakhi_user_token');
+  if (!token) return;
+  if (!document.getElementById('saveAddress')?.checked) return;
+
+  try {
+    await fetch(`${API_URL}/api/users/addresses`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: orderData.customer_name,
+        phone: orderData.customer_phone,
+        address: orderData.address,
+        city: orderData.city,
+        state: orderData.state,
+        pincode: orderData.pincode,
+        is_default: document.getElementById('makeDefault')?.checked || false
+      })
+    });
+    console.log('✅ Address saved!');
+  } catch(err) {
+    console.log('Address save error:', err.message);
+  }
+}
+// ═══ SAVED ADDRESSES FUNCTIONS END ═══
 
 // Loyalty points load
 async function loadLoyaltyPoints() {
@@ -466,7 +628,6 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
   };
 
   try {
-    // Order create karo — SIRF EK BAAR
     const orderRes = await fetch(`${API_URL}/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -482,7 +643,9 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
     const orderNumber = orderResult.order_number || orderResult.order?.order_number;
     const trackingId = orderResult.tracking_id || orderResult.order?.tracking_id;
 
-    // COD — seedha success
+    // Save address if checkbox checked (naya add hua)
+    await saveNewAddress(orderData);
+
     if (paymentMethod === 'cod') {
       localStorage.setItem('sakhi_last_order', JSON.stringify({
         order_number: orderNumber,
@@ -495,7 +658,6 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
       return;
     }
 
-    // Online — Razorpay
     const payRes = await fetch(`${API_URL}/api/payment/create-order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -573,11 +735,9 @@ document.getElementById('checkoutForm').addEventListener('submit', async (e) => 
   }
 });
 
-// Page load
 document.addEventListener('DOMContentLoaded', loadSummary);
 </script>
 
-<!-- BACK TO TOP -->
 <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
   style="display:none;position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;border-radius:50%;background:var(--maroon);color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow-lg);z-index:400;align-items:center;justify-content:center;transition:all .3s">
   ↑
