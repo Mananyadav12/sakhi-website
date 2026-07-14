@@ -439,3 +439,20 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .checkout-layout { padding: 1.5rem 0 4rem; }
   .container { overflow-x: hidden; }
 }
+/* ── PAGE TRANSITION OVERLAY ── */
+#pageTransition {
+  position: fixed; inset: 0; background: var(--maroon-dark);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99999; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+#pageTransition.active { opacity: 1; pointer-events: all; }
+#pageTransition img {
+  width: 60px; height: 60px; border-radius: 50%;
+  border: 2px solid var(--gold);
+  animation: pulseLogo 1s ease-in-out infinite;
+}
+@keyframes pulseLogo {
+  0%, 100% { transform: scale(1); opacity: .7; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
