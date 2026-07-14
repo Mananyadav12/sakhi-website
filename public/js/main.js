@@ -296,18 +296,7 @@ function addToRecentlyViewed(product) {
   recent = recent.slice(0, 8);
   localStorage.setItem('sakhi_recent', JSON.stringify(recent));
 }
-// Page transition on internal link clicks
-document.querySelectorAll('a[href]').forEach(link => {
-  const href = link.getAttribute('href');
-  if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto') && !href.startsWith('tel') && !href.startsWith('javascript')) {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const overlay = document.getElementById('pageTransition');
-      if (overlay) overlay.classList.add('active');
-      setTimeout(() => { window.location.href = href; }, 280);
-    });
-  }
-});
+
 function getRecentlyViewed() {
   return JSON.parse(localStorage.getItem('sakhi_recent') || '[]');
 }
