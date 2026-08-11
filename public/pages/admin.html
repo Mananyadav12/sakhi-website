@@ -585,9 +585,26 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
   const files = document.getElementById('pImages').files;
   for (const f of files) fd.append('images', f);
   const url = id ? `${API}/api/products/${id}` : `${API}/api/products`;
-  await fetch(url, { method: id ? 'PUT' : 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
-  closeModal();
-  loadProducts();
+  try {
+    const res = await fetch(url, {
+      method: id ? 'PUT' : 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd
+    });
+    const data = await res.json();
+    console.log('Product save response:', data);
+    if (data.product || data.message) {
+      showToast('✅ Product saved successfully!');
+      closeModal();
+      loadProducts();
+    } else {
+      showToast('❌ Error: ' + (data.error || 'Unknown error'));
+      console.error('Save error:', data);
+    }
+  } catch(err) {
+    showToast('❌ Network error: ' + err.message);
+    console.error('Fetch error:', err);
+  }
   btn.textContent = 'Save Product'; btn.disabled = false;
 });
 
