@@ -4,20 +4,471 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Product – Sakhi.co</title>
-<meta name="description" content="Shop handcrafted pure cotton kurtis at Sakhi.co. Starting ₹649. Free shipping above ₹999."/>
+<meta name="description" content="Shop handcrafted pure cotton kurtis at Sakhi.co. Starting ₹649."/>
 <link rel="stylesheet" href="../css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<!-- Google tag (gtag.js) -->
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-R0VWP57W8J');
 </script>
+<style>
+/* ── PRODUCT PAGE ADVANCED STYLES ── */
+.product-page-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 100px 2rem 4rem;
+}
+
+/* BREADCRUMB */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .78rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--text-light); text-decoration: none; }
+.breadcrumb a:hover { color: var(--maroon); }
+.breadcrumb span { color: var(--maroon); font-weight: 600; }
+
+/* PRODUCT GRID */
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* IMAGE SECTION */
+.detail-images { position: sticky; top: 90px; }
+.main-image-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--cream);
+  aspect-ratio: 3/4;
+  margin-bottom: .75rem;
+}
+.detail-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+  cursor: zoom-in;
+}
+.main-image-wrap:hover .detail-main-img { transform: scale(1.04); }
+.img-badges {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+.img-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.badge-new { background: var(--maroon); color: #E8B84B; }
+.badge-sale { background: #2D8A4E; color: #fff; }
+.thumb-strip {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  padding-bottom: .25rem;
+  scrollbar-width: none;
+}
+.thumb-strip::-webkit-scrollbar { display: none; }
+.thumb-img {
+  width: 72px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.thumb-img.active { border-color: var(--maroon); }
+.thumb-img:hover { border-color: var(--gold); }
+
+/* INFO SECTION */
+.detail-info { padding-top: .5rem; }
+.product-category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--cream);
+  color: var(--maroon);
+  font-size: .75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+  letter-spacing: .5px;
+}
+.product-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--maroon-dark);
+  line-height: 1.2;
+  margin-bottom: .75rem;
+}
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+.stars-display { color: #C9922A; font-size: 1rem; letter-spacing: 2px; }
+.rating-count { font-size: .82rem; color: var(--text-light); }
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.price-main { font-size: 2.2rem; font-weight: 700; color: var(--maroon); }
+.price-mrp { font-size: 1.1rem; color: var(--text-light); text-decoration: line-through; }
+.price-off {
+  background: #e8f5ed;
+  color: #2D8A4E;
+  font-size: .85rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* DIVIDER */
+.section-divider {
+  height: 1px;
+  background: rgba(201,146,42,.15);
+  margin: 1.25rem 0;
+}
+
+/* COLOR SELECTOR */
+.option-label {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+.option-label span {
+  color: var(--maroon);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.color-selector {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.color-dot {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all .2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.color-dot:hover { transform: scale(1.1); }
+.color-dot.selected {
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px rgba(123,28,46,.2);
+  transform: scale(1.1);
+}
+.color-dot::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity .2s;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+.color-dot.selected::after { opacity: 1; }
+.color-name-tag {
+  font-size: .78rem;
+  color: var(--text-light);
+  margin-top: .4rem;
+  margin-bottom: 1.5rem;
+}
+
+/* SIZE SELECTOR */
+.size-options {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  margin-bottom: .75rem;
+}
+.size-btn {
+  position: relative;
+  min-width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(201,146,42,.3);
+  background: var(--white);
+  color: var(--text-mid);
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  padding: 0 .75rem;
+}
+.size-btn:hover:not(:disabled) {
+  border-color: var(--maroon);
+  background: var(--maroon);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123,28,46,.2);
+}
+.size-btn.selected {
+  border-color: var(--maroon);
+  background: var(--maroon);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(123,28,46,.2);
+}
+.size-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  background: var(--cream-dark);
+}
+.low-badge {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  background: #e67e22;
+  color: #fff;
+  font-size: .58rem;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* ACTION BUTTONS */
+.action-btns {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.btn-add-cart {
+  padding: 16px 24px;
+  background: var(--maroon);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-add-cart:hover {
+  background: var(--maroon-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(123,28,46,.3);
+}
+.btn-buy-now {
+  padding: 16px 20px;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.btn-buy-now:hover {
+  background: #b87d1a;
+  transform: translateY(-2px);
+}
+.btn-wishlist-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(201,146,42,.3);
+  background: var(--white);
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+}
+.btn-wishlist-icon:hover {
+  border-color: var(--maroon);
+  background: #fff0f3;
+  transform: translateY(-2px);
+}
+
+/* ASSURANCE STRIP */
+.assurance-strip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.assurance-item {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .85rem 1rem;
+  background: var(--cream);
+  border-radius: 12px;
+}
+.assurance-icon { font-size: 1.3rem; flex-shrink: 0; }
+.assurance-text p:first-child {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--maroon-dark);
+  margin-bottom: 1px;
+}
+.assurance-text p:last-child { font-size: .72rem; color: var(--text-light); }
+
+/* DESCRIPTION ACCORDION */
+.accordion-item {
+  border-bottom: 1px solid rgba(201,146,42,.15);
+}
+.accordion-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--maroon-dark);
+  text-align: left;
+}
+.accordion-btn .acc-icon {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  transition: transform .2s;
+}
+.accordion-btn.open .acc-icon { transform: rotate(45deg); }
+.accordion-content {
+  display: none;
+  padding: 0 0 1rem;
+  color: var(--text-mid);
+  font-size: .875rem;
+  line-height: 1.75;
+}
+.accordion-content.open { display: block; }
+
+/* SHARE ROW */
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+.share-label { font-size: .78rem; color: var(--text-light); font-weight: 600; }
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(201,146,42,.25);
+  background: none;
+  cursor: pointer;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  font-family: inherit;
+  transition: all .2s;
+}
+.share-btn:hover { border-color: var(--maroon); color: var(--maroon); }
+.share-btn.whatsapp:hover { background: #25D366; color: #fff; border-color: #25D366; }
+
+/* STICKY BAR */
+.sticky-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-top: 1px solid rgba(201,146,42,.2);
+  padding: .85rem 1.5rem;
+  z-index: 400;
+  box-shadow: 0 -4px 20px rgba(123,28,46,.1);
+}
+.sticky-bar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.sticky-product-info { flex: 1; min-width: 0; }
+.sticky-product-info p:first-child {
+  font-weight: 700;
+  color: var(--maroon-dark);
+  font-size: .9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sticky-product-info p:last-child { font-size: .8rem; color: var(--text-light); }
+
+/* MOBILE */
+@media(max-width: 768px) {
+  .product-detail-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .detail-images { position: static; }
+  .action-btns { grid-template-columns: 1fr 1fr; }
+  .btn-wishlist-icon { display: none; }
+  .assurance-strip { grid-template-columns: 1fr 1fr; }
+  .product-page-wrap { padding: 80px 1rem 5rem; }
+  .sticky-bar { display: block; }
+}
+@media(max-width: 480px) {
+  .assurance-strip { grid-template-columns: 1fr; }
+  .action-btns { grid-template-columns: 1fr; }
+  .btn-buy-now { order: -1; }
+}
+</style>
 </head>
 <body>
+
 <nav class="navbar" id="navbar">
   <div class="nav-container">
     <a href="/" class="nav-logo">
@@ -31,6 +482,17 @@
       <li><a href="/pages/contact.html">Contact</a></li>
     </ul>
     <div class="nav-actions">
+      <button class="icon-btn" onclick="openSearch()" aria-label="Search">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </button>
+      <button class="icon-btn" onclick="location.href='/pages/wishlist.html'" style="position:relative">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <span class="wishlist-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#E8B84B;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:700;align-items:center;justify-content:center">0</span>
+      </button>
       <button class="icon-btn" onclick="location.href='/pages/cart.html'" style="position:relative">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
@@ -45,23 +507,92 @@
   </div>
 </nav>
 
-<div class="container" style="padding-top:90px">
+<!-- SEARCH OVERLAY -->
+<div id="searchOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:flex-start;justify-content:center;padding:100px 1rem 2rem;backdrop-filter:blur(4px)">
+  <div style="background:var(--white);border-radius:20px;width:100%;max-width:600px;overflow:hidden;box-shadow:var(--shadow-lg)">
+    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid rgba(201,146,42,.15);display:flex;align-items:center;gap:1rem">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-light);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search kurtis, styles..."
+        oninput="handleSearch(this.value)"
+        style="flex:1;border:none;outline:none;font-size:1rem;font-family:inherit;color:var(--text-dark);background:none"/>
+      <button onclick="closeSearch()" style="background:none;border:none;cursor:pointer;color:var(--text-light);font-size:1.5rem;line-height:1;padding:0">&times;</button>
+    </div>
+    <div id="searchResults" style="max-height:400px;overflow-y:auto;padding:.5rem"></div>
+    <div style="padding:1rem 1.5rem;border-top:1px solid rgba(201,146,42,.1);background:var(--cream)">
+      <p style="font-size:.78rem;color:var(--text-light);margin:0">Try: "square neck", "bell sleeve", "cotton kurti"</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN PRODUCT PAGE -->
+<div class="product-page-wrap">
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb" id="breadcrumb">
+    <a href="/">Home</a> › <a href="/pages/collections.html">Collections</a> › <span id="breadcrumbName">Loading...</span>
+  </nav>
+
+  <!-- SKELETON -->
   <div id="productDetail">
     <div class="product-detail-grid">
       <div class="skeleton" style="aspect-ratio:3/4;border-radius:20px"></div>
-      <div style="padding-top:1rem">
-        <div class="skeleton" style="height:40px;width:60%;border-radius:8px;margin-bottom:1rem"></div>
+      <div>
+        <div class="skeleton" style="height:20px;width:30%;border-radius:8px;margin-bottom:1rem"></div>
+        <div class="skeleton" style="height:40px;width:80%;border-radius:8px;margin-bottom:1rem"></div>
         <div class="skeleton" style="height:24px;width:40%;border-radius:8px;margin-bottom:2rem"></div>
-        <div class="skeleton" style="height:120px;border-radius:8px"></div>
+        <div class="skeleton" style="height:120px;border-radius:8px;margin-bottom:1rem"></div>
+        <div class="skeleton" style="height:56px;border-radius:14px"></div>
       </div>
     </div>
   </div>
+
+  <!-- REVIEWS SECTION -->
   <div id="reviewsSection"></div>
+
+  <!-- RECENTLY VIEWED -->
+  <div id="recentlyViewedSection"></div>
+</div>
+
+<!-- STICKY BAR (Mobile) -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-bar-inner">
+    <div class="sticky-product-info">
+      <p id="stickyName">—</p>
+      <p id="stickyPrice">—</p>
+    </div>
+    <button class="btn-add-cart" onclick="handleAddToCart()" style="padding:12px 20px;font-size:.875rem">
+      🛍️ Add to Cart
+    </button>
+    <button class="btn-buy-now" onclick="handleBuyNow()" style="padding:12px 16px;font-size:.875rem">
+      Buy Now
+    </button>
+  </div>
 </div>
 
 <footer class="footer">
   <div class="container">
-    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem">
+    <div class="footer-grid">
+      <div>
+        <img src="../images/logo.jpeg" alt="Sakhi" class="footer-logo-img"/>
+        <p class="brand-tagline">Craft worn daily.<br/>Made for every woman.</p>
+      </div>
+      <div class="footer-links"><h4>Shop</h4><ul>
+        <li><a href="/pages/collections.html">All Kurtis</a></li>
+        <li><a href="/pages/collections.html?cat=square">Square Neck</a></li>
+        <li><a href="/pages/collections.html?cat=bell">Bell Sleeves</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Help</h4><ul>
+        <li><a href="/pages/contact.html">Contact Us</a></li>
+        <li><a href="/pages/track.html">Track Order</a></li>
+        <li><a href="/pages/refund.html">Returns</a></li>
+        <li><a href="/pages/size-chart.html">Size Chart</a></li>
+      </ul></div>
+      <div class="footer-links"><h4>Company</h4><ul>
+        <li><a href="/pages/about.html">About</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
       <p>© 2026 Sakhi.co</p><p>Made with ❤️ in India</p>
     </div>
   </div>
@@ -74,6 +605,7 @@
 <script>
 let currentProduct = null;
 let selectedSize = null;
+let selectedColor = null;
 let currentProductId = null;
 
 async function loadProduct() {
@@ -86,13 +618,20 @@ async function loadProduct() {
     const data = await res.json();
     currentProduct = data.product;
     document.title = `${currentProduct.name} – Sakhi.co`;
+    document.getElementById('breadcrumbName').textContent = currentProduct.name;
+
+    // Sticky bar update
+    document.getElementById('stickyName').textContent = currentProduct.name;
+    document.getElementById('stickyPrice').textContent = `₹${currentProduct.price}`;
+
     renderProduct(currentProduct);
-    // Recently viewed mein add karo
     addToRecentlyViewed(currentProduct);
     loadReviews(id);
+    renderRecentlyViewed('recentlyViewedSection');
+    trackProductView(currentProduct);
   } catch (err) {
     document.getElementById('productDetail').innerHTML =
-      `<p style="text-align:center;padding:4rem;color:var(--text-light)">Product not found.</p>`;
+      `<div style="text-align:center;padding:4rem"><p style="color:var(--text-light)">Product not found.</p><a href="/pages/collections.html" class="btn btn-primary" style="margin-top:1rem;display:inline-flex">Browse Collections</a></div>`;
   }
 }
 
@@ -101,140 +640,228 @@ function renderProduct(p) {
   const sizeStock = p.size_stock || {};
   const availableSizes = p.sizes || ['S','M','L','XL','XXL'];
   const allSizes = ['XS','S','M','L','XL','XXL','3XL','4XL'];
+  const colors = p.colors || [];
 
   const hasSizeStock = Object.keys(sizeStock).length > 0;
   const totalStock = Object.values(sizeStock).reduce((sum, qty) => sum + qty, 0);
   const isSoldOut = hasSizeStock && totalStock === 0;
 
-  const imgHTML = p.images && p.images.length > 0
-    ? `<img src="${p.images[0]}" alt="${p.name}" class="detail-main-img"
-        onerror="this.parentElement.innerHTML='<div class=detail-img-placeholder>👗</div>'"/>`
-    : `<div class="detail-img-placeholder">👗</div>`;
+  // Images
+  const mainImg = p.images && p.images.length > 0 ? p.images[0] : null;
 
+  // Color selector HTML
+  const colorHTML = colors.length > 0 ? `
+    <div class="section-divider"></div>
+    <p class="option-label">Color: <span id="selectedColorName">${colors[0].name}</span></p>
+    <div class="color-selector" id="colorSelector">
+      ${colors.map((c, i) => `
+        <div class="color-dot ${i === 0 ? 'selected' : ''}"
+          style="background:${c.hex}"
+          title="${c.name}"
+          onclick="selectColor('${c.hex}','${c.name}',this)">
+        </div>`).join('')}
+    </div>` : '';
+
+  // Sizes HTML
   let sizesHTML = '';
   if (isSoldOut) {
     sizesHTML = `
-      <div style="background:#f8d7da;border:1px solid #f5c6cb;border-radius:12px;padding:14px;text-align:center;margin:1rem 0">
-        <span style="color:#58151c;font-weight:700;font-size:1.1rem">❌ Sold Out</span>
-        <p style="color:#58151c;font-size:.8rem;margin-top:.25rem">This product is currently unavailable</p>
+      <div style="background:#f8d7da;border:1px solid #f5c6cb;border-radius:12px;padding:16px;text-align:center;margin:1rem 0">
+        <p style="color:#58151c;font-weight:700;font-size:1.1rem">❌ Sold Out</p>
+        <p style="color:#58151c;font-size:.8rem;margin-top:4px">Currently unavailable</p>
       </div>`;
   } else {
     const sizesToShow = hasSizeStock
       ? allSizes.filter(s => sizeStock.hasOwnProperty(s))
       : availableSizes;
-
     sizesHTML = `
-      <p class="size-label" style="font-size:.85rem;font-weight:600;color:var(--text-mid);margin-bottom:.75rem">
-        Select Size: ${selectedSize ? `<span style="color:var(--maroon);font-weight:700">${selectedSize}</span>` : ''}
-      </p>
-      <div class="size-options" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem">
+      <div class="section-divider"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+        <p class="option-label" style="margin:0">Size: <span id="selectedSizeName" style="color:var(--maroon)">${selectedSize || 'Select'}</span></p>
+        <a href="/pages/size-chart.html" style="font-size:.75rem;color:var(--maroon);text-decoration:none;font-weight:600">📏 Size Chart</a>
+      </div>
+      <div class="size-options">
         ${sizesToShow.map(s => {
           const qty = sizeStock[s];
           const isUnavailable = hasSizeStock && qty === 0;
           const isLow = hasSizeStock && qty > 0 && qty <= 5;
-          return `
-            <button
-              class="size-btn ${isUnavailable ? 'out-of-stock' : ''} ${selectedSize === s ? 'selected' : ''}"
-              onclick="${isUnavailable ? '' : `selectSize('${s}', this)`}"
-              ${isUnavailable ? 'disabled' : ''}
-              style="position:relative;${isUnavailable ? 'opacity:.45;cursor:not-allowed;text-decoration:line-through;background:var(--cream-dark);' : ''}">
-              ${s}
-              ${isLow ? `<span style="position:absolute;top:-8px;right:-4px;background:#e67e22;color:#fff;font-size:.58rem;padding:1px 5px;border-radius:10px;font-weight:700;white-space:nowrap">Low</span>` : ''}
-              ${isUnavailable ? `<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#c0392b;font-size:1.2rem;pointer-events:none">✕</span>` : ''}
-            </button>`;
+          return `<button
+            class="size-btn ${isUnavailable ? '' : ''} ${selectedSize === s ? 'selected' : ''}"
+            onclick="${isUnavailable ? '' : `selectSize('${s}',this)`}"
+            ${isUnavailable ? 'disabled' : ''}
+            style="${isUnavailable ? 'opacity:.35;cursor:not-allowed;text-decoration:line-through;' : ''}">
+            ${s}
+            ${isLow ? `<span class="low-badge">Low</span>` : ''}
+          </button>`;
         }).join('')}
-      </div>
-      <a href="/pages/size-chart.html" style="font-size:.78rem;color:var(--maroon);text-decoration:none;display:inline-block;margin-bottom:1.25rem">
-        📏 Size Chart →
-      </a>`;
+      </div>`;
   }
+
+  // Stock status
+  const stockStatus = !isSoldOut ? `
+    <p style="font-size:.8rem;margin-bottom:1.25rem;${hasSizeStock && totalStock <= 10 && totalStock > 0 ? 'color:#e67e22;font-weight:600' : 'color:#2D8A4E'}">
+      ${hasSizeStock
+        ? (totalStock > 10 ? '✅ In Stock' : totalStock > 0 ? `⚠️ Only ${totalStock} pieces left!` : '')
+        : (p.stock > 10 ? '✅ In Stock' : p.stock > 0 ? `⚠️ Only ${p.stock} left!` : '')}
+    </p>` : '';
+
+  const isWished = isWishlisted(p.id);
 
   document.getElementById('productDetail').innerHTML = `
     <div class="product-detail-grid">
+
+      <!-- LEFT: IMAGES -->
       <div class="detail-images">
-        ${imgHTML}
+        <div class="main-image-wrap">
+          ${mainImg
+            ? `<img src="${mainImg}" alt="${p.name}" class="detail-main-img" id="mainImg"/>`
+            : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:5rem">👗</div>`}
+          <div class="img-badges">
+            ${discount > 0 ? `<span class="img-badge badge-sale">${discount}% OFF</span>` : ''}
+            <span class="img-badge badge-new">NEW</span>
+          </div>
+        </div>
         ${p.images && p.images.length > 1 ? `
-        <div style="display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap">
+        <div class="thumb-strip">
           ${p.images.map((img, i) => `
-            <img src="${img}" alt="${p.name} ${i+1}"
-              style="width:72px;height:90px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid ${i===0?'var(--maroon)':'transparent'};transition:border .2s"
-              onclick="document.querySelector('.detail-main-img').src='${img}';this.parentElement.querySelectorAll('img').forEach(el=>el.style.borderColor='transparent');this.style.borderColor='var(--maroon)'"/>
+            <img src="${img}" alt="${p.name}" class="thumb-img ${i === 0 ? 'active' : ''}"
+              onclick="switchImage('${img}', this)"/>
           `).join('')}
         </div>` : ''}
       </div>
 
+      <!-- RIGHT: INFO -->
       <div class="detail-info">
-        <p style="color:var(--text-light);font-size:.8rem;margin-bottom:.4rem;text-transform:capitalize;letter-spacing:.5px">
-          ${p.category} Kurti
-        </p>
-        <h1 style="font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);color:var(--maroon-dark);margin-bottom:.75rem;line-height:1.2">
-          ${p.name}
-        </h1>
-
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap">
-          <span style="font-size:1.8rem;font-weight:700;color:var(--maroon)">₹${p.price}</span>
-          ${p.mrp ? `<span style="font-size:1rem;color:var(--text-light);text-decoration:line-through">₹${p.mrp}</span>` : ''}
-          ${discount > 0 ? `<span style="background:#e8f5ed;color:#2D8A4E;font-size:.85rem;font-weight:700;padding:4px 10px;border-radius:20px">${discount}% off</span>` : ''}
+        <div class="product-category-tag">
+          👗 ${p.category} Kurti
         </div>
 
-        <p style="color:var(--text-mid);line-height:1.75;margin-bottom:1.5rem;font-size:.95rem">
-          ${p.description || 'Beautiful handcrafted kurti in 100% pure cotton. Made with love by skilled artisans.'}
-        </p>
+        <h1 class="product-title">${p.name}</h1>
 
+        <!-- RATING -->
+        <div class="rating-row" id="ratingRow">
+          <span class="stars-display">★★★★☆</span>
+          <span class="rating-count">Loading reviews...</span>
+        </div>
+
+        <!-- PRICE -->
+        <div class="price-row">
+          <span class="price-main">₹${p.price}</span>
+          ${p.mrp && p.mrp > p.price ? `<span class="price-mrp">₹${p.mrp}</span>` : ''}
+          ${discount > 0 ? `<span class="price-off">${discount}% off</span>` : ''}
+        </div>
+
+        <!-- COLOR SELECTOR -->
+        ${colorHTML}
+
+        <!-- SIZE SELECTOR -->
         ${sizesHTML}
 
-        ${!isSoldOut ? `
-        <p style="font-size:.8rem;margin-bottom:1.5rem;${totalStock > 0 && totalStock <= 10 ? 'color:#e67e22;font-weight:600' : 'color:#2D8A4E'}">
-          ${hasSizeStock
-            ? (totalStock > 10 ? '✅ In Stock' : totalStock > 0 ? `⚠️ Only ${totalStock} pieces left!` : '')
-            : (p.stock > 10 ? '✅ In Stock' : p.stock > 0 ? `⚠️ Only ${p.stock} left!` : '')}
-        </p>` : ''}
-         <div style="display:flex;gap:.75rem;margin-bottom:1rem">
-          <button onclick="toggleWishlistDetail()"
-          id="wishlistDetailBtn"
-          style="flex:1;padding:11px;border-radius:var(--radius);border:1.5px solid rgba(201,146,42,.3);background:none;cursor:pointer;font-size:.9rem;font-weight:500;color:var(--text-mid);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px">
-          ${isWishlisted(p.id) ? '❤️ Wishlisted' : '🤍 Add to Wishlist'}
-          </button>
-          <button onclick="shareCurrentProduct()"
-          style="width:46px;height:46px;border-radius:var(--radius);border:1.5px solid rgba(201,146,42,.3);background:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s"
-          title="Share this product">
-          🔗
-         </button>
-        </div>
-        ${isSoldOut ? `
-          <div style="margin-top:1rem; margin-bottom:1rem">
-            <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.75rem;text-align:center">Get notified when back in stock!</p>
-            <form onsubmit="notifyMe(event,'${p.id}','${p.name}')" style="display:flex;gap:.75rem">
-              <input type="email" placeholder="Your email address" required
-                style="flex:1;padding:11px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:var(--radius);font-size:.875rem;font-family:inherit;outline:none;background:var(--cream)"/>
-              <button type="submit" class="btn btn-outline" style="white-space:nowrap;padding:11px 16px;font-size:.85rem">
-                Notify Me 🔔
+        <!-- STOCK -->
+        ${stockStatus}
+
+        <!-- ACTION BUTTONS -->
+        <div class="section-divider"></div>
+        ${isSoldOut
+          ? `<div>
+              <button class="btn-add-cart" style="width:100%;opacity:.5;cursor:not-allowed" disabled>❌ Sold Out</button>
+              <div style="margin-top:1rem">
+                <p style="font-size:.82rem;color:var(--text-light);margin-bottom:.75rem;text-align:center">Get notified when back in stock!</p>
+                <form onsubmit="notifyMe(event,'${p.id}','${p.name}')" style="display:flex;gap:.75rem">
+                  <input type="email" placeholder="Your email" required
+                    style="flex:1;padding:11px 14px;border:1.5px solid rgba(201,146,42,.25);border-radius:10px;font-size:.875rem;font-family:inherit;outline:none;background:var(--cream)"/>
+                  <button type="submit" class="btn-buy-now" style="white-space:nowrap">🔔 Notify</button>
+                </form>
+              </div>
+            </div>`
+          : `<div class="action-btns">
+              <button class="btn-add-cart" onclick="handleAddToCart()" id="addCartBtn">
+                🛍️ Add to Cart
               </button>
-            </form>
-          </div>` : ''}
+              <button class="btn-buy-now" onclick="handleBuyNow()">
+                Buy Now →
+              </button>
+              <button class="btn-wishlist-icon" onclick="toggleWishlistDetail()" id="wishlistDetailBtn" title="Add to Wishlist">
+                ${isWished ? '❤️' : '🤍'}
+              </button>
+            </div>`}
 
-        <div class="detail-actions" style="display:flex;gap:1rem;margin-bottom:1.5rem">
-          ${isSoldOut
-            ? `<button class="btn btn-primary" style="flex:1;justify-content:center;opacity:.5;cursor:not-allowed" disabled>Sold Out</button>`
-            : `<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="handleAddToCart()">Add to Cart 🛍️</button>
-               <button class="btn btn-outline" onclick="handleBuyNow()">Buy Now →</button>`
-          }
+        <!-- ASSURANCE STRIP -->
+        <div class="assurance-strip">
+          <div class="assurance-item">
+            <span class="assurance-icon">🚚</span>
+            <div class="assurance-text">
+              <p>Free Shipping</p>
+              <p>On orders above ₹999</p>
+            </div>
+          </div>
+          <div class="assurance-item">
+            <span class="assurance-icon">🔄</span>
+            <div class="assurance-text">
+              <p>Easy Returns</p>
+              <p><a href="/pages/refund.html" style="color:var(--maroon);text-decoration:none">7-day policy</a></p>
+            </div>
+          </div>
+          <div class="assurance-item">
+            <span class="assurance-icon">💳</span>
+            <div class="assurance-text">
+              <p>Safe Payment</p>
+              <p>UPI, Cards, COD</p>
+            </div>
+          </div>
+          <div class="assurance-item">
+            <span class="assurance-icon">🌿</span>
+            <div class="assurance-text">
+              <p>100% Cotton</p>
+              <p>Pure handcrafted</p>
+            </div>
+          </div>
         </div>
 
-       
-        <div style="background:var(--cream-dark);border-radius:14px;padding:1.25rem">
-          <div style="display:flex;flex-direction:column;gap:.6rem">
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">🚚 <span>Free shipping on orders above ₹999</span></p>
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">🔄 <span><a href="/pages/refund.html" style="color:var(--maroon);text-decoration:none">7-day hassle-free returns</a></span></p>
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">💳 <span>UPI, Cards, NetBanking & COD accepted</span></p>
-            <p style="font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:8px">🌿 <span>100% pure cotton — skin-friendly fabric</span></p>
+        <!-- ACCORDION -->
+        <div class="accordion-item">
+          <button class="accordion-btn open" onclick="toggleAccordion(this)">
+            <span>Product Description</span>
+            <span class="acc-icon">+</span>
+          </button>
+          <div class="accordion-content open">
+            <p>${p.description || 'Beautiful handcrafted kurti in 100% pure cotton. Made with love by skilled artisans. Perfect for college, office, and everyday wear.'}</p>
           </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            <span>Material & Care</span>
+            <span class="acc-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>• 100% Pure Cotton fabric<br/>• Handscreen printed design<br/>• Machine wash cold, gentle cycle<br/>• Do not bleach<br/>• Iron on medium heat<br/>• Dry in shade</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            <span>Delivery & Returns</span>
+            <span class="acc-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>• Standard delivery: 5-7 business days (FREE above ₹999)<br/>• Express delivery: 2-3 business days (+₹99)<br/>• 7-day hassle-free returns<br/>• COD available across India</p>
+          </div>
+        </div>
+
+        <!-- SHARE ROW -->
+        <div class="share-row">
+          <span class="share-label">Share:</span>
+          <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+            💬 WhatsApp
+          </button>
+          <button class="share-btn" onclick="copyProductLink()">
+            🔗 Copy Link
+          </button>
         </div>
       </div>
     </div>
 
     <!-- RELATED PRODUCTS -->
-    <div style="margin-top:4rem">
+    <div style="margin-top:5rem">
       <div class="section-header">
         <p class="section-eyebrow">Explore More</p>
         <h2 class="section-title">You may also like</h2>
@@ -243,21 +870,56 @@ function renderProduct(p) {
         <div class="skeleton"></div><div class="skeleton"></div>
         <div class="skeleton"></div><div class="skeleton"></div>
       </div>
-    </div>
-    <div id="recentlyViewedSection"></div>`;
+    </div>`;
+
+  // Set first color selected
+  if (colors.length > 0) {
+    selectedColor = { hex: colors[0].hex, name: colors[0].name };
+  }
 
   loadRelated(p.category, p.id);
-  renderRecentlyViewed('recentlyViewedSection');
 }
 
+// Image switch
+function switchImage(src, thumb) {
+  const mainImg = document.getElementById('mainImg');
+  if (mainImg) {
+    mainImg.style.opacity = '0';
+    setTimeout(() => {
+      mainImg.src = src;
+      mainImg.style.opacity = '1';
+    }, 150);
+  }
+  document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+
+// Color select
+function selectColor(hex, name, el) {
+  selectedColor = { hex, name };
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  const nameEl = document.getElementById('selectedColorName');
+  if (nameEl) nameEl.textContent = name;
+}
+
+// Size select
 function selectSize(size, btn) {
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedSize = size;
-  const label = document.querySelector('.size-label');
-  if (label) label.innerHTML = `Select Size: <span style="color:var(--maroon);font-weight:700">${size}</span>`;
+  const nameEl = document.getElementById('selectedSizeName');
+  if (nameEl) nameEl.textContent = size;
 }
 
+// Accordion
+function toggleAccordion(btn) {
+  const content = btn.nextElementSibling;
+  btn.classList.toggle('open');
+  content.classList.toggle('open');
+}
+
+// Add to cart
 function handleAddToCart() {
   if (!selectedSize) {
     showToast('Please select a size first!', 'error');
@@ -268,14 +930,73 @@ function handleAddToCart() {
     return;
   }
   addToCart(currentProduct, selectedSize);
+  trackAddToCart(currentProduct, selectedSize);
 }
 
+// Buy now
 function handleBuyNow() {
-  if (!selectedSize) { showToast('Please select a size first!', 'error'); return; }
+  if (!selectedSize) {
+    showToast('Please select a size first!', 'error');
+    return;
+  }
   addToCart(currentProduct, selectedSize);
   location.href = '/pages/cart.html';
 }
 
+// Wishlist
+function toggleWishlistDetail() {
+  const btn = document.getElementById('wishlistDetailBtn');
+  const p = currentProduct;
+  const wished = isWishlisted(p.id);
+  const wishlist = getWishlist();
+  if (wished) {
+    const idx = wishlist.findIndex(w => w.id === p.id);
+    wishlist.splice(idx, 1);
+    saveWishlist(wishlist);
+    if (btn) btn.innerHTML = '🤍';
+    showToast('Removed from wishlist');
+  } else {
+    wishlist.push({ id: p.id, name: p.name, price: p.price, image: p.images?.[0] || '' });
+    saveWishlist(wishlist);
+    if (btn) btn.innerHTML = '❤️';
+    showToast('Added to wishlist ❤️');
+    trackWishlist(p);
+  }
+}
+
+// Share
+function shareWhatsApp() {
+  const link = window.location.href;
+  const text = encodeURIComponent(`Check out this beautiful kurti from Sakhi.co! 👗\n\n*${currentProduct?.name}*\n₹${currentProduct?.price}\n\n${link}`);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+function copyProductLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    showToast('🔗 Link copied! Share with your friends.');
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = window.location.href;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('🔗 Link copied!');
+  });
+}
+
+// Notify me
+function notifyMe(e, productId, productName) {
+  e.preventDefault();
+  const email = e.target.querySelector('input[type="email"]').value;
+  let notifications = JSON.parse(localStorage.getItem('sakhi_notify') || '[]');
+  notifications.push({ productId, productName, email, date: new Date() });
+  localStorage.setItem('sakhi_notify', JSON.stringify(notifications));
+  showToast('✅ We will notify you when back in stock!');
+  e.target.reset();
+}
+
+// Related products
 async function loadRelated(category, currentId) {
   try {
     const res = await fetch(`${API_URL}/api/products?category=${category}`);
@@ -283,37 +1004,47 @@ async function loadRelated(category, currentId) {
     const related = (data.products || []).filter(p => p.id !== currentId).slice(0, 4);
     const el = document.getElementById('relatedProducts');
     if (!el) return;
-    if (related.length === 0) {
-      el.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-light)">No related products found.</p>';
-      return;
-    }
-    el.innerHTML = related.map(p => productCard(p)).join('');
-  } catch (err) {
-    console.log('Related load error:', err.message);
-  }
+    el.innerHTML = related.length > 0
+      ? related.map(p => productCard(p)).join('')
+      : '<p style="grid-column:1/-1;text-align:center;color:var(--text-light)">No related products.</p>';
+  } catch (err) { console.log('Related error:', err.message); }
 }
 
-// ── REVIEWS ──────────────────────────────────────────────
+// Reviews
 async function loadReviews(productId) {
   try {
     const res = await fetch(`${API_URL}/api/reviews/${productId}`);
     const data = await res.json();
-    const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
 
+    // Update rating row
+    const ratingRow = document.getElementById('ratingRow');
+    if (ratingRow && data.total > 0) {
+      const avg = parseFloat(data.average);
+      const fullStars = Math.floor(avg);
+      const halfStar = avg - fullStars >= 0.5;
+      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      const starsHTML = '★'.repeat(fullStars) + (halfStar ? '⭐' : '') + '☆'.repeat(emptyStars);
+      ratingRow.innerHTML = `
+        <span class="stars-display" style="color:#C9922A">${starsHTML}</span>
+        <span class="rating-count">${data.average} (${data.total} review${data.total > 1 ? 's' : ''})</span>
+        <a href="#reviews" style="font-size:.78rem;color:var(--maroon);text-decoration:none">See all →</a>`;
+    } else if (ratingRow) {
+      ratingRow.innerHTML = `<span class="rating-count" style="color:var(--text-light)">No reviews yet — be the first!</span>`;
+    }
+
+    const stars = n => '★'.repeat(n) + '☆'.repeat(5-n);
     document.getElementById('reviewsSection').innerHTML = `
-      <div style="margin-top:4rem;padding-bottom:4rem">
+      <div id="reviews" style="margin-top:4rem;padding-bottom:4rem">
         <div class="section-header">
           <p class="section-eyebrow">Customer Reviews</p>
           <h2 class="section-title">What people say</h2>
         </div>
-
         ${data.total > 0 ? `
         <div style="background:var(--white);border-radius:16px;padding:2rem;margin-bottom:2rem;text-align:center;border:1px solid rgba(201,146,42,.15)">
           <p style="font-size:3.5rem;font-weight:700;color:var(--maroon);line-height:1">${data.average}</p>
-          <p style="color:var(--gold);font-size:1.5rem;letter-spacing:4px;margin:.25rem 0">${stars(Math.round(data.average))}</p>
+          <p style="color:var(--gold);font-size:1.5rem;margin:.25rem 0">${stars(Math.round(data.average))}</p>
           <p style="color:var(--text-light);font-size:.875rem">Based on ${data.total} review${data.total > 1 ? 's' : ''}</p>
         </div>` : ''}
-
         <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem">
           ${data.reviews && data.reviews.length > 0
             ? data.reviews.map(r => `
@@ -330,34 +1061,28 @@ async function loadReviews(productId) {
                 </div>
                 ${r.review ? `<p style="color:var(--text-mid);line-height:1.7;font-size:.9rem;margin:0;font-style:italic">"${r.review}"</p>` : ''}
               </div>`).join('')
-            : '<div style="text-align:center;padding:2rem;color:var(--text-light);background:var(--white);border-radius:16px;border:1px solid rgba(201,146,42,.12)"><p style="font-size:2rem;margin-bottom:.5rem">💬</p><p>No reviews yet. Be the first!</p></div>'
-          }
+            : '<div style="text-align:center;padding:2rem;color:var(--text-light);background:var(--white);border-radius:16px"><p style="font-size:2rem;margin-bottom:.5rem">💬</p><p>No reviews yet. Be the first!</p></div>'}
         </div>
-
-        <!-- WRITE REVIEW FORM -->
-        <div style="background:var(--white);border-radius:20px;padding:2rem;border:1px solid rgba(201,146,42,.15);box-shadow:var(--shadow)">
-          <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem;font-size:1.3rem">✍️ Write a Review</h3>
+        <div style="background:var(--white);border-radius:20px;padding:2rem;border:1px solid rgba(201,146,42,.15)">
+          <h3 style="font-family:var(--font-display);color:var(--maroon-dark);margin-bottom:1.5rem">✍️ Write a Review</h3>
           <form id="reviewForm">
-            <div class="form-row">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
               <div class="form-group"><label>Your Name *</label><input type="text" id="revName" placeholder="Priya Sharma" required/></div>
               <div class="form-group"><label>Email (optional)</label><input type="email" id="revEmail" placeholder="priya@email.com"/></div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:1rem">
               <label>Rating *</label>
               <div style="display:flex;gap:.25rem;margin-top:.5rem">
-                ${[1,2,3,4,5].map(n => `
-                  <button type="button" onclick="setRating(${n})" id="star${n}"
-                    style="background:none;border:none;font-size:2rem;cursor:pointer;color:#ddd;padding:2px;transition:color .15s;line-height:1">★</button>`).join('')}
+                ${[1,2,3,4,5].map(n => `<button type="button" onclick="setRating(${n})" id="star${n}" style="background:none;border:none;font-size:2rem;cursor:pointer;color:#ddd;padding:2px;line-height:1;transition:color .15s">★</button>`).join('')}
               </div>
               <input type="hidden" id="revRating"/>
             </div>
-            <div class="form-group"><label>Your Review</label><textarea id="revText" rows="3" placeholder="Share your experience with this kurti..."></textarea></div>
+            <div class="form-group" style="margin-bottom:1.5rem"><label>Your Review</label><textarea id="revText" rows="3" placeholder="Share your experience..."></textarea></div>
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Submit Review 💕</button>
           </form>
         </div>
       </div>`;
 
-    // Star rating
     window.setRating = function(n) {
       document.getElementById('revRating').value = n;
       for (let i = 1; i <= 5; i++) {
@@ -365,8 +1090,6 @@ async function loadReviews(productId) {
       }
     };
 
-
-    // Review submit
     document.getElementById('reviewForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const rating = document.getElementById('revRating').value;
@@ -392,140 +1115,18 @@ async function loadReviews(productId) {
         } else {
           showToast(data.error || 'Please fill all required fields!', 'error');
         }
-      } catch (err) {
-        showToast('Something went wrong!', 'error');
-      }
+      } catch (err) { showToast('Something went wrong!', 'error'); }
       btn.textContent = 'Submit Review 💕'; btn.disabled = false;
     });
-
-  } catch (err) {
-    console.log('Reviews error:', err.message);
-  }
-}
-function shareCurrentProduct() {
-  const link = window.location.href;
-  const name = currentProduct?.name || 'Sakhi Kurti';
-
-  if (navigator.share) {
-    navigator.share({
-      title: `${name} – Sakhi.co`,
-      text: `Check out this beautiful kurti from Sakhi.co! 👗`,
-      url: link
-    }).catch(() => copyLink(link));
-  } else {
-    copyLink(link);
-  }
+  } catch (err) { console.log('Reviews error:', err.message); }
 }
 
-function copyLink(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('🔗 Link copied! Share with your friends.');
-  }).catch(() => {
-    const el = document.createElement('textarea');
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    showToast('🔗 Link copied!');
-  });
-}
-function toggleWishlistDetail() {
-  const btn = document.getElementById('wishlistDetailBtn');
-  const p = currentProduct;
-  const wished = isWishlisted(p.id);
+// Image transition CSS
+document.getElementById('mainImg') && Object.assign(document.getElementById('mainImg').style, {
+  transition: 'opacity .15s ease'
+});
 
-  const wishlist = getWishlist();
-  if (wished) {
-    const idx = wishlist.findIndex(w => w.id === p.id);
-    wishlist.splice(idx, 1);
-    saveWishlist(wishlist);
-    btn.innerHTML = '🤍 Add to Wishlist';
-    showToast('Removed from wishlist');
-  } else {
-    wishlist.push({ id: p.id, name: p.name, price: p.price, image: p.images?.[0] || '' });
-    saveWishlist(wishlist);
-    btn.innerHTML = '❤️ Wishlisted';
-    showToast('Added to wishlist ❤️');
-  }
-}
-
-function shareCurrentProduct() {
-  const link = window.location.href;
-  const name = currentProduct?.name || 'Sakhi Kurti';
-  if (navigator.share) {
-    navigator.share({ title: `${name} – Sakhi.co`, text: 'Check out this beautiful kurti! 👗', url: link })
-      .catch(() => copyLink(link));
-  } else {
-    copyLink(link);
-  }
-}
-
-function copyLink(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('🔗 Link copied! Share with your friends.');
-  }).catch(() => {
-    const el = document.createElement('textarea');
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    showToast('🔗 Link copied!');
-  });
-}
-function notifyMe(e, productId, productName) {
-  e.preventDefault();
-  const email = e.target.querySelector('input[type="email"]').value;
-  // Save to localStorage for now
-  let notifications = JSON.parse(localStorage.getItem('sakhi_notify') || '[]');
-  notifications.push({ productId, productName, email, date: new Date() });
-  localStorage.setItem('sakhi_notify', JSON.stringify(notifications));
-  showToast('✅ We will notify you when back in stock!');
-  e.target.reset();
-}
 document.addEventListener('DOMContentLoaded', loadProduct);
-</script>
-<!-- BACK TO TOP -->
-<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-  style="display:none;position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;border-radius:50%;background:var(--maroon);color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow-lg);z-index:400;align-items:center;justify-content:center;transition:all .3s">
-  ↑
-</button>
-<script>
-window.addEventListener('scroll', () => {
-  const btn = document.getElementById('backToTop');
-  if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
-});
-</script>
-<!-- STICKY ADD TO CART -->
-<div id="stickyCart" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid rgba(201,146,42,.2);padding:1rem 1.5rem;z-index:400;box-shadow:0 -4px 20px rgba(123,28,46,.1)">
-  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-    <div id="stickyProductName" style="font-family:var(--font-display);font-weight:600;color:var(--maroon-dark);font-size:.95rem"></div>
-    <div style="display:flex;align-items:center;gap:1rem">
-      <span id="stickyPrice" style="font-weight:700;color:var(--maroon);font-size:1.1rem"></span>
-      <button onclick="handleAddToCart()" class="btn btn-primary" style="padding:10px 24px;font-size:.875rem">
-        Add to Cart 🛍️
-      </button>
-    </div>
-  </div>
-</div>
-
-<script>
-window.addEventListener('scroll', () => {
-  const sticky = document.getElementById('stickyCart');
-  const detailSection = document.querySelector('.product-detail-grid');
-  if (!sticky || !detailSection) return;
-  const rect = detailSection.getBoundingClientRect();
-  if (rect.bottom < 0) {
-    sticky.style.display = 'block';
-    if (currentProduct) {
-      document.getElementById('stickyProductName').textContent = currentProduct.name;
-      document.getElementById('stickyPrice').textContent = `₹${currentProduct.price}`;
-    }
-  } else {
-    sticky.style.display = 'none';
-  }
-});
 </script>
 </body>
 </html>
