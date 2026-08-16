@@ -609,6 +609,12 @@ let selectedColor = null;
 let currentProductId = null;
 
 async function loadProduct() {
+  async function loadProduct() {
+  const id = new URLSearchParams(window.location.search).get('id');
+  console.log('Product ID:', id);
+  console.log('API URL:', API_URL);
+  
+  if (!id) { location.href = '/pages/collections.html'; return; }
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id) { location.href = '/pages/collections.html'; return; }
 
