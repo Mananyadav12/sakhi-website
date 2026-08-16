@@ -609,35 +609,31 @@ let selectedColor = null;
 let currentProductId = null;
 
 async function loadProduct() {
-  const id = new URLSearchParams(window.location.search).get('id');
-  console.log('Product ID:', id);
+  let productId = new URLSearchParams(window.location.search).get('id');
+  console.log('Product ID:', productId);
   console.log('API URL:', API_URL);
-  
-  if (!id) { location.href = '/pages/collections.html'; return; }
-  currentProductId = id;
 
-  // API_URL check karo
+  if (!productId) { location.href = '/pages/collections.html'; return; }
+
   if (typeof API_URL === 'undefined') {
     console.error('API_URL not defined!');
     setTimeout(loadProduct, 500);
     return;
   }
-  currentProductId = id;
+
+  currentProductId = productId;
 
   try {
-    const res = await fetch(`${API_URL}/api/products/${id}`);
+    const res = await fetch(`${API_URL}/api/products/${productId}`);
     const data = await res.json();
     currentProduct = data.product;
     document.title = `${currentProduct.name} – Sakhi.co`;
     document.getElementById('breadcrumbName').textContent = currentProduct.name;
-
-    // Sticky bar update
     document.getElementById('stickyName').textContent = currentProduct.name;
     document.getElementById('stickyPrice').textContent = `₹${currentProduct.price}`;
-
     renderProduct(currentProduct);
     addToRecentlyViewed(currentProduct);
-    loadReviews(id);
+    loadReviews(productId);
     renderRecentlyViewed('recentlyViewedSection');
     trackProductView(currentProduct);
   } catch (err) {
@@ -645,7 +641,6 @@ async function loadProduct() {
       `<div style="text-align:center;padding:4rem"><p style="color:var(--text-light)">Product not found.</p><a href="/pages/collections.html" class="btn btn-primary" style="margin-top:1rem;display:inline-flex">Browse Collections</a></div>`;
   }
 }
-
 function renderProduct(p) {
   const discount = p.mrp > p.price ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
   const sizeStock = p.size_stock || {};
