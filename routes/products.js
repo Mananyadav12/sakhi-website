@@ -35,13 +35,18 @@ router.get('/:id', async (req, res) => {
 // POST add product (admin only)
 router.post('/', auth, upload.array('images', 5), async (req, res) => {
   try {
-    const { name, description, price, mrp, category, sizes, stock, size_stock } = req.body;
+    const { name, description, price, mrp, category, sizes, stock, size_stock, colors } = req.body;
 
+    // Image upload
     const imageUrls = [];
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
-        const result = await uploadToCloudinary(file.buffer);
-        imageUrls.push(result.secure_url);
+        try {
+          const result = await uploadToCloudinary(file.buffer);
+          imageUrls.push(result.secure_url);
+        } catch(imgErr) {
+          console.log('⚠️ Image upload failed:', imgErr.message);
+        }
       }
     }
 
@@ -57,28 +62,45 @@ router.post('/', auth, upload.array('images', 5), async (req, res) => {
       try { parsedSizes = JSON.parse(sizes); } catch(e) {}
     }
 
+    // Parse colors
+    let parsedColors = [];
+    if (colors) {
+      try { parsedColors = JSON.parse(colors); } catch(e) {}
+    }
+
     // Auto calculate total stock from size_stock if available
     const totalStock = Object.keys(parsedSizeStock).length > 0
-      ? Object.values(parsedSizeStock).reduce((sum, qty) => sum + qty, 0)
-      : parseInt(stock);
+      ? Object.values(parsedSizeStock).reduce((sum, qty) => sum + (parseInt(qty) || 0), 0)
+      : parseInt(stock) || 0;
 
-    const { data, error } = await supabase.from('products').insert([{
+    const productData = {
       name,
-      description,
+      description: description || '',
       price: parseFloat(price),
-      mrp: parseFloat(mrp),
+      mrp: parseFloat(mrp) || parseFloat(price),
       category,
       sizes: parsedSizes,
       size_stock: parsedSizeStock,
+      colors: parsedColors,
       stock: totalStock,
       images: imageUrls,
       active: true,
       created_at: new Date()
-    }]).select();
+    };
 
-    if (error) throw error;
+    console.log('💾 Inserting product:', productData.name);
+
+    const { data, error } = await supabase.from('products').insert([productData]).select();
+
+    if (error) {
+      console.log('❌ Supabase error:', error.message);
+      throw error;
+    }
+
+    console.log('✅ Product added:', data[0]?.id);
     res.status(201).json({ message: 'Product added!', product: data[0] });
   } catch (err) {
+    console.log('❌ Product add error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -86,13 +108,13 @@ router.post('/', auth, upload.array('images', 5), async (req, res) => {
 // PUT update product (admin only)
 router.put('/:id', auth, upload.array('images', 5), async (req, res) => {
   try {
-    const { name, description, price, mrp, category, stock, active, sizes, size_stock } = req.body;
+    const { name, description, price, mrp, category, stock, active, sizes, size_stock, colors } = req.body;
 
     const updates = {
       name,
-      description,
+      description: description || '',
       price: parseFloat(price),
-      mrp: parseFloat(mrp),
+      mrp: parseFloat(mrp) || parseFloat(price),
       category,
       active: active === 'true',
       updated_at: new Date()
@@ -108,30 +130,48 @@ router.put('/:id', auth, upload.array('images', 5), async (req, res) => {
       try {
         const parsedSizeStock = JSON.parse(size_stock);
         updates.size_stock = parsedSizeStock;
-        // Auto calculate total stock
-        updates.stock = Object.values(parsedSizeStock).reduce((sum, qty) => sum + qty, 0);
+        updates.stock = Object.values(parsedSizeStock)
+          .reduce((sum, qty) => sum + (parseInt(qty) || 0), 0);
       } catch(e) {
-        updates.stock = parseInt(stock);
+        updates.stock = parseInt(stock) || 0;
       }
     } else {
-      updates.stock = parseInt(stock);
+      updates.stock = parseInt(stock) || 0;
+    }
+
+    // Parse colors
+    if (colors) {
+      try { updates.colors = JSON.parse(colors); } catch(e) {}
     }
 
     // Upload new images if provided
     if (req.files && req.files.length > 0) {
       const imageUrls = [];
       for (const file of req.files) {
-        const result = await uploadToCloudinary(file.buffer);
-        imageUrls.push(result.secure_url);
+        try {
+          const result = await uploadToCloudinary(file.buffer);
+          imageUrls.push(result.secure_url);
+        } catch(imgErr) {
+          console.log('⚠️ Image upload failed:', imgErr.message);
+        }
       }
-      updates.images = imageUrls;
+      if (imageUrls.length > 0) updates.images = imageUrls;
     }
+
+    console.log('💾 Updating product:', req.params.id);
 
     const { data, error } = await supabase
       .from('products').update(updates).eq('id', req.params.id).select();
-    if (error) throw error;
+
+    if (error) {
+      console.log('❌ Supabase update error:', error.message);
+      throw error;
+    }
+
+    console.log('✅ Product updated:', data[0]?.id);
     res.json({ message: 'Product updated!', product: data[0] });
   } catch (err) {
+    console.log('❌ Product update error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });

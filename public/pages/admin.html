@@ -20,7 +20,9 @@ body{font-family:Inter,sans-serif;background:#f5f5f7;color:#1a1a2e}
 .btn-login{width:100%;padding:13px;background:#7B1C2E;color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.5rem}
 .btn-login:hover{background:#5A1220}
 .admin-app{display:none}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#5A1220;z-index:100}
+
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#5A1220;z-index:100;transition:transform .3s}
 .sidebar-logo{padding:1.5rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
 .sidebar-logo img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #C9922A}
 .sidebar-logo span{color:#E8B84B;font-weight:700;font-size:1rem}
@@ -28,22 +30,31 @@ body{font-family:Inter,sans-serif;background:#f5f5f7;color:#1a1a2e}
 .sidebar-btn{display:flex;align-items:center;gap:10px;padding:.85rem 1.5rem;color:rgba(255,255,255,.7);background:none;border:none;width:100%;cursor:pointer;font-size:.9rem;font-family:Inter,sans-serif;transition:all .2s}
 .sidebar-btn:hover,.sidebar-btn.active{background:rgba(255,255,255,.1);color:#fff}
 .sidebar-btn .icon{font-size:1.1rem;width:22px}
+
+/* MAIN */
 .main{margin-left:240px;padding:2rem;min-height:100vh}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;gap:1rem}
 .topbar h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:#5A1220}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
 .btn-logout{background:none;border:1px solid #ddd;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.875rem}
+.hamburger-admin{display:none;background:#7B1C2E;border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:1.2rem}
+
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2rem}
 .stat{background:#fff;border-radius:16px;padding:1.5rem;border-left:4px solid #C9922A}
 .stat .label{font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#9B6070;margin-bottom:.5rem}
 .stat .value{font-size:2rem;font-weight:700;color:#5A1220}
 .panel{background:#fff;border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
-.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
 .panel-head h2{font-size:1.1rem;color:#5A1220;font-family:'Playfair Display',serif}
 .btn-add{background:#7B1C2E;color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;font-size:.875rem;font-weight:600}
-table{width:100%;border-collapse:collapse}
-th{background:#f5ede0;padding:10px 14px;text-align:left;font-size:.8rem;font-weight:600;color:#5C3040}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:500px}
+th{background:#f5ede0;padding:10px 14px;text-align:left;font-size:.8rem;font-weight:600;color:#5C3040;white-space:nowrap}
 td{padding:12px 14px;border-bottom:1px solid #f0f0f0;font-size:.875rem}
 tr:hover td{background:#fafafa}
+
 .badge{padding:4px 10px;border-radius:20px;font-size:.73rem;font-weight:600}
 .badge-pending{background:#fff3cd;color:#856404}
 .badge-confirmed{background:#d1e7dd;color:#0a3622}
@@ -51,7 +62,9 @@ tr:hover td{background:#fafafa}
 .badge-delivered{background:#d1e7dd;color:#0a3622}
 .badge-cancelled{background:#f8d7da;color:#58151c}
 .tab{display:none}.tab.active{display:block}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .modal.open{display:flex}
 .modal-box{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto}
 .modal-box h3{color:#5A1220;margin-bottom:1.5rem;font-family:'Playfair Display',serif;font-size:1.2rem}
@@ -65,6 +78,7 @@ tr:hover td{background:#fafafa}
 .action-btn{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:500;margin-right:4px}
 .btn-edit{background:#7B1C2E;color:#fff}
 .btn-del{background:#dc3545;color:#fff}
+
 /* SIZE STOCK */
 .size-stock-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:8px}
 .size-stock-cell{text-align:center}
@@ -73,6 +87,35 @@ tr:hover td{background:#fafafa}
 .size-stock-cell input:focus{border-color:#7B1C2E}
 .size-stock-cell input[value="0"]{background:#fff5f5;color:#c0392b}
 
+/* COLOR SECTION */
+.color-grid{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem}
+.color-item{display:flex;flex-direction:column;align-items:center;gap:.35rem}
+.color-item input[type="color"]{width:44px;height:44px;border:2px solid rgba(201,146,42,.25);border-radius:50%;cursor:pointer;padding:2px;background:none}
+.color-item input[type="text"]{width:70px;padding:4px 6px;border:1px solid rgba(201,146,42,.25);border-radius:6px;font-size:.72rem;text-align:center;font-family:inherit;outline:none}
+.color-item button{background:none;border:none;color:#dc3545;cursor:pointer;font-size:.8rem;padding:0}
+.add-color-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--cream,#FDF8F2);border:1.5px dashed rgba(201,146,42,.4);border-radius:10px;cursor:pointer;font-size:.82rem;color:#7B1C2E;font-family:inherit;font-weight:600;margin-top:.5rem}
+
+/* OVERLAY */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0;padding:1rem}
+  .hamburger-admin{display:block}
+  .stats{grid-template-columns:1fr 1fr;gap:1rem}
+  .stat .value{font-size:1.5rem}
+  .mform-row{grid-template-columns:1fr}
+  .size-stock-grid{grid-template-columns:repeat(4,1fr);gap:.5rem}
+  .topbar h1{font-size:1.2rem}
+  .modal-box{padding:1.25rem}
+}
+@media(max-width:400px){
+  .stats{grid-template-columns:1fr}
+  .size-stock-grid{grid-template-columns:repeat(4,1fr)}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-R0VWP57W8J"></script>
@@ -80,11 +123,13 @@ tr:hover td{background:#fafafa}
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-R0VWP57W8J');
 </script>
 </head>
 <body>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <!-- LOGIN PAGE -->
 <div class="login-page" id="loginPage">
@@ -103,7 +148,7 @@ tr:hover td{background:#fafafa}
 
 <!-- ADMIN DASHBOARD -->
 <div class="admin-app" id="adminApp">
-  <aside class="sidebar">
+  <aside class="sidebar" id="adminSidebar">
     <div class="sidebar-logo">
       <img src="../images/logo.jpeg" alt="Sakhi"/>
       <span>sakhi.co</span>
@@ -112,19 +157,20 @@ tr:hover td{background:#fafafa}
       <button class="sidebar-btn active" onclick="showTab('dashboard',this)"><span class="icon">📊</span>Dashboard</button>
       <button class="sidebar-btn" onclick="showTab('products',this)"><span class="icon">👗</span>Products</button>
       <button class="sidebar-btn" onclick="showTab('orders',this)"><span class="icon">📦</span>Orders</button>
-      <button class="sidebar-btn" onclick="showTab('coupons',this)">
-        <span class="icon">🎟️</span>Coupons
-      </button>
-      <button class="sidebar-btn" onclick="showTab('wholesale',this)">
-        <span class="icon">🏪</span>Wholesale
-      </button>
+      <button class="sidebar-btn" onclick="showTab('coupons',this)"><span class="icon">🎟️</span>Coupons</button>
+      <button class="sidebar-btn" onclick="showTab('wholesale',this)"><span class="icon">🏪</span>Wholesale</button>
     </nav>
   </aside>
 
   <main class="main">
     <div class="topbar">
-      <h1 id="pageTitle">Dashboard</h1>
-      <button class="btn-logout" onclick="logout()">Logout</button>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <button class="hamburger-admin" onclick="openSidebar()">☰</button>
+        <h1 id="pageTitle">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-logout" onclick="logout()">Logout</button>
+      </div>
     </div>
 
     <!-- DASHBOARD TAB -->
@@ -136,10 +182,12 @@ tr:hover td{background:#fafafa}
       </div>
       <div class="panel">
         <div class="panel-head"><h2>Recent Orders</h2></div>
-        <table>
-          <thead><tr><th>Order #</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
-          <tbody id="recentOrdersTbl"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Order #</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="recentOrdersTbl"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -150,10 +198,12 @@ tr:hover td{background:#fafafa}
           <h2>All Products</h2>
           <button class="btn-add" onclick="openModal()">+ Add Product</button>
         </div>
-        <table>
-          <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Total Stock</th><th>Sizes</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="productsTbl"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Sizes</th><th>Colors</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="productsTbl"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -161,10 +211,12 @@ tr:hover td{background:#fafafa}
     <div class="tab" id="tab-orders">
       <div class="panel">
         <div class="panel-head"><h2>All Orders</h2></div>
-        <table>
-          <thead><tr><th>Order #</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Status</th><th>Update Status</th></tr></thead>
-          <tbody id="ordersTbl"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Order #</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Status</th><th>Update Status</th></tr></thead>
+            <tbody id="ordersTbl"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -175,20 +227,12 @@ tr:hover td{background:#fafafa}
           <h2>Coupon Codes</h2>
           <button class="btn-add" onclick="openCouponModal()">+ Add Coupon</button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Discount</th>
-              <th>Min Order</th>
-              <th>Used / Max</th>
-              <th>Expires</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="couponsTbl"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Used/Max</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="couponsTbl"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -196,23 +240,14 @@ tr:hover td{background:#fafafa}
     <div class="tab" id="tab-wholesale">
       <div class="panel">
         <div class="panel-head"><h2>Wholesale Enquiries</h2></div>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>City</th>
-              <th>Quantity</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="wholesaleTbl"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Quantity</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="wholesaleTbl"></tbody>
+          </table>
+        </div>
       </div>
     </div>
-
   </main>
 </div>
 
@@ -297,6 +332,16 @@ tr:hover td{background:#fafafa}
         <p style="font-size:.75rem;color:#9B6070;margin-top:.5rem">💡 Jo size available nahi hai uska 0 rakho — product page pe cross lag jaayega</p>
       </div>
 
+      <!-- COLOR SECTION -->
+      <div class="mform-group">
+        <label>Available Colors</label>
+        <p style="font-size:.75rem;color:#9B6070;margin-bottom:.5rem">Color pick karo aur naam daalo (e.g. "Maroon", "Sky Blue")</p>
+        <div class="color-grid" id="colorGrid"></div>
+        <button type="button" class="add-color-btn" onclick="addColor()">
+          + Add Color
+        </button>
+      </div>
+
       <div class="mform-group"><label>Product Photos (max 5)</label><input type="file" id="pImages" accept="image/*" multiple/></div>
       <button type="submit" class="btn-save" id="saveBtn">Save Product</button>
       <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -310,6 +355,17 @@ let token = localStorage.getItem('sakhi_token');
 
 if (token) { showDashboard(); loadStats(); }
 
+// Mobile sidebar
+function openSidebar() {
+  document.getElementById('adminSidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('adminSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// Login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const res = await fetch(`${API}/api/admin/login`, {
@@ -348,62 +404,55 @@ function showTab(name, btn) {
   if (name === 'products') loadProducts();
   if (name === 'coupons') loadCoupons();
   if (name === 'orders') loadOrders();
+  closeSidebar();
 }
 
 async function loadStats() {
-  const res = await fetch(`${API}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
-  const d = await res.json();
-  document.getElementById('sTotalOrders').textContent = d.totalOrders || 0;
-  document.getElementById('sTotalProducts').textContent = d.totalProducts || 0;
-  document.getElementById('sRevenue').textContent = '₹' + (d.revenue || 0).toLocaleString('en-IN');
-  const tbody = document.getElementById('recentOrdersTbl');
-  tbody.innerHTML = (d.recentOrders || []).map(o => `
-    <tr>
-      <td>#${o.order_number}</td>
-      <td>${o.customer_name}</td>
-      <td>₹${o.total_amount}</td>
-      <td><span class="badge badge-${o.status}">${o.status}</span></td>
-      <td>${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
-    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
+  try {
+    const res = await fetch(`${API}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
+    const d = await res.json();
+    document.getElementById('sTotalOrders').textContent = d.totalOrders || 0;
+    document.getElementById('sTotalProducts').textContent = d.totalProducts || 0;
+    document.getElementById('sRevenue').textContent = '₹' + (d.revenue || 0).toLocaleString('en-IN');
+    const tbody = document.getElementById('recentOrdersTbl');
+    tbody.innerHTML = (d.recentOrders || []).map(o => `
+      <tr>
+        <td>#${o.order_number}</td>
+        <td>${o.customer_name}</td>
+        <td>₹${o.total_amount}</td>
+        <td><span class="badge badge-${o.status}">${o.status}</span></td>
+        <td>${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
+      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
+  } catch(err) { console.log('Stats error:', err.message); }
 }
-// Coupons tab
+
 async function loadCoupons() {
-  const res = await fetch(`${API}/api/coupons`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const d = await res.json();
-  document.getElementById('couponsTbl').innerHTML = (d.coupons || []).map(c => `
-    <tr>
-      <td><strong style="color:#7B1C2E;font-size:1rem;letter-spacing:1px">${c.code}</strong></td>
-      <td>${c.discount_percent > 0 ? `${c.discount_percent}%` : `₹${c.discount_amount}`}</td>
-      <td>₹${c.min_order}</td>
-      <td>${c.used_count} / ${c.max_uses}</td>
-      <td>${c.expires_at ? new Date(c.expires_at).toLocaleDateString('en-IN') : 'No expiry'}</td>
-      <td>
-        <span class="badge" style="background:${c.active ? '#d1e7dd' : '#f8d7da'};color:${c.active ? '#0a3622' : '#58151c'}">
-          ${c.active ? 'Active' : 'Inactive'}
-        </span>
-      </td>
-      <td>
-        <button class="action-btn btn-del" onclick="deleteCoupon('${c.id}')">Deactivate</button>
-      </td>
-    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No coupons yet</td></tr>';
+  try {
+    const res = await fetch(`${API}/api/coupons`, { headers: { Authorization: `Bearer ${token}` } });
+    const d = await res.json();
+    document.getElementById('couponsTbl').innerHTML = (d.coupons || []).map(c => `
+      <tr>
+        <td><strong style="color:#7B1C2E;font-size:1rem;letter-spacing:1px">${c.code}</strong></td>
+        <td>${c.discount_percent > 0 ? `${c.discount_percent}%` : `₹${c.discount_amount}`}</td>
+        <td>₹${c.min_order}</td>
+        <td>${c.used_count} / ${c.max_uses}</td>
+        <td>${c.expires_at ? new Date(c.expires_at).toLocaleDateString('en-IN') : 'No expiry'}</td>
+        <td><span class="badge" style="background:${c.active?'#d1e7dd':'#f8d7da'};color:${c.active?'#0a3622':'#58151c'}">${c.active?'Active':'Inactive'}</span></td>
+        <td><button class="action-btn btn-del" onclick="deleteCoupon('${c.id}')">Deactivate</button></td>
+      </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No coupons yet</td></tr>';
+  } catch(err) { console.log('Coupons error:', err.message); }
 }
 
 function openCouponModal() {
   document.getElementById('couponModal').classList.add('open');
   document.getElementById('couponForm').reset();
 }
-
-function closeCouponModal() {
-  document.getElementById('couponModal').classList.remove('open');
-}
+function closeCouponModal() { document.getElementById('couponModal').classList.remove('open'); }
 
 document.getElementById('couponForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = e.target.querySelector('button[type="submit"]');
   btn.textContent = 'Creating...'; btn.disabled = true;
-
   await fetch(`${API}/api/coupons`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -416,7 +465,6 @@ document.getElementById('couponForm').addEventListener('submit', async (e) => {
       expires_at: document.getElementById('cExpiry').value || null
     })
   });
-
   closeCouponModal();
   loadCoupons();
   showToast('Coupon created!');
@@ -425,70 +473,110 @@ document.getElementById('couponForm').addEventListener('submit', async (e) => {
 
 async function deleteCoupon(id) {
   if (!confirm('Deactivate this coupon?')) return;
-  await fetch(`${API}/api/coupons/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  await fetch(`${API}/api/coupons/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
   loadCoupons();
   showToast('Coupon deactivated!');
 }
 
 async function loadProducts() {
-  const res = await fetch(`${API}/api/products`);
-  const d = await res.json();
-  document.getElementById('productsTbl').innerHTML = (d.products || []).map(p => {
-    const ss = p.size_stock || {};
-    const totalQty = Object.values(ss).reduce((s,v) => s+v, 0);
-    const isSoldOut = p.sizes && p.sizes.length > 0 && Object.keys(ss).length > 0 && totalQty === 0;
-    const sizeSummary = Object.keys(ss).length > 0
-      ? Object.entries(ss).map(([s,q]) => `<span style="font-size:.7rem;padding:2px 6px;border-radius:4px;background:${q>0?'#d1e7dd':'#f8d7da'};color:${q>0?'#0a3622':'#58151c'};margin:1px">${s}:${q}</span>`).join('')
-      : '<span style="color:#9B6070;font-size:.78rem">Not set</span>';
-    return `<tr>
-      <td><strong>${p.name}</strong>${isSoldOut ? ' <span style="background:#f8d7da;color:#58151c;font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:600">SOLD OUT</span>' : ''}</td>
-      <td style="text-transform:capitalize">${p.category}</td>
-      <td>₹${p.price}</td>
-      <td>${p.stock}</td>
-      <td style="max-width:150px">${sizeSummary}</td>
-      <td><span class="badge" style="background:${p.active?'#d1e7dd':'#f8d7da'};color:${p.active?'#0a3622':'#58151c'}">${p.active?'Active':'Hidden'}</span></td>
-      <td>
-        <button class="action-btn btn-edit" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
-        <button class="action-btn btn-del" onclick="deleteProduct('${p.id}')">Remove</button>
-      </td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No products yet. Add your first kurti! 👗</td></tr>';
+  try {
+    const res = await fetch(`${API}/api/products`);
+    const d = await res.json();
+    document.getElementById('productsTbl').innerHTML = (d.products || []).map(p => {
+      const ss = p.size_stock || {};
+      const totalQty = Object.values(ss).reduce((s,v) => s+v, 0);
+      const isSoldOut = p.sizes && p.sizes.length > 0 && Object.keys(ss).length > 0 && totalQty === 0;
+      const sizeSummary = Object.keys(ss).length > 0
+        ? Object.entries(ss).map(([s,q]) => `<span style="font-size:.7rem;padding:2px 6px;border-radius:4px;background:${q>0?'#d1e7dd':'#f8d7da'};color:${q>0?'#0a3622':'#58151c'};margin:1px">${s}:${q}</span>`).join('')
+        : '<span style="color:#9B6070;font-size:.78rem">Not set</span>';
+      const colors = p.colors || [];
+      const colorDots = colors.length > 0
+        ? colors.map(c => `<span title="${c.name}" style="display:inline-block;width:18px;height:18px;border-radius:50%;background:${c.hex};border:2px solid #ddd;margin:1px"></span>`).join('')
+        : '<span style="color:#9B6070;font-size:.78rem">—</span>';
+      return `<tr>
+        <td><strong>${p.name}</strong>${isSoldOut?'<span style="background:#f8d7da;color:#58151c;font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:600;margin-left:4px">SOLD OUT</span>':''}</td>
+        <td style="text-transform:capitalize">${p.category}</td>
+        <td>₹${p.price}</td>
+        <td>${p.stock}</td>
+        <td style="max-width:140px">${sizeSummary}</td>
+        <td>${colorDots}</td>
+        <td><span class="badge" style="background:${p.active?'#d1e7dd':'#f8d7da'};color:${p.active?'#0a3622':'#58151c'}">${p.active?'Active':'Hidden'}</span></td>
+        <td>
+          <button class="action-btn btn-edit" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
+          <button class="action-btn btn-del" onclick="deleteProduct('${p.id}')">Remove</button>
+        </td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#9B6070">No products yet. Add your first kurti! 👗</td></tr>';
+  } catch(err) { console.log('Products error:', err.message); }
 }
 
 async function loadOrders() {
-  const res = await fetch(`${API}/api/orders`, { headers: { Authorization: `Bearer ${token}` } });
-  const d = await res.json();
-  document.getElementById('ordersTbl').innerHTML = (d.orders || []).map(o => `
-    <tr>
-      <td>#${o.order_number}</td>
-      <td>${o.customer_name}<br/><small style="color:#9B6070">${o.customer_email}</small></td>
-      <td>${o.customer_phone}</td>
-      <td>₹${o.total_amount}</td>
-      <td><span class="badge badge-${o.status}">${o.status}</span></td>
-      <td>
-        <select onchange="updateStatus('${o.id}',this.value)" style="padding:6px;border:1px solid #ddd;border-radius:6px;font-size:.8rem">
-          <option value="">Update...</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="processing">Processing</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-      </td>
-    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
+  try {
+    const res = await fetch(`${API}/api/orders`, { headers: { Authorization: `Bearer ${token}` } });
+    const d = await res.json();
+    document.getElementById('ordersTbl').innerHTML = (d.orders || []).map(o => `
+      <tr>
+        <td>#${o.order_number}</td>
+        <td>${o.customer_name}<br/><small style="color:#9B6070">${o.customer_email}</small></td>
+        <td>${o.customer_phone}</td>
+        <td>₹${o.total_amount}</td>
+        <td><span class="badge badge-${o.status}">${o.status}</span></td>
+        <td>
+          <select onchange="updateStatus('${o.id}',this.value)" style="padding:6px;border:1px solid #ddd;border-radius:6px;font-size:.8rem">
+            <option value="">Update...</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </td>
+      </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#9B6070">No orders yet</td></tr>';
+  } catch(err) { console.log('Orders error:', err.message); }
 }
 
+// COLOR FUNCTIONS
+function addColor(hex = '#7B1C2E', name = '') {
+  const grid = document.getElementById('colorGrid');
+  const id = 'color_' + Date.now();
+  const div = document.createElement('div');
+  div.className = 'color-item';
+  div.id = id;
+  div.innerHTML = `
+    <input type="color" value="${hex}" onchange="updateColorPreview(this)"/>
+    <input type="text" placeholder="Name" value="${name}" style="width:70px;padding:4px 6px;border:1px solid rgba(201,146,42,.25);border-radius:6px;font-size:.72rem;text-align:center;font-family:inherit;outline:none"/>
+    <button type="button" onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:#dc3545;cursor:pointer;font-size:.9rem">✕</button>`;
+  grid.appendChild(div);
+}
+
+function updateColorPreview(input) {
+  input.style.borderColor = input.value;
+}
+
+function getColors() {
+  const colors = [];
+  document.querySelectorAll('#colorGrid .color-item').forEach(item => {
+    const hex = item.querySelector('input[type="color"]').value;
+    const name = item.querySelector('input[type="text"]').value.trim() || 'Color';
+    colors.push({ hex, name });
+  });
+  return colors;
+}
+
+function renderColorGrid(colors = []) {
+  document.getElementById('colorGrid').innerHTML = '';
+  colors.forEach(c => addColor(c.hex, c.name));
+}
+
+// MODAL
 function openModal() {
   document.getElementById('productModal').classList.add('open');
   document.getElementById('modalTitle').textContent = 'Add New Product';
   document.getElementById('productForm').reset();
   document.getElementById('editId').value = '';
   document.querySelectorAll('.size-stock-input').forEach(i => i.value = '');
+  document.getElementById('colorGrid').innerHTML = '';
 }
-
 function closeModal() { document.getElementById('productModal').classList.remove('open'); }
 
 function editProduct(p) {
@@ -501,48 +589,35 @@ function editProduct(p) {
   document.getElementById('pMrp').value = p.mrp;
   document.getElementById('pCat').value = p.category;
   document.getElementById('pStock').value = p.stock;
-  // Size stock fill
   document.querySelectorAll('.size-stock-input').forEach(input => {
     const size = input.dataset.size;
     input.value = (p.size_stock && p.size_stock[size] !== undefined) ? p.size_stock[size] : '';
   });
+  renderColorGrid(p.colors || []);
 }
+
 async function loadWholesale() {
-  const res = await fetch(`${API}/api/wholesale`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const d = await res.json();
-  document.getElementById('wholesaleTbl').innerHTML = (d.enquiries || []).map(e => `
-    <tr>
-      <td>
-        <strong>${e.name}</strong><br/>
-        <small style="color:#9B6070">${e.email}</small>
-      </td>
-      <td>
-        <a href="https://wa.me/91${e.phone.replace(/[^0-9]/g,'')}" target="_blank"
-          style="color:#25D366;font-weight:600;text-decoration:none">
-          💬 ${e.phone}
-        </a>
-      </td>
-      <td>${e.city}</td>
-      <td><span style="background:#d1e7dd;color:#0a3622;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600">${e.quantity}</span></td>
-      <td>${new Date(e.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</td>
-      <td>
-        <span class="badge" style="background:${e.status==='new'?'#fff3cd':e.status==='contacted'?'#d1e7dd':'#f8d7da'};color:${e.status==='new'?'#856404':e.status==='contacted'?'#0a3622':'#58151c'}">
-          ${e.status}
-        </span>
-      </td>
-      <td>
-        <select onchange="updateWholesaleStatus('${e.id}',this.value)"
-          style="padding:5px;border:1px solid #ddd;border-radius:6px;font-size:.8rem">
-          <option value="">Update...</option>
-          <option value="contacted">Contacted</option>
-          <option value="converted">Converted</option>
-          <option value="closed">Closed</option>
-        </select>
-      </td>
-    </tr>`).join('') ||
-    '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No enquiries yet</td></tr>';
+  try {
+    const res = await fetch(`${API}/api/wholesale`, { headers: { Authorization: `Bearer ${token}` } });
+    const d = await res.json();
+    document.getElementById('wholesaleTbl').innerHTML = (d.enquiries || []).map(e => `
+      <tr>
+        <td><strong>${e.name}</strong><br/><small style="color:#9B6070">${e.email}</small></td>
+        <td><a href="https://wa.me/91${e.phone.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366;font-weight:600;text-decoration:none">💬 ${e.phone}</a></td>
+        <td>${e.city}</td>
+        <td><span style="background:#d1e7dd;color:#0a3622;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600">${e.quantity}</span></td>
+        <td>${new Date(e.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</td>
+        <td><span class="badge" style="background:${e.status==='new'?'#fff3cd':e.status==='contacted'?'#d1e7dd':'#f8d7da'};color:${e.status==='new'?'#856404':e.status==='contacted'?'#0a3622':'#58151c'}">${e.status}</span></td>
+        <td>
+          <select onchange="updateWholesaleStatus('${e.id}',this.value)" style="padding:5px;border:1px solid #ddd;border-radius:6px;font-size:.8rem">
+            <option value="">Update...</option>
+            <option value="contacted">Contacted</option>
+            <option value="converted">Converted</option>
+            <option value="closed">Closed</option>
+          </select>
+        </td>
+      </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#9B6070">No enquiries yet</td></tr>';
+  } catch(err) { console.log('Wholesale error:', err.message); }
 }
 
 async function updateWholesaleStatus(id, status) {
@@ -569,7 +644,6 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
   fd.append('category', document.getElementById('pCat').value);
   fd.append('stock', document.getElementById('pStock').value);
 
-  // Size stock collect
   const sizeStock = {};
   const availableSizes = [];
   document.querySelectorAll('.size-stock-input').forEach(input => {
@@ -583,8 +657,13 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
   fd.append('sizes', JSON.stringify(availableSizes.length > 0 ? availableSizes : ['S','M','L','XL','XXL']));
   fd.append('size_stock', JSON.stringify(sizeStock));
 
+  // Colors
+  const colors = getColors();
+  fd.append('colors', JSON.stringify(colors));
+
   const files = document.getElementById('pImages').files;
   for (const f of files) fd.append('images', f);
+
   const url = id ? `${API}/api/products/${id}` : `${API}/api/products`;
   try {
     const res = await fetch(url, {
@@ -631,7 +710,7 @@ function showToast(msg) {
   if (!t) {
     t = document.createElement('div');
     t.id = 'adminToast';
-    t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#5A1220;color:#E8B84B;padding:12px 24px;border-radius:10px;font-size:.875rem;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transition:opacity .3s';
+    t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#5A1220;color:#E8B84B;padding:12px 24px;border-radius:10px;font-size:.875rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transition:opacity .3s;white-space:nowrap';
     document.body.appendChild(t);
   }
   t.textContent = msg;
@@ -639,6 +718,7 @@ function showToast(msg) {
   setTimeout(() => { t.style.opacity = '0'; }, 2500);
 }
 </script>
+
 <!-- BACK TO TOP -->
 <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
   style="display:none;position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;border-radius:50%;background:#7B1C2E;color:white;border:none;cursor:pointer;font-size:1.2rem;box-shadow:0 8px 20px rgba(0,0,0,.2);z-index:400;align-items:center;justify-content:center;transition:all .3s">
