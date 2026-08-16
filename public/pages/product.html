@@ -611,6 +611,13 @@ let currentProductId = null;
 async function loadProduct() {
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id) { location.href = '/pages/collections.html'; return; }
+
+  // API_URL check karo
+  if (typeof API_URL === 'undefined') {
+    console.error('API_URL not defined!');
+    setTimeout(loadProduct, 500);
+    return;
+  }
   currentProductId = id;
 
   try {
