@@ -648,7 +648,7 @@ async function loadProduct() {
     addToRecentlyViewed(currentProduct);
     loadReviews(productId);
     renderRecentlyViewed('recentlyViewedSection');
-    trackProductView(currentProduct);
+    if (typeof trackProductView === 'function') trackProductView(currentProduct);
   } catch (err) {
     console.error('Product load error:', err.message);
     document.getElementById('productDetail').innerHTML =
@@ -954,7 +954,7 @@ function handleAddToCart() {
     return;
   }
   addToCart(currentProduct, selectedSize);
-  trackAddToCart(currentProduct, selectedSize);
+  if (typeof trackAddToCart === 'function') trackAddToCart(currentProduct, selectedSize);
 }
 
 // Buy now
@@ -984,7 +984,7 @@ function toggleWishlistDetail() {
     saveWishlist(wishlist);
     if (btn) btn.innerHTML = '❤️';
     showToast('Added to wishlist ❤️');
-    trackWishlist(p);
+    if (typeof trackWishlist === 'function') trackWishlist(p);
   }
 }
 
@@ -1145,10 +1145,7 @@ async function loadReviews(productId) {
   } catch (err) { console.log('Reviews error:', err.message); }
 }
 
-// Image transition CSS
-document.getElementById('mainImg') && Object.assign(document.getElementById('mainImg').style, {
-  transition: 'opacity .15s ease'
-});
+// Image transition — dynamically applied
 
 document.addEventListener('DOMContentLoaded', loadProduct);
 </script>
