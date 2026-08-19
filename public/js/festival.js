@@ -16,7 +16,7 @@ const FESTIVALS = {
       subtext: 'Gift your sister a beautiful Sakhi kurti!',
       cta: 'Shop Gifts →',
       discount: 'Use code RAKHI20 for 20% off',
-      endDate: '2026-08-19' // Sale end date
+      endDate: '2026-08-25' // Sale end date
     },
     confetti: true
   },
