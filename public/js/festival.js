@@ -233,16 +233,10 @@ function applyFestival() {
       const bannerH = bannerEl.offsetHeight;
       navbar.style.top = bannerH + 'px';
 
-      // NAYA ADD HUA: page content ko bhi neeche push karo taaki navbar hero text ko na dhake
-      document.body.style.paddingTop = bannerH + 'px';
-
       // Resize pe bhi update
       window.addEventListener('resize', () => {
         const b = document.getElementById('festivalBanner');
-        if (b && navbar) {
-          navbar.style.top = b.offsetHeight + 'px';
-          document.body.style.paddingTop = b.offsetHeight + 'px';
-        }
+        if (b && navbar) navbar.style.top = b.offsetHeight + 'px';
       });
     }
   }, 150);
