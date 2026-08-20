@@ -2,11 +2,11 @@
 
 const FESTIVALS = {
   raksha_bandhan: {
-    active: true, // true = on, false = off
+    active: true,
     name: 'Raksha Bandhan Special',
     emoji: '🎀',
     colors: {
-      primary: '#D4006A',    // Pink
+      primary: '#D4006A',
       secondary: '#FF6B9D',
       accent: '#FFD700',
       bg: '#FFF0F7'
@@ -16,7 +16,7 @@ const FESTIVALS = {
       subtext: 'Gift your sister a beautiful Sakhi kurti!',
       cta: 'Shop Gifts →',
       discount: 'Use code RAKHI20 for 20% off',
-      endDate: '2026-08-25' // Sale end date
+      endDate: '2026-08-25'
     },
     confetti: true
   },
@@ -66,7 +66,6 @@ const FESTIVALS = {
 function getActiveFestival() {
   for (const [key, val] of Object.entries(FESTIVALS)) {
     if (val.active) {
-      // Check if sale ended
       if (val.banner.endDate && new Date(val.banner.endDate) < new Date()) {
         continue;
       }
@@ -128,43 +127,44 @@ function applyFestival() {
       0%, 100% { opacity: 1; }
       50% { opacity: .85; }
     }
-    @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
     .festival-banner {
       background: linear-gradient(135deg, ${fest.colors.primary}, ${fest.colors.secondary});
       color: #fff;
       text-align: center;
-      padding: .75rem 1rem;
+      padding: 1rem 3rem;
       position: relative;
-      z-index: 200;
+      z-index: 9999;
       animation: bannerPulse 3s ease infinite;
+      overflow: visible;
+      min-height: fit-content;
     }
     .festival-banner .fest-text {
       font-size: .95rem;
       font-weight: 700;
-      margin-bottom: .2rem;
+      margin-bottom: .3rem;
+      line-height: 1.4;
     }
     .festival-banner .fest-sub {
-      font-size: .78rem;
+      font-size: .8rem;
       opacity: .9;
+      margin-bottom: .3rem;
     }
     .festival-banner .fest-discount {
       display: inline-block;
       background: rgba(255,255,255,.25);
       border: 1px solid rgba(255,255,255,.4);
       border-radius: 20px;
-      padding: 3px 14px;
-      font-size: .78rem;
+      padding: 4px 16px;
+      font-size: .8rem;
       font-weight: 700;
-      margin-top: .4rem;
+      margin-top: .3rem;
       letter-spacing: .5px;
     }
     .festival-countdown {
-      font-size: .72rem;
-      opacity: .8;
-      margin-top: .3rem;
+      font-size: .75rem;
+      opacity: .9;
+      margin-top: .4rem;
+      font-weight: 600;
     }
     .festival-hero-badge {
       display: inline-block;
@@ -185,16 +185,19 @@ function applyFestival() {
       background: rgba(255,255,255,.2);
       border: none;
       color: #fff;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: .9rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      line-height: 1;
     }
-    /* Navbar festival dot */
+    .festival-close:hover {
+      background: rgba(255,255,255,.35);
+    }
     .navbar::after {
       content: '${fest.emoji} ${fest.name}';
       display: block;
@@ -222,6 +225,22 @@ function applyFestival() {
   `;
   document.body.insertBefore(banner, document.body.firstChild);
 
+  // Navbar neeche push karo banner ki height jitna
+  setTimeout(() => {
+    const navbar = document.getElementById('navbar');
+    const bannerEl = document.getElementById('festivalBanner');
+    if (navbar && bannerEl) {
+      const bannerH = bannerEl.offsetHeight;
+      navbar.style.top = bannerH + 'px';
+
+      // Resize pe bhi update
+      window.addEventListener('resize', () => {
+        const b = document.getElementById('festivalBanner');
+        if (b && navbar) navbar.style.top = b.offsetHeight + 'px';
+      });
+    }
+  }, 150);
+
   // Countdown update
   if (fest.banner.endDate) {
     setInterval(() => {
@@ -239,7 +258,7 @@ function applyFestival() {
       badge.textContent = `${fest.emoji} ${fest.name}`;
       heroEyebrow.parentNode.insertBefore(badge, heroEyebrow);
     }
-  }, 100);
+  }, 200);
 
   // Confetti on load
   if (fest.confetti) {
@@ -249,22 +268,29 @@ function applyFestival() {
   // Save dismissed state
   const dismissed = sessionStorage.getItem('festBannerClosed');
   if (dismissed) {
-    const banner = document.getElementById('festivalBanner');
-    if (banner) banner.style.display = 'none';
+    const b = document.getElementById('festivalBanner');
+    if (b) b.style.display = 'none';
+    const navbar = document.getElementById('navbar');
+    if (navbar) navbar.style.top = '0px';
   }
 }
 
 function closeFestivalBanner() {
   const banner = document.getElementById('festivalBanner');
+  const navbar = document.getElementById('navbar');
+
   if (banner) {
-    banner.style.height = banner.offsetHeight + 'px';
     banner.style.transition = 'all .3s ease';
     banner.style.overflow = 'hidden';
+    banner.style.height = banner.offsetHeight + 'px';
     setTimeout(() => {
       banner.style.height = '0';
       banner.style.padding = '0';
     }, 10);
-    setTimeout(() => banner.remove(), 300);
+    setTimeout(() => {
+      banner.remove();
+      if (navbar) navbar.style.top = '0px';
+    }, 300);
   }
   sessionStorage.setItem('festBannerClosed', 'true');
 }
