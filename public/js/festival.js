@@ -215,10 +215,7 @@ function applyFestival() {
     <div class="fest-discount">${fest.banner.discount}</div>
     ${fest.banner.endDate ? `<div class="festival-countdown" id="festCountdown">⏰ Ends in: ${getCountdown(fest.banner.endDate)}</div>` : ''}
   `;
-  <div style="text-align:center;margin-bottom:.5rem">
-  <img src="https://res.cloudinary.com/jfhtysg4/image/upload/v1787329108/Gemini_Generated_Image_fjrk61fjrk61fjrk.png" 
-    style="height:60px;border-radius:50%;border:3px solid rgba(255,255,255,.5)"/>
-    </div>
+  
   const navbar = document.getElementById('navbar');
   if (navbar && navbar.parentNode) {
     navbar.parentNode.insertBefore(banner, navbar.nextSibling);
