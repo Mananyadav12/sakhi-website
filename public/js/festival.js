@@ -18,6 +18,7 @@ const FESTIVALS = {
       discount: 'Use code RAKHI20 for 20% off',
       endDate: '2026-08-25'
     },
+    
     confetti: true
   },
 
@@ -144,6 +145,7 @@ function applyFestival() {
       margin-bottom: .3rem;
       line-height: 1.4;
     }
+    
     .festival-banner .fest-sub {
       font-size: .8rem;
       opacity: .9;
@@ -213,6 +215,14 @@ function applyFestival() {
     <div class="fest-discount">${fest.banner.discount}</div>
     ${fest.banner.endDate ? `<div class="festival-countdown" id="festCountdown">⏰ Ends in: ${getCountdown(fest.banner.endDate)}</div>` : ''}
   `;
+  banner.innerHTML = `
+    <button class="festival-close" onclick="closeFestivalBanner()" title="Close">×</button>
+    <div style="font-size:2rem;margin-bottom:.25rem">👧🏽🎀👦🏽</div>
+    <div class="fest-text">${fest.emoji} ${fest.banner.text}</div>
+    <div class="fest-sub">${fest.banner.subtext}</div>
+    <div class="fest-discount">${fest.banner.discount}</div>
+    ${fest.banner.endDate ? `<div class="festival-countdown" id="festCountdown">⏰ Ends in: ${getCountdown(fest.banner.endDate)}</div>` : ''}
+    `;
   const navbar = document.getElementById('navbar');
   if (navbar && navbar.parentNode) {
     navbar.parentNode.insertBefore(banner, navbar.nextSibling);
