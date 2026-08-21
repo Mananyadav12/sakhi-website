@@ -217,7 +217,22 @@ function applyFestival() {
   `;
   banner.innerHTML = `
     <button class="festival-close" onclick="closeFestivalBanner()" title="Close">×</button>
-    <div style="font-size:2rem;margin-bottom:.25rem">👧🏽🎀👦🏽</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.3rem">
+      <svg width="40" height="40" viewBox="0 0 100 100">
+        <!-- Rakhi thread -->
+        <circle cx="50" cy="30" r="15" fill="rgba(255,255,255,.3)" stroke="white" stroke-width="2"/>
+        <text x="50" y="35" text-anchor="middle" font-size="16">🎀</text>
+        <!-- Girl -->
+        <circle cx="25" cy="65" r="12" fill="rgba(255,255,255,.4)"/>
+        <text x="25" y="70" text-anchor="middle" font-size="14">👧</text>
+        <!-- Boy -->
+        <circle cx="75" cy="65" r="12" fill="rgba(255,255,255,.4)"/>
+        <text x="75" y="70" text-anchor="middle" font-size="14">👦</text>
+        <!-- Rakhi line -->
+        <line x1="37" y1="65" x2="50" y2="45" stroke="white" stroke-width="1.5" stroke-dasharray="3"/>
+        <line x1="63" y1="65" x2="50" y2="45" stroke="white" stroke-width="1.5" stroke-dasharray="3"/>
+      </svg>
+    </div>
     <div class="fest-text">${fest.emoji} ${fest.banner.text}</div>
     <div class="fest-sub">${fest.banner.subtext}</div>
     <div class="fest-discount">${fest.banner.discount}</div>
