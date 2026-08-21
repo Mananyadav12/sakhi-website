@@ -236,8 +236,7 @@ function applyFestival() {
     <div class="fest-text">${fest.emoji} ${fest.banner.text}</div>
     <div class="fest-sub">${fest.banner.subtext}</div>
     <div class="fest-discount">${fest.banner.discount}</div>
-    ${fest.banner.endDate ? `<div class="festival-countdown" id="festCountdown">⏰ Ends in: ${getCountdown(fest.banner.endDate)}</div>` : ''}
-    `;
+    ${fest.banner.endDate ? `<div class="festival-countdown" id="festCountdown">⏰ Ends in: ${getCountdown(fest.banner.endDate)}</div>` : ''}`;
   const navbar = document.getElementById('navbar');
   if (navbar && navbar.parentNode) {
     navbar.parentNode.insertBefore(banner, navbar.nextSibling);
