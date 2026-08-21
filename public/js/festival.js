@@ -213,23 +213,15 @@ function applyFestival() {
     <div class="fest-discount">${fest.banner.discount}</div>
     ${fest.banner.endDate ? `<div class="festival-countdown" id="festCountdown">⏰ Ends in: ${getCountdown(fest.banner.endDate)}</div>` : ''}
   `;
-  document.body.insertBefore(banner, document.body.firstChild);
+  const navbar = document.getElementById('navbar');
+  if (navbar && navbar.parentNode) {
+    navbar.parentNode.insertBefore(banner, navbar.nextSibling);
+  } else {
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
 
   // Navbar neeche push karo banner ki height jitna
-  setTimeout(() => {
-    const navbar = document.getElementById('navbar');
-    const bannerEl = document.getElementById('festivalBanner');
-    if (navbar && bannerEl) {
-      const bannerH = bannerEl.offsetHeight;
-      navbar.style.top = bannerH + 'px';
-
-      // Resize pe bhi update
-      window.addEventListener('resize', () => {
-        const b = document.getElementById('festivalBanner');
-        if (b && navbar) navbar.style.top = b.offsetHeight + 'px';
-      });
-    }
-  }, 150);
+  
 
   // Countdown update
   if (fest.banner.endDate) {
