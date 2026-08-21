@@ -198,17 +198,7 @@ function applyFestival() {
     .festival-close:hover {
       background: rgba(255,255,255,.35);
     }
-    .navbar::after {
-      content: '${fest.emoji} ${fest.name}';
-      display: block;
-      background: ${fest.colors.bg};
-      color: ${fest.colors.primary};
-      font-size: .72rem;
-      font-weight: 700;
-      text-align: center;
-      padding: 4px;
-      letter-spacing: .5px;
-    }
+    
   `;
   document.head.appendChild(style);
 
