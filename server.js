@@ -6,7 +6,15 @@ const path = require('path');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://sakhi-co.onrender.com',
+    'https://sakhikurtis.netlify.app',
+    'http://localhost:3000',
+    'http://localhost:5000'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
